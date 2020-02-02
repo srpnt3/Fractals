@@ -1,0 +1,64 @@
+﻿#pragma kernel CSMain
+
+RWTexture2D<float4> Texture;
+float4 Area;
+int Iterations;
+RWStructuredBuffer<float3> Colors;
+
+static const float PI = 3.14159265f;
+
+// complex number
+struct Cmplx {
+	double re;
+	double im;
+};
+
+// complex functions
+Cmplx Add(Cmplx a, Cmplx b) {
+	Cmplx x;
+	x.re = a.re + b.re;
+	x.im = a.im + b.im;
+	return x;
+}
+Cmplx Multiply(Cmplx a, Cmplx b) {
+	Cmplx x;
+	x.re = (a.re * b.re) - (a.im * b.im);
+	x.im = (a.re * b.im) + (a.im * b.re);
+	return x;
+}
+double GetAbsolute(Cmplx x) {
+	return (double)sqrt((double)pow(x.re, 2) + (double)pow(x.im, 2));
+}
+
+// the math
+int Iterate(Cmplx c) {
+	Cmplx z;
+	z.re = 0;
+	z.im = 0;
+	for (int i = 0; i < Iterations; i++) {
+		z = Add(Multiply(z, z), c);
+		if (GetAbsolute(z) > 2) {
+			return i;
+		}
+	}
+	return Iterations + 1;
+}
+
+// screen to imaginary
+Cmplx ConvertCoords(float2 c) {
+	double w, h; Texture.GetDimensions(w, h);
+	Cmplx z;
+	z.re = c[0] / (w / Area[2]) + Area[0];
+	z.im = c[1] / (h / Area[3]) - Area[1];
+	return z;
+}
+
+[numthreads(8, 8, 1)]
+void CSMain(uint3 id : SV_DispatchThreadID) {
+	float i = Iterate(ConvertCoords(float2(id.x, id.y))); // number of iterations
+	float a = (cos((i / 10 - 1) * PI) + 1) / 2; // value between 0 and 1
+	uint c, s; Colors.GetDimensions(c, s); // get the size of the array
+	int x = a * (c - 1); // calculate the index
+	float3 clr = Colors[x] / 255; // get the corresponding color
+	Texture[id.xy] = float4(clr[0], clr[1], clr[2], 1); // apply
+}
