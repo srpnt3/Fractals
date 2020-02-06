@@ -17,7 +17,29 @@ public static class Gradients {
 		new Vector3(204, 51, 51),
 	};
 
-	public static Vector3[] CreateGradient(Vector4[] Colors, int steps) {
+	public static Vector3[] CreateGradient(Vector4[] c, int steps) {
+
+		Colors.LCHColor[] colors = new Colors.LCHColor[steps]
+
+		for (int i = 0; i < c.Length; i++) {
+			colors[Mathf.Round(c[i][3])] = Vec4toRGB(c[i]);
+		}
+
+		// some functions
+		Colors.RGBColor Vec4toRGB(Vector4 v) {
+			return new RGBColor(v[0], v[1], v[2]);
+		}
+
+		Colors.LCHColor RGBtoLCH(Colors.RGBColor col) {
+			return col.ToXYZ().ToLAB().ToLCH();
+		}
+
+		Colors.RGBColor LCHtoRGB(Colors.LCHColor col) {
+			return col.ToLAB().ToXYZ().ToRGB();
+		}
+	}
+
+	/*public static Vector3[] CreateGradient(Vector4[] Colors, int steps) {
 
 		// test function
 		ColorTest();
@@ -45,7 +67,7 @@ public static class Gradients {
 		}
 
 		return r;
-	}
+	}*/
 
 	private static void ColorTest() {
 		for (int i = 0; i < 10; i++) {

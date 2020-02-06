@@ -10,6 +10,9 @@
 /Fractals Project/[Ll]ogs/
 /Fractals Project/[Mm]emoryCaptures/
 
+# JetBrains IDE
+/.idea
+
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
 

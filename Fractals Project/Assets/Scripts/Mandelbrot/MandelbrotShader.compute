@@ -44,7 +44,7 @@ int Iterate(Cmplx c) {
 	return Iterations + 1;
 }
 
-// screen to imaginary
+// screen to imaginary coords
 Cmplx ConvertCoords(float2 c) {
 	double w, h; Texture.GetDimensions(w, h);
 	Cmplx z;
