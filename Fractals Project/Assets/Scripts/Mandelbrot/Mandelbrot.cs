@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Mandelbrot : MonoBehaviour {
-
 	public ComputeShader shader;
 	public float zoom = 1;
 	public Vector2 center = new Vector2(-0.5F, 0);
-	[Range (10, 1000)] public int iterations = 100;
+	[Range(10, 1000)] public int iterations = 100;
 
 	private Camera cam;
 	private RenderTexture t;
@@ -18,20 +17,18 @@ public class Mandelbrot : MonoBehaviour {
 
 	void Start() {
 		//colorGradient = Gradients.BlackToRed;
-		Vector3[]  colorGradient = Gradients.CreateGradient(new Vector4[] {
+		Vector3[] colorGradient = Gradients.CreateGradient(new Vector4[] {
 			new Vector4(29, 31, 42, 0f),
-			new Vector4(204, 51, 51, 1f)
+			new Vector4(204, 51, 51, 1f),
 		}, 10);
 		colors = new ComputeBuffer(colorGradient.Length, sizeof(float) * 3);
 		colors.SetData(colorGradient);
 	}
 
 	void Update() {
-
 	}
 
 	void OnRenderImage(RenderTexture s, RenderTexture d) {
-
 		// variables
 		cam = Camera.current;
 		w = cam.pixelWidth;
@@ -46,6 +43,7 @@ public class Mandelbrot : MonoBehaviour {
 			if (t != null) {
 				t.Release();
 			}
+
 			t = new RenderTexture(w, h, 32);
 			t.enableRandomWrite = true;
 			t.Create();
@@ -66,11 +64,13 @@ public class Mandelbrot : MonoBehaviour {
 	private void CalculateArea() {
 		float width = 4 / zoom;
 		float height = 4 / zoom;
-		float r = (float)w / h;
+		float r = (float) w / h;
 
-		if (width / height < r) { // Screen wider than area
+		if (width / height < r) {
+			// Screen wider than area
 			width = height / h * w;
-		} else if (width / height > r) { // Screen higher than area
+		} else if (width / height > r) {
+			// Screen higher than area
 			height = width / w * h;
 		}
 
