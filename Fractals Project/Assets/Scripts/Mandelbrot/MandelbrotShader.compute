@@ -1,6 +1,7 @@
 ﻿#pragma kernel CSMain
 
 RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
 float4 Area;
 int Iterations;
 RWStructuredBuffer<float3> Colors;
@@ -55,10 +56,15 @@ Cmplx ConvertCoords(float2 c) {
 
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID) {
+
+	Texture[id.xy] = Source[id.xy];
+
 	float i = Iterate(ConvertCoords(float2(id.x, id.y))); // number of iterations
-	float a = (cos((i / 10 - 1) * PI) + 1) / 2; // value between 0 and 1
-	uint c, s; Colors.GetDimensions(c, s); // get the size of the array
-	int x = a * (c - 1); // calculate the index
-	float3 clr = Colors[x];// get the corresponding color
-	Texture[id.xy] = float4(clr[0], clr[1], clr[2], 1); // apply
+	if (i > 1) {
+		float a = (cos((i / 10 - 1) * PI) + 1) / 2; // value between 0 and 1
+		uint c, s; Colors.GetDimensions(c, s); // get the size of the array
+		int x = a * (c - 1); // calculate the index
+		float3 clr = Colors[x];// get the corresponding color
+		Texture[id.xy] = float4(clr[0], clr[1], clr[2], 1); // apply
+	}
 }

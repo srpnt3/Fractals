@@ -7,10 +7,10 @@ public static class Colors {
     public struct RGBColor {
         public float R, G, B;
 
-        public RGBColor(float R, float G, float B) {
-            this.R = R;
-            this.G = G;
-            this.B = B;
+        public RGBColor(float r, float g, float b) {
+            R = r;
+            G = g;
+            B = b;
         }
 
         // RGB to XYZ
@@ -18,16 +18,16 @@ public static class Colors {
             float r = GammaF(R);
             float g = GammaF(G);
             float b = GammaF(B);
-            float X = 0.4124564f * r + 0.3575761f * g + 0.1804375f * b;
-            float Y = 0.2126729f * r + 0.7151522f * g + 0.0721750f * b;
-            float Z = 0.0193339f * r + 0.1191920f * g + 0.9503041f * b;
-            return new XYZColor(X, Y, Z);
+            float x = 0.4124564f * r + 0.3575761f * g + 0.1804375f * b;
+            float y = 0.2126729f * r + 0.7151522f * g + 0.0721750f * b;
+            float z = 0.0193339f * r + 0.1191920f * g + 0.9503041f * b;
+            return new XYZColor(x, y, z);
 
-            float GammaF(float V) {
-                if (V <= 0.04045f)
-                    return V / 12.92f;
+            float GammaF(float v) {
+                if (v <= 0.04045f)
+                    return v / 12.92f;
                 else
-                    return Mathf.Pow((V + 0.055f) / 1.055f, 2.4f);
+                    return Mathf.Pow((v + 0.055f) / 1.055f, 2.4f);
             }
         }
 
@@ -40,24 +40,23 @@ public static class Colors {
     public struct XYZColor {
         public float X, Y, Z;
 
-        public XYZColor(float X, float Y, float Z) {
-            this.X = X;
-            this.Y = Y;
-            this.Z = Z;
+        public XYZColor(float x, float y, float z) {
+            X = x;
+            Y = y;
+            Z = z;
         }
 
         // XYZ to RGB
         public RGBColor ToRGB() {
-            float R = 3.2404542f * X - 1.5371385f * Y - 0.4985314f * Z;
-            float G = -0.969266f * X + 1.8760108f * Y + 0.0415560f * Z;
-            float B = 0.0556434f * X - 0.2040259f * Y + 1.0572252f * Z;
-            return new RGBColor(GammaF(R), GammaF(G), GammaF(B));
+            float r = 3.2404542f * X - 1.5371385f * Y - 0.4985314f * Z;
+            float g = -0.969266f * X + 1.8760108f * Y + 0.0415560f * Z;
+            float b = 0.0556434f * X - 0.2040259f * Y + 1.0572252f * Z;
+            return new RGBColor(GammaF(r), GammaF(g), GammaF(b));
 
-            float GammaF(float V) {
-                if (V <= 0.0031308f)
-                    return V * 12.92f;
-                else
-                    return Mathf.Pow(V, 1 / 2.4f) * 1.055f - 0.055f;
+            float GammaF(float v) {
+                if (v <= 0.0031308f)
+                    return v * 12.92f;
+                return Mathf.Pow(v, 1 / 2.4f) * 1.055f - 0.055f;
             }
         }
 
@@ -66,16 +65,15 @@ public static class Colors {
             float x = X / 0.95047f;
             float y = Y / 1f;
             float z = Z / 1.08883f;
-            float L = 116 * F(y) - 16;
+            float l = 116 * F(y) - 16;
             float a = 500 * (F(x) - F(y));
             float b = 200 * (F(y) - F(z));
-            return new LABColor(L, a, b);
+            return new LABColor(l, a, b);
 
-            float F(float V) {
-                if (V > 0.008856f)
-                    return Mathf.Pow(V, 1 / 3f);
-                else
-                    return (V * 903.3f + 16) / 116;
+            float F(float v) {
+                if (v > 0.008856f)
+                    return Mathf.Pow(v, 1 / 3f);
+                return (v * 903.3f + 16) / 116;
             }
         }
 
@@ -88,10 +86,10 @@ public static class Colors {
     public struct LABColor {
         public float L, A, B;
 
-        public LABColor(float L, float A, float B) {
-            this.L = L;
-            this.A = A;
-            this.B = B;
+        public LABColor(float l, float a, float b) {
+            L = l;
+            A = a;
+            B = b;
         }
 
         // LAB to XYZ
@@ -106,24 +104,23 @@ public static class Colors {
                 y = L / 903.3f;
             return new XYZColor(x * 0.95047f, y * 1f, z * 1.08883f);
 
-            float F(float V) {
+            float F(float v) {
                 // only works for x and z
-                if (Mathf.Pow(V, 3f) > 0.008856f)
-                    return Mathf.Pow(V, 3f);
-                else
-                    return (116 * V - 16) / 903.3f;
+                if (Mathf.Pow(v, 3f) > 0.008856f)
+                    return Mathf.Pow(v, 3f);
+                return (116 * v - 16) / 903.3f;
             }
         }
 
         // LAB to LCH
         public LCHColor ToLCH() {
-            float C = Mathf.Sqrt(Mathf.Pow(A, 2) + Mathf.Pow(B, 2));
+            float c = Mathf.Sqrt(Mathf.Pow(A, 2) + Mathf.Pow(B, 2));
             float t = Mathf.Atan2(B, A) * (180 / Mathf.PI);
-            float H;
-            if (t >= 0) H = t;
-            else H = t + 360;
+            float h;
+            if (t >= 0) h = t;
+            else h = t + 360;
 
-            return new LCHColor(L, C, H);
+            return new LCHColor(L, c, h);
         }
 
         public Vector3 ToVec3() {
@@ -135,17 +132,17 @@ public static class Colors {
     public struct LCHColor {
         public float L, C, H;
 
-        public LCHColor(float L, float C, float H) {
-            this.L = L;
-            this.C = C;
-            this.H = H;
+        public LCHColor(float l, float c, float h) {
+            L = l;
+            C = c;
+            H = h;
         }
 
         // LCH to LAB
         public LABColor ToLAB() {
-            float A = C * Mathf.Cos(H * (Mathf.PI / 180));
-            float B = C * Mathf.Sin(H * (Mathf.PI / 180));
-            return new LABColor(L, A, B);
+            float a = C * Mathf.Cos(H * (Mathf.PI / 180));
+            float b = C * Mathf.Sin(H * (Mathf.PI / 180));
+            return new LABColor(L, a, b);
         }
 
         public Vector3 ToVec3() {

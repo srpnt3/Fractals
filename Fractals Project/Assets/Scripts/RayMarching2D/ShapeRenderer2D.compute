@@ -1,0 +1,58 @@
+﻿
+#pragma kernel CSMain
+
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+struct Shape {
+	float2 pos;
+	int size;
+	int type;
+	int border;
+	float3 color;
+};
+
+StructuredBuffer<Shape> Shapes;
+
+// Distance Estimators (2D)
+
+float Length(float2 a) {
+	return sqrt(a.x * a.x + a.y * a.y);
+}
+
+float DECircle(float2 c, float2 pos, float radius) {
+	return Length(pos - c) - radius;
+}
+
+float DESquare(float2 c, float2 pos, float size) {
+	float2 d = abs(pos - c) - float2(size, size);
+	return Length(max(d, float2(0, 0))) + min(max(d.x, d.y), 0);
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	Texture[id.xy] = Source[id.xy];
+	uint c, s; Shapes.GetDimensions(c, s);
+
+	for (int i = 0; i < (int) c; i++) {
+		Shape shape = Shapes[i];
+		float d = 0;
+		if (shape.type == 0) {
+			d = DECircle(id.xy, shape.pos, shape.size);
+		};
+		if (shape.type == 1) {
+			d = DESquare(id.xy, shape.pos, shape.size);
+		};
+		if (shape.border == 0) {
+			if (d <= 0) {
+				Texture[id.xy] = float4(shape.color / 255, 0);
+			};
+		};
+		if (shape.border == 1) {
+			if (-1 <= d && d <= 1) {
+				Texture[id.xy] = float4(shape.color / 255, 0);
+			};
+		};
+	}
+}
