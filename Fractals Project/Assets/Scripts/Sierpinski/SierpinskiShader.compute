@@ -1,0 +1,39 @@
+﻿#pragma kernel CSMain
+
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+int N;
+int Iterations;
+
+bool InCarpet(uint x, uint y) {
+	while (x > 0 || y > 0) {
+		if (x % N == 1 && y % N == 1) {
+			return true;
+		};
+		x /= N;
+		y /= N;
+	}
+	return false;
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	Texture[id.xy] = Source[id.xy];
+	
+	// some visuals
+	float w, h; Texture.GetDimensions(w, h);
+	float s = pow(N, Iterations) / min(w, h); // scale it to display it correctly
+	float ox = 0, oy = 0; // calculate offset
+	if (w > h)
+		ox = (w - h) / 2;
+	if (h > w)
+		oy = (h - w) / 2;
+	float x = id.x - ox, y = id.y - oy; // center
+	
+	if (x / y > 0 && x < min(w, h) && y < min(w, h)) { // check boundries
+		if (!InCarpet(x * s, y * s)) {
+			Texture[id.xy] = float4(0.8, 0.2, 0.2, 1);
+		}
+	}
+}
