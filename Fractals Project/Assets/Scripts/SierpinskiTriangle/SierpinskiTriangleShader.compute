@@ -1,0 +1,15 @@
+﻿#pragma kernel CSMain
+
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	Texture[id.xy] = Source[id.xy];
+	
+	float a = id.x & id.y;
+	if (a == 0) {
+		Texture[id.xy] = float4(0.8, 0.2, 0.2, 1);
+	}
+}
