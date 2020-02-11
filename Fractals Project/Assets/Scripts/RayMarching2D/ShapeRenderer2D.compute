@@ -6,7 +6,7 @@ Texture2D<float4> Source;
 
 struct Shape {
 	float2 pos;
-	int size;
+	float3 size;
 	int type;
 	int border;
 	float3 color;
@@ -24,9 +24,16 @@ float DECircle(float2 c, float2 pos, float radius) {
 	return Length(pos - c) - radius;
 }
 
-float DESquare(float2 c, float2 pos, float size) {
-	float2 d = abs(pos - c) - float2(size, size);
+float DESquare(float2 c, float2 pos, float2 size) {
+	float2 d = abs(pos - c) - size;
 	return Length(max(d, float2(0, 0))) + min(max(d.x, d.y), 0);
+}
+
+float DELine(float2 c, float2 a, float3 size) {
+	float2 b = float2(size[0], size[1]);
+	float2 ca = c - a, ba = b - a;
+	float h = clamp(dot(ca,ba)/dot(ba,ba), 0.0, 1.0);
+	return Length(ca - ba * h) - size[2];
 }
 
 [numthreads(8,8,1)]
@@ -39,11 +46,14 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 		Shape shape = Shapes[i];
 		float d = 0;
 		if (shape.type == 0) {
-			d = DECircle(id.xy, shape.pos, shape.size);
+			d = DECircle(id.xy, shape.pos, shape.size[0]);
 		};
 		if (shape.type == 1) {
-			d = DESquare(id.xy, shape.pos, shape.size);
+			d = DESquare(id.xy, shape.pos, float2(shape.size[0], shape.size[1]));
 		};
+		if (shape.type == 2) {
+			d = DELine(id.xy, shape.pos, shape.size);
+		}
 		if (shape.border == 0) {
 			if (d <= 0) {
 				Texture[id.xy] = float4(shape.color / 255, 0);
