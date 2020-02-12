@@ -30,7 +30,6 @@ public class RayMarching2D : App {
 		
 		Init();
 		March();
-		//Min(origin);
 		InitShapes();
 
 		// shader

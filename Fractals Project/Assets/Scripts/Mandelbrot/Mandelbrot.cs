@@ -5,9 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Mandelbrot : App {
 	
+	[Header("View Options")]
 	public float zoom = 1;
 	public Vector2 center = new Vector2(-0.5F, 0);
 	[Range(10, 1000)] public int iterations = 100;
+	[Header("Variables")]
+	public bool julia = false;
+	public Vector2 c;
 
 	private Vector4 area; // re, im, width, height
 	private Vector3[] colorGradient;
@@ -33,7 +37,9 @@ public class Mandelbrot : App {
 		// shader
 		shader.SetTexture(0, "Texture", tex);
 		shader.SetTexture (0, "Source", s);
+		shader.SetBool("Julia", julia);
 		shader.SetVector("Area", area); // re, im, width, height
+		shader.SetVector("C", c);
 		shader.SetInt("Iterations", iterations);
 		shader.SetBuffer(0, "Colors", colors);
 		

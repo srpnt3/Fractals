@@ -1,0 +1,30 @@
+﻿#pragma kernel CSMain
+
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+int Iterations;
+int N;
+float A;
+float R;
+
+struct Circle {
+	float2 pos;
+	float r;
+};
+
+StructuredBuffer<Circle> Circles;
+
+float Length(float2 a, float2 b) {
+	return sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2));
+}
+
+bool IsInView(float x, float y) {
+	float w, h; Texture.GetDimensions(w, h);
+	if (x > 0 && y > 0 && x < w && y < h) return true;
+	return false;
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+	Texture[id.xy] = Source[id.xy];
+}

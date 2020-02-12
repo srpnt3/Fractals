@@ -130,9 +130,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1242227841}
+  - component: {fileID: 1242227838}
   - component: {fileID: 1242227840}
   - component: {fileID: 1242227839}
-  - component: {fileID: 1242227838}
   - component: {fileID: 1242227837}
   - component: {fileID: 1242227836}
   m_Layer: 8
@@ -232,6 +232,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 4c5189c584d621d479b84df659dca40c, type: 3}
+  n: 3
+  iterations: 5
 --- !u!81 &1242227839
 AudioListener:
   m_ObjectHideFlags: 0
