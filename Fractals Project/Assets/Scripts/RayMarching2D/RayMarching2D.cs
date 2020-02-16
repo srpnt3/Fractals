@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Random = UnityEngine.Random;
 
 public class RayMarching2D : App {
 	
+	// variables
 	public Vector2 origin = new Vector2(960, 540);
 	[Range(0, 360)] public float direction = 0;
 	[Range(1, 100)] public int steps = 1;
 
+	// lists of the objects
 	private ComputeBuffer shapes;
 	private List<Shape> objects;
 	private List<Shape> visuals = new List<Shape>();
 
+	// create some objects that look random
 	private void Start() {
-		objects = new List<Shape>(); // Looks Random
+		objects = new List<Shape>();
 		objects.Add(new Shape(new Vector2(1290, 451), new Vector2(69, 0), 0, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(684, 669), new Vector2(85, 0), 0, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(390, 281), new Vector2(89, 0), 0, 0, new Vector3(204, 51, 51)));
@@ -28,6 +29,7 @@ public class RayMarching2D : App {
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
 		
+		// init functions
 		Init();
 		March();
 		InitShapes();
@@ -39,15 +41,16 @@ public class RayMarching2D : App {
 
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
 
-		// apply
+		// apply the texture
 		Graphics.Blit(tex, d);
 
-		// Dispose buffers
+		// dispose buffers
 		shapes.Dispose();
 	}
 
+	// get the smallest distance
 	private float Min(Vector2 pos) {
-		int d = 1000000;
+		int d = Int32.MaxValue;
 		foreach (Shape shape in objects) {
 			float x = GetDistance(pos, shape);
 			if (x < d) d = Mathf.RoundToInt(x);
@@ -56,6 +59,7 @@ public class RayMarching2D : App {
 		return d;
 	}
 
+	// march n times until the ray hits an object (gets smaller than 1)
 	private void March() {
 		Vector2 pos = origin;
 		for (int i = 0; i < steps; i++) {
@@ -64,13 +68,12 @@ public class RayMarching2D : App {
 				pos.x + d * Mathf.Cos(direction * (Mathf.PI / 180)),
 				pos.y + d * Mathf.Sin(direction * (Mathf.PI / 180))
 			);
-			if (d < 1 || d > 1000) {
-				i = steps;
-			}
+			if (d < 1 || d > 1000) break;
 		}
 		visuals.Add(new Shape(origin, new Vector3(pos.x, pos.y, 1), 2, 0, new Vector3(246, 246, 246)));
 	}
 
+	// create the shape buffer
 	private void InitShapes() {
 	
 		visuals.Add(new Shape(origin, new Vector2(5, 0), 0, 0, new Vector3(246, 246, 246)));
@@ -79,12 +82,11 @@ public class RayMarching2D : App {
 		shapes = new ComputeBuffer(allShapes.Count, sizeof(float) * 8 + sizeof(int) * 2);
 		shapes.SetData(allShapes);
 		
-		// reset List
+		// reset list
 		visuals = new List<Shape>();
 	}
 	
-	// Distance Estimators
-
+	// distance estimators
 	private float GetDistance(Vector2 pos, Shape shape) {
 		return shape.type == 0 ? DECircle(pos, shape.pos, shape.size[0]) : DESquare(pos, shape.pos, shape.size);
 	}
@@ -106,10 +108,11 @@ public class RayMarching2D : App {
 		return new Vector2(Mathf.Abs(x[0]), Mathf.Abs(x[1]));
 	}
 
+	// the shape object
 	struct Shape {
 		public Vector2 pos;
 		public Vector3 size;
-		public int type; // 0: Sphere, 1: Cube, 2: Line
+		public int type; // 0: sphere, 1: cube, 2: line
 		public int border; // 0: no, 1: yes
 		public Vector3 color;
 

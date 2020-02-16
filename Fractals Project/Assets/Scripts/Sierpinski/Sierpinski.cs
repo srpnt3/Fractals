@@ -1,15 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Sierpinski : App {
 
-	[Range(1, 4)] public int n = 3;
+	// variables
+	[Range(2, 4)] public int n = 3;
 	[Range(1, 9)] public int iterations = 5;
 	
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
 		
+		// init functions
 		Init();
 		
 		// shader
@@ -20,7 +20,7 @@ public class Sierpinski : App {
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
 		
-		// apply
+		// apply the texture
 		Graphics.Blit(tex, d);
 	}
 }

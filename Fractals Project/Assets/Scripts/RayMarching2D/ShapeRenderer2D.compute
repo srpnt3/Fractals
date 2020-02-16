@@ -1,9 +1,10 @@
-﻿
-#pragma kernel CSMain
+﻿#pragma kernel CSMain
 
+// textures
 RWTexture2D<float4> Texture;
 Texture2D<float4> Source;
 
+// the shape Object
 struct Shape {
 	float2 pos;
 	float3 size;
@@ -12,36 +13,39 @@ struct Shape {
 	float3 color;
 };
 
+// list of shapes
 StructuredBuffer<Shape> Shapes;
 
-// Distance Estimators (2D)
-
+// distance estimators
 float Length(float2 a) {
 	return sqrt(a.x * a.x + a.y * a.y);
 }
 
-float DECircle(float2 c, float2 pos, float radius) {
-	return Length(pos - c) - radius;
+float DECircle(float2 c, float2 pos, float radius) { // c: your coords, pos: circle position, radius: circle radius
+	return Length(c - pos) - radius;
 }
 
-float DESquare(float2 c, float2 pos, float2 size) {
-	float2 d = abs(pos - c) - size;
+float DEBox(float2 c, float2 pos, float2 size) { // c: your coords, pos: box position, radius: box size
+	float2 d = abs(c - pos) - size;
 	return Length(max(d, float2(0, 0))) + min(max(d.x, d.y), 0);
 }
 
-float DELine(float2 c, float2 a, float3 size) {
+float DELine(float2 c, float2 a, float3 size) { // c: your coords, a: line start position, size: line end position and width
 	float2 b = float2(size[0], size[1]);
 	float2 ca = c - a, ba = b - a;
 	float h = clamp(dot(ca,ba)/dot(ba,ba), 0.0, 1.0);
 	return Length(ca - ba * h) - size[2];
 }
 
+// main function
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 
+	// add the background
 	Texture[id.xy] = Source[id.xy];
 	uint c, s; Shapes.GetDimensions(c, s);
 
+	// loop through shapes
 	for (int i = 0; i < (int) c; i++) {
 		Shape shape = Shapes[i];
 		float d = 0;
@@ -49,7 +53,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 			d = DECircle(id.xy, shape.pos, shape.size[0]);
 		};
 		if (shape.type == 1) {
-			d = DESquare(id.xy, shape.pos, float2(shape.size[0], shape.size[1]));
+			d = DEBox(id.xy, shape.pos, float2(shape.size[0], shape.size[1]));
 		};
 		if (shape.type == 2) {
 			d = DELine(id.xy, shape.pos, shape.size);

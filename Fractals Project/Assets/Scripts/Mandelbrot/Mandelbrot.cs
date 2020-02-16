@@ -1,10 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 
 public class Mandelbrot : App {
 	
+	// variables
 	[Header("View Options")]
 	public float zoom = 1;
 	public Vector2 center = new Vector2(-0.5F, 0);
@@ -13,9 +11,11 @@ public class Mandelbrot : App {
 	public bool julia = false;
 	public Vector2 c;
 
+	// private vars
 	private Vector4 area; // re, im, width, height
 	private Vector3[] colorGradient;
 
+	// create the Gradient
 	private void Start() {
 		colorGradient = Gradients.CreateGradient(new Vector4[] {
 			new Vector4(29, 31, 42, 0f),
@@ -26,10 +26,11 @@ public class Mandelbrot : App {
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
 		
+		// init functions
 		Init();
 		CalculateArea();
 		
-		// variables
+		// calculate some things
 		iterations = iterations / 20 * 20;
 		ComputeBuffer colors = new ComputeBuffer(colorGradient.Length, sizeof(float) * 3);
 		colors.SetData(colorGradient);
@@ -45,10 +46,10 @@ public class Mandelbrot : App {
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
 
-		// apply
+		// apply the texture
 		Graphics.Blit(tex, d);
 		
-		// Dispose buffers
+		// dispose buffers
 		colors.Dispose();
 	}
 
@@ -58,14 +59,11 @@ public class Mandelbrot : App {
 		float height = 4 / zoom;
 		float r = (float) w / h;
 
-		if (width / height < r) {
-			// Screen wider than area
+		if (width / height < r) // screen wider than area
 			width = height / h * w;
-		} else if (width / height > r) {
-			// Screen higher than area
+		else if (width / height > r) // screen higher than area
 			height = width / w * h;
-		}
-
+		
 		float x = center.x - (width / 2);
 		float y = center.y + (height / 2);
 		area = new Vector4(x, y, width, height);
