@@ -57,7 +57,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 		};
 		if (shape.type == 2) {
 			d = DELine(id.xy, shape.pos, shape.size);
-		}
+		};
 		if (shape.border == 0) {
 			if (d <= 0) {
 				Texture[id.xy] = float4(shape.color / 255, 0);
