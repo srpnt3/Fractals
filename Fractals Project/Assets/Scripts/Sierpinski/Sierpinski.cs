@@ -3,6 +3,7 @@
 public class Sierpinski : App {
 
 	// variables
+	[Header("Options")]
 	[Range(2, 4)] public int n = 3;
 	[Range(1, 9)] public int iterations = 5;
 	

@@ -6,6 +6,7 @@ using UnityEngine;
 public class RayMarching2D : App {
 	
 	// variables
+	[Header("Options")]
 	public Vector2 origin = new Vector2(960, 540);
 	[Range(0, 360)] public float direction = 0;
 	[Range(1, 100)] public int steps = 1;

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class App : MonoBehaviour {
 	
@@ -11,7 +12,7 @@ public class App : MonoBehaviour {
 
 	// init function
 	protected void Init() {
-		cam = Camera.current;
+		cam = GetComponent<Camera>();
 		w = cam.pixelWidth;
 		h = cam.pixelHeight;
 		

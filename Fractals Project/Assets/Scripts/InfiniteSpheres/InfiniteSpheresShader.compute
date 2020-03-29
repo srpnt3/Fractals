@@ -4,6 +4,13 @@
 RWTexture2D<float4> Texture;
 Texture2D<float4> Source;
 
+// variables
+float Radius;
+float FogStrength;
+bool Repeat;
+bool Invert;
+bool Outline;
+
 // matrixes
 float4x4 CamToWorld;
 float4x4 CamInverseProjection;
@@ -24,10 +31,21 @@ float DESphere(float3 p, float r) {
 	return Lenght(p) - r;
 }
 
+// from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+float3 RepeatSpace(float3 p) {
+	float a = 3;
+	float x = abs(p.x - a / 2) % a - a / 2;
+	float y = abs(p.y - a / 2) % a - a / 2;
+	float z = abs(p.z - a / 2) % a - a / 2;
+	return float3(x, y, z);
+}
+
 // the distance to the sphere
 float MinDistance(float3 pos) {
-	float3 spherePos = float3(0, 0, 0);
-	return DESphere(spherePos - pos, 1);
+	if (Repeat) { pos = RepeatSpace(pos); }; // repeat space
+	float dst = DESphere(float3(0, 0, 0) - pos, Radius); // calculate distance
+	if (Invert) { dst *= -1; }; // invert
+	return dst;
 }
 
 // from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
@@ -69,6 +87,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	float ol = 0; // outline
 	float3 eye = ray.origin; // camera position
 	float dst = 0; // current distance
+	float fog = 0;
 	
 	// marching
 	for(uint i = 0; i < 1000; i++) {
@@ -78,12 +97,14 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 		
 		// ray too far away
 		if (Lenght(ray.origin - eye) > 100) {
+			fog = Lenght(ray.origin - eye) / 40; // calculate fog
 			break;
 		}
 		
 		// ray hits an object
 		if (dst < 0.0001) {
-			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0);
+			fog = Lenght(ray.origin - eye) / 40; // calculate fog
+			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0); // add color
 			break;
 		}
 		
@@ -97,5 +118,10 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	}
 	
 	// add outline
-	Texture[id.xy] += ol;
+	if (Outline) {
+		Texture[id.xy] += ol;
+	};
+	
+	// add fog
+	Texture[id.xy] *= (1 - (fog * FogStrength));
 }
