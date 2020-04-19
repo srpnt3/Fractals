@@ -21,14 +21,9 @@ struct Ray {
     float3 direction;
 };
 
-// vector lenght
-float Lenght(float3 p) {
-	return sqrt(pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2));
-}
-
 // sphere distance estimator
 float DESphere(float3 p, float r) {
-	return Lenght(p) - r;
+	return length(p) - r;
 }
 
 // from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
@@ -41,7 +36,7 @@ float3 RepeatSpace(float3 p) {
 }
 
 // the distance to the sphere
-float MinDistance(float3 pos) {
+float DEMain(float3 pos) {
 	if (Repeat) { pos = RepeatSpace(pos); }; // repeat space
 	float dst = DESphere(float3(0, 0, 0) - pos, Radius); // calculate distance
 	if (Invert) { dst *= -1; }; // invert
@@ -93,17 +88,17 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	for(uint i = 0; i < 1000; i++) {
 		
 		// calculate distance
-		dst = MinDistance(ray.origin);
+		dst = DEMain(ray.origin);
 		
 		// ray too far away
-		if (Lenght(ray.origin - eye) > 100) {
-			fog = Lenght(ray.origin - eye) / 40; // calculate fog
+		if (length(ray.origin - eye) > 100) {
+			fog = length(ray.origin - eye) / 40; // calculate fog
 			break;
 		}
 		
 		// ray hits an object
 		if (dst < 0.0001) {
-			fog = Lenght(ray.origin - eye) / 40; // calculate fog
+			fog = length(ray.origin - eye) / 40; // calculate fog
 			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0); // add color
 			break;
 		}

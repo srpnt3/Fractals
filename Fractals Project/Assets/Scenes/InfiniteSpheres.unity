@@ -283,11 +283,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 1d0da37f39412934fb6965797e1045c6, type: 3}
-  radius: 2.09
+  radius: 2
   fogStrength: 1
   repeat: 1
   invert: 1
-  outline: 0
+  outline: 1
 --- !u!4 &192913190
 Transform:
   m_ObjectHideFlags: 0

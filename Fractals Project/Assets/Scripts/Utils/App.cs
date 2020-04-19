@@ -28,4 +28,35 @@ public class App : MonoBehaviour {
 			tex.Create();
 		}
 	}
+
+	protected float sens = 10f;
+	protected CameraType cameraType = CameraType.None;
+	
+	void Update () {
+		if (cameraType != CameraType.None) {
+			if (Cursor.lockState == CursorLockMode.Locked) {
+				switch (cameraType) {
+					
+					// free view camera controls
+					case CameraType.Free:
+						transform.Rotate(0, Input.GetAxis("Mouse X") * sens, 0);
+						transform.Rotate(-Input.GetAxis("Mouse Y") * sens, 0, 0);	
+						transform.Translate(new Vector3(Input.GetAxis("Horizontal") * sens / 100, 0, Input.GetAxis("Vertical") * sens / 100));
+						break;
+					
+					// orbit camera controls
+					case CameraType.Orbit:
+						break;
+					
+				}
+				if (Input.GetMouseButtonUp(0)) 
+					Cursor.lockState = CursorLockMode.None;
+			} else if (Input.GetMouseButtonUp(0)) 
+				Cursor.lockState = CursorLockMode.Locked;	
+		}
+	}
+
+	protected enum CameraType {
+		None, Orbit, Free
+	}
 }

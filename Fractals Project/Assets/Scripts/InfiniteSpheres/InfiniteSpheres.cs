@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using UnityEngine;
@@ -12,7 +13,11 @@ public class InfiniteSpheres : App {
 	public bool repeat;
 	public bool invert;
 	public bool outline;
-	
+
+	private void Start() {
+		cameraType = CameraType.Free;
+	}
+
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
 		
