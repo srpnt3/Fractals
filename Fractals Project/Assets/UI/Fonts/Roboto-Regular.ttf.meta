@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 74a3a025ae29041408fe8f8faf129d13
+guid: 5c285abcbb2d110488eaf2cedf73e311
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -8,10 +8,11 @@ TrueTypeFontImporter:
   characterSpacing: 0
   characterPadding: 1
   includeFontData: 1
-  fontName: SF Pro Display
+  fontName: Roboto
   fontNames:
-  - SF Pro Display
-  fallbackFontReferences: []
+  - Roboto
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 24b62357a6aa1654f98cfcc1241dc53a, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
