@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Numerics;
 using UnityEngine;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 public class App : MonoBehaviour {
 	
@@ -9,7 +12,7 @@ public class App : MonoBehaviour {
 	protected Camera cam;
 	protected int w;
 	protected int h;
-
+	
 	// init function
 	protected void Init() {
 		cam = GetComponent<Camera>();
@@ -31,7 +34,27 @@ public class App : MonoBehaviour {
 
 	protected float sens = 10f;
 	protected CameraType cameraType = CameraType.None;
+
+	// below are just controls
+
+	private Controls c;
+	private Vector2 move;
+	private Vector2 cursor;
+	private float tilt;
 	
+	private void Awake() {
+		c = new Controls();
+		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
+		c.Default.Move.canceled += ctx => move = Vector2.zero;
+		c.Default.Cursor.performed += ctx => cursor = ctx.ReadValue<Vector2>();
+		c.Default.Cursor.canceled += ctx => cursor = Vector2.zero;
+		c.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
+		c.Default.Tilt.canceled += ctx => tilt = 0;
+	}
+
+	private void OnEnable() { c.Enable(); }
+	private void OnDisable() { c.Disable(); }
+
 	void Update () {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
@@ -39,9 +62,8 @@ public class App : MonoBehaviour {
 					
 					// free view camera controls
 					case CameraType.Free:
-						transform.Rotate(0, Input.GetAxis("Mouse X") * sens, 0);
-						transform.Rotate(-Input.GetAxis("Mouse Y") * sens, 0, 0);	
-						transform.Translate(new Vector3(Input.GetAxis("Horizontal") * sens / 100, 0, Input.GetAxis("Vertical") * sens / 100));
+						transform.Rotate(-cursor.y * Time.smoothDeltaTime * sens, cursor.x * Time.smoothDeltaTime * sens, -tilt * Time.deltaTime * sens);
+						transform.Translate(new Vector3(move.x * Time.deltaTime * sens, 0, move.y * Time.deltaTime * sens));
 						break;
 					
 					// orbit camera controls

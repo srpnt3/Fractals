@@ -1,0 +1,101 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// matrixes
+float4x4 CamToWorld;
+float4x4 CamInverseProjection;
+
+// ray
+struct Ray {
+    float3 origin;
+    float3 direction;
+};
+
+// vector lenght
+float Lenght(float3 p) {
+	return sqrt(pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2));
+}
+
+// sphere distance estimator
+float DESphere(float3 p, float r) {
+	return Lenght(p) - r;
+}
+
+// the distance to the sphere
+float MinDistance(float3 pos) {
+	float3 spherePos = float3(0, 0, 0);
+	return DESphere(spherePos - pos, 1);
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateRay(float3 origin, float3 direction) {
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateCameraRay(float2 uv) {
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    return CreateRay(origin, direction);
+}
+
+// march along the ray
+Ray March(Ray ray, float distance) {
+	ray.origin += ray.direction * distance;
+	return ray;
+}
+
+// main function
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+	
+	// add the background
+	Texture[id.xy] = Source[id.xy];
+	
+	// convert into range [-1, 1]
+	float w, h; Texture.GetDimensions(w, h);
+	float2 uv = id.xy / float2(w, h) * 2 - 1;
+	
+	// create the ray
+	Ray ray = CreateCameraRay(uv);
+	float ol = 0; // outline
+	float3 eye = ray.origin; // camera position
+	float dst = 0; // current distance
+	
+	// marching
+	for(uint i = 0; i < 1000; i++) {
+		
+		// calculate distance
+		dst = MinDistance(ray.origin);
+		
+		// ray too far away
+		if (Lenght(ray.origin - eye) > 100) {
+			break;
+		}
+		
+		// ray hits an object
+		if (dst < 0.0001) {
+			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0);
+			break;
+		}
+		
+		// outline
+		if (dst < 0.01) {
+			ol += dst * 2;
+		}
+		
+		// repeat
+		ray = March(ray, dst);
+	}
+	
+	// add outline
+	Texture[id.xy] += ol;
+}

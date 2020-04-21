@@ -1,0 +1,45 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// variables
+int N;
+int Iterations;
+
+// From https://en.wikipedia.org/wiki/Sierpinski_carpet and slightly modified
+bool InFractal(uint x, uint y) {
+	int i = 0; // keep track of the iterations
+	while ((x > 0 || y > 0) && i < 10) {
+		if (x % N == 1 && y % N == 1) // checks if the pixel is in the center for the current square level
+			return false;
+		x /= N; y /= N; // decrement to next square level
+		i++;
+	}
+	return true; // the pixel is not in the center of all possible square levels
+}
+
+// main function
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	// add the background
+	Texture[id.xy] = Source[id.xy];
+	
+	// scale and position the fractal
+	float w, h; Texture.GetDimensions(w, h);
+	float s = pow(N, Iterations) / min(w, h); // scale it
+	float ox = 0, oy = 0; // calculate the offset
+	if (w > h)
+		ox = (w - h) / 2;
+	if (h > w)
+		oy = (h - w) / 2;
+	float x = id.x - ox, y = id.y - oy; // center it
+	
+	if (x / y > 0 && x < min(w, h) && y < min(w, h)) { // check boundries
+		if (InFractal(x * s, y * s)) {
+			Texture[id.xy] = float4(0.8, 0.2, 0.2, 1);
+		}
+	}
+}

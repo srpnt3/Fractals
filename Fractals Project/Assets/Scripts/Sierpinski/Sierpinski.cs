@@ -6,7 +6,7 @@ public class Sierpinski : App {
 	[Header("Options")]
 	[Range(2, 4)] public int n = 3;
 	[Range(1, 9)] public int iterations = 5;
-	
+
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
 		
