@@ -85,6 +85,9 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	float fog = 0;
 	
 	// marching
+	
+	ray = March(ray, 1);
+	
 	for(uint i = 0; i < 1000; i++) {
 		
 		// calculate distance

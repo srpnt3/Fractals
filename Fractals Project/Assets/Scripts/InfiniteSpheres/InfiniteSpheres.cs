@@ -3,23 +3,19 @@
 public class InfiniteSpheres : App {
 
 	// variables
-	[Header("Options")]
-	[Range(0, 3)] public float radius;
-	[Range(0, 1)] public float fogStrength;
-	public bool repeat;
-	public bool invert;
-	public bool outline;
+	private float radius = 1;
+	private float fogStrength = 1;
+	private bool repeat = false;
+	private bool invert= false;
+	private bool outline = false;
 
 	private void Start() {
 		cameraType = CameraType.Free;
 	}
 
-	[ImageEffectOpaque]
-	private void OnRenderImage(RenderTexture s, RenderTexture d) {
+	// main render method
+	protected override void Render(RenderTexture s) {
 		
-		// init functions
-		Init();
-
 		// shader
 		shader.SetTexture(0, "Texture", tex);
 		shader.SetTexture(0, "Source", s);
@@ -32,8 +28,12 @@ public class InfiniteSpheres : App {
 		shader.SetMatrix("CamInverseProjection", cam.projectionMatrix.inverse);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
-
-		// apply the texture
-		Graphics.Blit(tex, d);
 	}
+	
+	// options
+	
+	public void Radius(float v) { ReRender(); radius = v; }
+	public void Fog(float v) { ReRender(); fogStrength = v; }
+	public void Repeat(bool v) { ReRender(); repeat = v; }
+	public void Invert(bool v) { ReRender(); invert = v; }
 }

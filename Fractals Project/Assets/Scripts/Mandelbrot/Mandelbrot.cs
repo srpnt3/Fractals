@@ -1,18 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.PlayerLoop;
 
 public class Mandelbrot : App {
 	
 	// variables
-	[Header("View Options")]
-	public float zoom = 1;
-	public Vector2 center = new Vector2(-0.5F, 0);
-	[Range(10, 1000)] public int iterations = 100;
-	[Header("Variables")]
-	public bool julia = false;
-	public Vector2 c;
+	private float zoom = 1;
+	private Vector2 center = new Vector2(-0.5f, 0);
+	private int iterations = 100;
+	private bool julia = false;
+	private Vector2 c = Vector2.zero;
 
 	// private vars
-	private Vector4 area; // re, im, width, height
+	private Vector4 area; // (re, im, width, height)
 	private Vector3[] colorGradient;
 
 	// create the Gradient
@@ -23,14 +25,11 @@ public class Mandelbrot : App {
 		}, 10);
 	}
 
-	[ImageEffectOpaque]
-	private void OnRenderImage(RenderTexture s, RenderTexture d) {
-		
-		// init functions
-		Init();
-		CalculateArea();
+	// main render method
+	protected override void Render(RenderTexture s) {
 		
 		// calculate some things
+		CalculateArea();
 		iterations = iterations / 20 * 20;
 		ComputeBuffer colors = new ComputeBuffer(colorGradient.Length, sizeof(float) * 3);
 		colors.SetData(colorGradient);
@@ -45,9 +44,6 @@ public class Mandelbrot : App {
 		shader.SetBuffer(0, "Colors", colors);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
-
-		// apply the texture
-		Graphics.Blit(tex, d);
 		
 		// dispose buffers
 		colors.Dispose();
@@ -68,4 +64,26 @@ public class Mandelbrot : App {
 		float y = center.y + (height / 2);
 		area = new Vector4(x, y, width, height);
 	}
+	
+	// display coordinates
+	
+	public TextMeshProUGUI info;
+
+	private Vector2 converCoords(Vector2 coord) {
+		return new Vector2(coord[0] / (w / area[2]) + area[0], coord[1] / (h / area[3]) - area[1]);
+	}
+	
+	private void Update() {
+		Vector2 coord = converCoords(Input.mousePosition);
+		info.text = "P ( " + coord.x + " / " + coord.y + "i )";
+	}
+
+	// options
+	public void Zoom(string v) { ReRender(); zoom = float.Parse(v); }
+	public void CoordinatesX(string v) { ReRender(); center.x = float.Parse(v); }
+	public void CoordinatesY(string v) { ReRender(); center.y = float.Parse(v); }
+	public void Iterations(float v) { ReRender(); iterations = Mathf.RoundToInt(v); }
+	public void Julia(bool v) { ReRender(); julia = v; }
+	public void CX(string v) { ReRender(); c.x = float.Parse(v); }
+	public void CY(string v) { ReRender(); c.y = float.Parse(v); }
 }

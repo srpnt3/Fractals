@@ -6,10 +6,9 @@ using UnityEngine;
 public class RayMarching2D : App {
 	
 	// variables
-	[Header("Options")]
-	public Vector2 origin = new Vector2(960, 540);
-	[Range(0, 360)] public float direction = 0;
-	[Range(1, 100)] public int steps = 1;
+	private Vector2 origin = new Vector2(960, 540);
+	private float direction = 0;
+	private int steps = 1;
 
 	// lists of the objects
 	private ComputeBuffer shapes;
@@ -27,11 +26,9 @@ public class RayMarching2D : App {
 		objects.Add(new Shape(new Vector2(1739, 180), new Vector2(137, 97), 1, 0, new Vector3(204, 51, 51)));
 	}
 
-	[ImageEffectOpaque]
-	private void OnRenderImage(RenderTexture s, RenderTexture d) {
+	// main render method
+	protected override void Render(RenderTexture s) {
 		
-		// init functions
-		Init();
 		March();
 		InitShapes();
 
@@ -41,10 +38,7 @@ public class RayMarching2D : App {
 		shader.SetBuffer(0, "Shapes", shapes);
 
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
-
-		// apply the texture
-		Graphics.Blit(tex, d);
-
+		
 		// dispose buffers
 		shapes.Dispose();
 	}
@@ -125,4 +119,11 @@ public class RayMarching2D : App {
 			this.color = color;
 		}
 	}
+	
+	// options
+	
+	public void PositionX(string v) { ReRender(); origin.x = float.Parse(v); }
+	public void PositionY(string v) { ReRender(); origin.y = float.Parse(v); }
+	public void Direction(float v) { ReRender(); direction = v; }
+	public void Steps(float v) { ReRender(); steps = Mathf.RoundToInt(v); }
 }

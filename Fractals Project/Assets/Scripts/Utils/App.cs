@@ -1,21 +1,39 @@
 ﻿using System;
 using System.Numerics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
-public class App : MonoBehaviour {
+public abstract class App : MonoBehaviour {
 	
 	// variables
 	public ComputeShader shader;
+	public GameObject options;
 	protected RenderTexture tex;
 	protected Camera cam;
 	protected int w;
 	protected int h;
+
+	// only update when needed
+	private bool update = false;
+	protected void ReRender() { update = true; }
 	
+	protected abstract void Render(RenderTexture s);
+	
+	// render update method
+	[ImageEffectOpaque]
+	private void OnRenderImage(RenderTexture s, RenderTexture d) {
+		Init();
+		if (update) {
+			Render(s);
+			update = false;
+		}
+		Graphics.Blit(tex, d);
+	}
+
 	// init function
-	protected void Init() {
-		cam = GetComponent<Camera>();
+	private void Init() {
 		w = cam.pixelWidth;
 		h = cam.pixelHeight;
 		
@@ -29,13 +47,14 @@ public class App : MonoBehaviour {
 			tex = new RenderTexture(w, h, 32);
 			tex.enableRandomWrite = true;
 			tex.Create();
+			ReRender(); // rerender needed
 		}
 	}
 
+	// below are just camera/player controls
+
 	protected float sens = 10f;
 	protected CameraType cameraType = CameraType.None;
-
-	// below are just controls
 
 	private Controls c;
 	private Vector2 move;
@@ -50,11 +69,29 @@ public class App : MonoBehaviour {
 		c.Default.Cursor.canceled += ctx => cursor = Vector2.zero;
 		c.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
 		c.Default.Tilt.canceled += ctx => tilt = 0;
+		c.Default.ToggleCam.canceled += ctx => { switchCursor(); };
+		c.Default.Back.canceled += ctx => { GetComponent<SceneLoader>().Load(0); };
+		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 	}
 
-	private void OnEnable() { c.Enable(); }
+	private void OnEnable() {
+		cam = GetComponent<Camera>();
+		c.Enable();
+	}
 	private void OnDisable() { c.Disable(); }
 
+	private void switchCursor() {
+		if (cameraType != CameraType.None) {
+			if (Cursor.lockState == CursorLockMode.Locked) {
+				Cursor.lockState = CursorLockMode.None;
+				Cursor.visible = true;
+			} else if (!EventSystem.current.IsPointerOverGameObject()) {
+				Cursor.lockState = CursorLockMode.Locked;
+				Cursor.visible = false;
+			}
+		}
+	}
+	
 	void Update () {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
@@ -62,19 +99,18 @@ public class App : MonoBehaviour {
 					
 					// free view camera controls
 					case CameraType.Free:
+						ReRender();
 						transform.Rotate(-cursor.y * Time.smoothDeltaTime * sens, cursor.x * Time.smoothDeltaTime * sens, -tilt * Time.deltaTime * sens);
 						transform.Translate(new Vector3(move.x * Time.deltaTime * sens, 0, move.y * Time.deltaTime * sens));
 						break;
 					
 					// orbit camera controls
 					case CameraType.Orbit:
+						ReRender();
 						break;
 					
 				}
-				if (Input.GetMouseButtonUp(0)) 
-					Cursor.lockState = CursorLockMode.None;
-			} else if (Input.GetMouseButtonUp(0)) 
-				Cursor.lockState = CursorLockMode.Locked;	
+			}
 		}
 	}
 

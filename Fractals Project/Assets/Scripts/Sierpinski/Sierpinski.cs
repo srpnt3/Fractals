@@ -3,15 +3,11 @@
 public class Sierpinski : App {
 
 	// variables
-	[Header("Options")]
-	[Range(2, 4)] public int n = 3;
-	[Range(1, 9)] public int iterations = 5;
+	private int n = 3;
+	private int iterations = 5;
 
-	[ImageEffectOpaque]
-	private void OnRenderImage(RenderTexture s, RenderTexture d) {
-		
-		// init functions
-		Init();
+	// main render method
+	protected override void Render(RenderTexture s) {
 		
 		// shader
 		shader.SetTexture(0, "Texture", tex);
@@ -20,8 +16,10 @@ public class Sierpinski : App {
 		shader.SetInt("Iterations", iterations);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
-		
-		// apply the texture
-		Graphics.Blit(tex, d);
 	}
+	
+	// options
+	
+	public void N(float v) { ReRender(); n = Mathf.RoundToInt(v); }
+	public void Iterations(float v) { ReRender(); iterations = Mathf.RoundToInt(v); }
 }

@@ -44,10 +44,6 @@ public class AppManager : MonoBehaviour {
 		apps.Add(new App("Ray Marching 3D", true, 0, "", 4));
 		apps.Add(new App("Infinite Spheres", true, 0, "", 5));
 
-		// create corresponding elements
-		/*foreach (App a in apps) {
-			CreateElement(a);
-		}*/
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);
 		}
@@ -114,7 +110,7 @@ public class AppManager : MonoBehaviour {
 	}
 
 	public void LoadSelectedScene() {
-		SceneManager.LoadScene(apps[id - 1].ID);
+		GetComponent<SceneLoader>().Load(apps[id - 1].ID);
 	}
 
 	private class App {
@@ -131,5 +127,9 @@ public class AppManager : MonoBehaviour {
 			this.Date = date;
 			this.ID = id;
 		}
+	}
+
+	public void Quit() {
+		Application.Quit();
 	}
 }
