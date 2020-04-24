@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Numerics;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using Object = UnityEngine.Object;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -55,23 +58,29 @@ public abstract class App : MonoBehaviour {
 
 	protected float sens = 10f;
 	protected CameraType cameraType = CameraType.None;
-
+	
 	private Controls c;
 	private Vector2 move;
 	private Vector2 cursor;
 	private float tilt;
-	
+	protected float deltaZoom;
+	protected bool drag;
+	protected Vector2 dp;
+
 	private void Awake() {
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
 		c.Default.Move.canceled += ctx => move = Vector2.zero;
-		c.Default.Cursor.performed += ctx => cursor = ctx.ReadValue<Vector2>();
-		c.Default.Cursor.canceled += ctx => cursor = Vector2.zero;
+		c.Default.Look.performed += ctx => cursor = ctx.ReadValue<Vector2>();
+		c.Default.Look.canceled += ctx => cursor = Vector2.zero;
 		c.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
 		c.Default.Tilt.canceled += ctx => tilt = 0;
-		c.Default.ToggleCam.canceled += ctx => { switchCursor(); };
+		c.Default.ScreenClick.performed += ctx => { StartDrag(); };
+		c.Default.ScreenClick.canceled += ctx => { EndDrag(); SwitchCursor(); };
 		c.Default.Back.canceled += ctx => { GetComponent<SceneLoader>().Load(0); };
 		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
+		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
+		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 	}
 
 	private void OnEnable() {
@@ -80,7 +89,7 @@ public abstract class App : MonoBehaviour {
 	}
 	private void OnDisable() { c.Disable(); }
 
-	private void switchCursor() {
+	private void SwitchCursor() {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
 				Cursor.lockState = CursorLockMode.None;
@@ -90,6 +99,17 @@ public abstract class App : MonoBehaviour {
 				Cursor.visible = false;
 			}
 		}
+	}
+
+	private void StartDrag() {
+		if (!EventSystem.current.IsPointerOverGameObject()) {
+			drag = true;
+			dp = Input.mousePosition;
+		}
+	}
+
+	private void EndDrag() {
+		drag = false;
 	}
 	
 	void Update () {

@@ -27,7 +27,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""Cursor"",
+                    ""name"": ""Look"",
                     ""type"": ""Value"",
                     ""id"": ""fc37e1d1-2698-44b3-bdcc-6e2fecec7940"",
                     ""expectedControlType"": """",
@@ -43,11 +43,11 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""ToggleCam"",
+                    ""name"": ""ScreenClick"",
                     ""type"": ""Button"",
                     ""id"": ""1121e82c-7cda-4b6b-bd52-2bb8a75380fa"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": ""Scale(factor=3)"",
+                    ""processors"": """",
                     ""interactions"": """"
                 },
                 {
@@ -55,7 +55,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""a5d5821c-f476-4899-b58c-cd54be09a121"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": ""Scale(factor=3)"",
+                    ""processors"": """",
                     ""interactions"": """"
                 },
                 {
@@ -63,7 +63,15 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""type"": ""Button"",
                     ""id"": ""69ac8e04-4f6d-4374-b2ce-55eb194d6f68"",
                     ""expectedControlType"": ""Button"",
-                    ""processors"": ""Scale(factor=3)"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Zoom"",
+                    ""type"": ""Value"",
+                    ""id"": ""f0b7063c-2f6f-4435-aec1-7ef4da07614a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
                     ""interactions"": """"
                 }
             ],
@@ -207,7 +215,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": ""ScaleVector2(x=6,y=6)"",
                     ""groups"": """",
-                    ""action"": ""Cursor"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -218,7 +226,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Cursor"",
+                    ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -229,7 +237,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleCam"",
+                    ""action"": ""ScreenClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -240,7 +248,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ToggleCam"",
+                    ""action"": ""ScreenClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -287,6 +295,50 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Back"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c6bcc600-6a55-4ff7-9b7e-87b2eb9b7619"",
+                    ""path"": ""<Mouse>/scroll/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""3b4f5ef6-cd74-4191-bae1-22969c118343"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""206d9ea2-859e-4fd1-91cf-d0327a03a0d7"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""0f1200af-9a6b-466d-afdb-1f4f2e583dd7"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zoom"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -296,11 +348,12 @@ public class @Controls : IInputActionCollection, IDisposable
         // Default
         m_Default = asset.FindActionMap("Default", throwIfNotFound: true);
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
-        m_Default_Cursor = m_Default.FindAction("Cursor", throwIfNotFound: true);
+        m_Default_Look = m_Default.FindAction("Look", throwIfNotFound: true);
         m_Default_Tilt = m_Default.FindAction("Tilt", throwIfNotFound: true);
-        m_Default_ToggleCam = m_Default.FindAction("ToggleCam", throwIfNotFound: true);
+        m_Default_ScreenClick = m_Default.FindAction("ScreenClick", throwIfNotFound: true);
         m_Default_ToggleOptions = m_Default.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Default_Back = m_Default.FindAction("Back", throwIfNotFound: true);
+        m_Default_Zoom = m_Default.FindAction("Zoom", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -351,21 +404,23 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputActionMap m_Default;
     private IDefaultActions m_DefaultActionsCallbackInterface;
     private readonly InputAction m_Default_Move;
-    private readonly InputAction m_Default_Cursor;
+    private readonly InputAction m_Default_Look;
     private readonly InputAction m_Default_Tilt;
-    private readonly InputAction m_Default_ToggleCam;
+    private readonly InputAction m_Default_ScreenClick;
     private readonly InputAction m_Default_ToggleOptions;
     private readonly InputAction m_Default_Back;
+    private readonly InputAction m_Default_Zoom;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
         public DefaultActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Default_Move;
-        public InputAction @Cursor => m_Wrapper.m_Default_Cursor;
+        public InputAction @Look => m_Wrapper.m_Default_Look;
         public InputAction @Tilt => m_Wrapper.m_Default_Tilt;
-        public InputAction @ToggleCam => m_Wrapper.m_Default_ToggleCam;
+        public InputAction @ScreenClick => m_Wrapper.m_Default_ScreenClick;
         public InputAction @ToggleOptions => m_Wrapper.m_Default_ToggleOptions;
         public InputAction @Back => m_Wrapper.m_Default_Back;
+        public InputAction @Zoom => m_Wrapper.m_Default_Zoom;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -378,21 +433,24 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnMove;
-                @Cursor.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnCursor;
-                @Cursor.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnCursor;
-                @Cursor.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnCursor;
+                @Look.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
+                @Look.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
+                @Look.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLook;
                 @Tilt.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
                 @Tilt.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
                 @Tilt.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
-                @ToggleCam.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleCam;
-                @ToggleCam.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleCam;
-                @ToggleCam.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleCam;
+                @ScreenClick.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
+                @ScreenClick.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
+                @ScreenClick.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
                 @ToggleOptions.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
                 @Back.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnBack;
                 @Back.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnBack;
                 @Back.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnBack;
+                @Zoom.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
+                @Zoom.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
+                @Zoom.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -400,21 +458,24 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
-                @Cursor.started += instance.OnCursor;
-                @Cursor.performed += instance.OnCursor;
-                @Cursor.canceled += instance.OnCursor;
+                @Look.started += instance.OnLook;
+                @Look.performed += instance.OnLook;
+                @Look.canceled += instance.OnLook;
                 @Tilt.started += instance.OnTilt;
                 @Tilt.performed += instance.OnTilt;
                 @Tilt.canceled += instance.OnTilt;
-                @ToggleCam.started += instance.OnToggleCam;
-                @ToggleCam.performed += instance.OnToggleCam;
-                @ToggleCam.canceled += instance.OnToggleCam;
+                @ScreenClick.started += instance.OnScreenClick;
+                @ScreenClick.performed += instance.OnScreenClick;
+                @ScreenClick.canceled += instance.OnScreenClick;
                 @ToggleOptions.started += instance.OnToggleOptions;
                 @ToggleOptions.performed += instance.OnToggleOptions;
                 @ToggleOptions.canceled += instance.OnToggleOptions;
                 @Back.started += instance.OnBack;
                 @Back.performed += instance.OnBack;
                 @Back.canceled += instance.OnBack;
+                @Zoom.started += instance.OnZoom;
+                @Zoom.performed += instance.OnZoom;
+                @Zoom.canceled += instance.OnZoom;
             }
         }
     }
@@ -422,10 +483,11 @@ public class @Controls : IInputActionCollection, IDisposable
     public interface IDefaultActions
     {
         void OnMove(InputAction.CallbackContext context);
-        void OnCursor(InputAction.CallbackContext context);
+        void OnLook(InputAction.CallbackContext context);
         void OnTilt(InputAction.CallbackContext context);
-        void OnToggleCam(InputAction.CallbackContext context);
+        void OnScreenClick(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
+        void OnZoom(InputAction.CallbackContext context);
     }
 }

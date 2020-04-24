@@ -1,8 +1,6 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.PlayerLoop;
 
 public class Mandelbrot : App {
 	
@@ -51,8 +49,8 @@ public class Mandelbrot : App {
 
 	// calculate the viewed area
 	private void CalculateArea() {
-		float width = 4 / zoom;
-		float height = 4 / zoom;
+		float width = 4f / Mathf.Pow(1.1f, zoom);
+		float height = 4f / Mathf.Pow(1.1f, zoom);
 		float r = (float) w / h;
 
 		if (width / height < r) // screen wider than area
@@ -60,30 +58,48 @@ public class Mandelbrot : App {
 		else if (width / height > r) // screen higher than area
 			height = width / w * h;
 		
-		float x = center.x - (width / 2);
-		float y = center.y + (height / 2);
+		float x = center.x - width / 2f;
+		float y = -center.y + height / 2f;
 		area = new Vector4(x, y, width, height);
 	}
 	
 	// display coordinates
-	
 	public TextMeshProUGUI info;
-
-	private Vector2 converCoords(Vector2 coord) {
-		return new Vector2(coord[0] / (w / area[2]) + area[0], coord[1] / (h / area[3]) - area[1]);
+	
+	private Vector2 converCoords(Vector2 coords) {
+		return new Vector2(coords[0] / (w / area[2]) + area[0], coords[1] / (h / area[3]) - area[1]);
 	}
 	
 	private void Update() {
-		Vector2 coord = converCoords(Input.mousePosition);
-		info.text = "P ( " + coord.x + " / " + coord.y + "i )";
+		
+		// update coordinates
+		Vector2 coords = converCoords(Input.mousePosition);
+		info.text = "P ( " + coords.x + " / " + coords.y + "i )";
+
+		// controls
+		if (Math.Abs(deltaZoom) > 0) {
+			zoom += deltaZoom * Time.deltaTime;
+			if (zoom < 1) zoom = 1;
+			center = coords;
+			CalculateArea();
+			Vector2 d = center - converCoords(Input.mousePosition);
+			center += d;
+			ReRender();	
+		}
+
+		if (drag) {
+			center += converCoords(dp) - converCoords(Input.mousePosition);
+			dp = Input.mousePosition;
+			ReRender();
+		}
 	}
 
 	// options
-	public void Zoom(string v) { ReRender(); zoom = float.Parse(v); }
-	public void CoordinatesX(string v) { ReRender(); center.x = float.Parse(v); }
-	public void CoordinatesY(string v) { ReRender(); center.y = float.Parse(v); }
-	public void Iterations(float v) { ReRender(); iterations = Mathf.RoundToInt(v); }
-	public void Julia(bool v) { ReRender(); julia = v; }
-	public void CX(string v) { ReRender(); c.x = float.Parse(v); }
-	public void CY(string v) { ReRender(); c.y = float.Parse(v); }
+	public void Zoom(string v) { zoom = float.Parse(v); if (zoom < 1) zoom = 1; ReRender(); }
+	public void CoordinatesX(string v) { center.x = float.Parse(v); ReRender(); }
+	public void CoordinatesY(string v) { center.y = float.Parse(v); ReRender(); }
+	public void Iterations(float v) { iterations = Mathf.RoundToInt(v); ReRender(); }
+	public void Julia(bool v) { julia = v; ReRender(); }
+	public void CX(string v) { c.x = float.Parse(v); ReRender(); }
+	public void CY(string v) { c.y = float.Parse(v); ReRender(); }
 }

@@ -14,7 +14,7 @@
                     "interactions": ""
                 },
                 {
-                    "name": "Cursor",
+                    "name": "Look",
                     "type": "Value",
                     "id": "fc37e1d1-2698-44b3-bdcc-6e2fecec7940",
                     "expectedControlType": "",
@@ -30,11 +30,11 @@
                     "interactions": ""
                 },
                 {
-                    "name": "ToggleCam",
+                    "name": "ScreenClick",
                     "type": "Button",
                     "id": "1121e82c-7cda-4b6b-bd52-2bb8a75380fa",
                     "expectedControlType": "Button",
-                    "processors": "Scale(factor=3)",
+                    "processors": "",
                     "interactions": ""
                 },
                 {
@@ -42,7 +42,7 @@
                     "type": "Button",
                     "id": "a5d5821c-f476-4899-b58c-cd54be09a121",
                     "expectedControlType": "Button",
-                    "processors": "Scale(factor=3)",
+                    "processors": "",
                     "interactions": ""
                 },
                 {
@@ -50,7 +50,15 @@
                     "type": "Button",
                     "id": "69ac8e04-4f6d-4374-b2ce-55eb194d6f68",
                     "expectedControlType": "Button",
-                    "processors": "Scale(factor=3)",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Zoom",
+                    "type": "Value",
+                    "id": "f0b7063c-2f6f-4435-aec1-7ef4da07614a",
+                    "expectedControlType": "",
+                    "processors": "",
                     "interactions": ""
                 }
             ],
@@ -194,7 +202,7 @@
                     "interactions": "",
                     "processors": "ScaleVector2(x=6,y=6)",
                     "groups": "",
-                    "action": "Cursor",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -205,7 +213,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Cursor",
+                    "action": "Look",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -216,7 +224,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleCam",
+                    "action": "ScreenClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -227,7 +235,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ToggleCam",
+                    "action": "ScreenClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -274,6 +282,50 @@
                     "action": "Back",
                     "isComposite": false,
                     "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c6bcc600-6a55-4ff7-9b7e-87b2eb9b7619",
+                    "path": "<Mouse>/scroll/y",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "3b4f5ef6-cd74-4191-bae1-22969c118343",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "206d9ea2-859e-4fd1-91cf-d0327a03a0d7",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "0f1200af-9a6b-466d-afdb-1f4f2e583dd7",
+                    "path": "<Gamepad>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 }
             ]
         }

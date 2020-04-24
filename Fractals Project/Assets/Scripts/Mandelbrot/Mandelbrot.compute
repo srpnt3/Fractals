@@ -36,7 +36,7 @@ Cmplx Multiply(Cmplx a, Cmplx b) {
 }
 
 double GetAbsolute(Cmplx x) {
-	return (double)sqrt((double)pow(x.re, 2) + (double)pow(x.im, 2));
+	return sqrt(x.re * x.re + x.im * x.im);
 }
 
 // the math
