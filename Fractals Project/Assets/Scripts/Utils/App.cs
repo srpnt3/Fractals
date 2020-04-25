@@ -53,6 +53,27 @@ public abstract class App : MonoBehaviour {
 			ReRender(); // rerender needed
 		}
 	}
+	
+	// option stuff
+	
+	public void SetOption(string n, object value) {
+		try {
+			GetType().GetProperty(n).SetValue(this, value);
+		} catch (Exception e) {
+			Debug.LogError("Invalid option name");
+			throw e;
+		}
+	}
+
+	public object GetOption(string n) {
+		try {
+			ReRender();
+			return GetType().GetProperty(n).GetValue(this);
+		} catch (Exception e) {
+			Debug.LogError("Invalid option name");
+			throw e;
+		}
+	}
 
 	// below are just camera/player controls
 

@@ -50,7 +50,7 @@ public class RayMarching2D : App {
 			float x = GetDistance(pos, shape);
 			if (x < d) d = Mathf.RoundToInt(x);
 		}
-		visuals.Add(new Shape(pos, new Vector2(d, 0), 0, 1, new Vector3(246, 246, 246)));
+		visuals.Add(new Shape(pos, new Vector2(Mathf.Abs(d), 0), 0, 1, new Vector3(246, 246, 246)));
 		return d;
 	}
 
@@ -63,7 +63,7 @@ public class RayMarching2D : App {
 				pos.x + d * Mathf.Cos(direction * (Mathf.PI / 180)),
 				pos.y + d * Mathf.Sin(direction * (Mathf.PI / 180))
 			);
-			if (d < 1 || d > 1000) break;
+			if (Mathf.Abs(d) < 1 || Mathf.Abs(d) > 1000) break;
 		}
 		visuals.Add(new Shape(origin, new Vector3(pos.x, pos.y, 1), 2, 0, new Vector3(246, 246, 246)));
 	}
@@ -102,6 +102,37 @@ public class RayMarching2D : App {
 	private Vector2 Abs(Vector2 x) {
 		return new Vector2(Mathf.Abs(x[0]), Mathf.Abs(x[1]));
 	}
+	
+	// controls
+
+	private bool posSet;
+	
+	private void Update() {
+		
+		if (drag) {
+			if (posSet) {
+				Vector2 d = origin - new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+				//steps = Mathf.RoundToInt(d.magnitude / 10f);
+				if (steps < 1) steps = 1;
+				if (steps > 100) steps = 100;
+				direction = getAngle(d);
+			} else {
+				posSet = true;
+				origin = Input.mousePosition;
+			}
+			ReRender();
+		} else if (posSet) {
+			posSet = false;
+		}
+	}
+
+	private float getAngle(Vector2 p) {
+		float a = Vector2.SignedAngle(Vector2.left, p);
+		if (a < 0) {
+			a += 360;
+		}
+		return a;
+	}
 
 	// the shape object
 	struct Shape {
@@ -121,9 +152,19 @@ public class RayMarching2D : App {
 	}
 	
 	// options
+
+	public Vector2 O_Position {
+		get => origin;
+		set => origin = value;
+	}
 	
-	public void PositionX(string v) { ReRender(); origin.x = float.Parse(v); }
-	public void PositionY(string v) { ReRender(); origin.y = float.Parse(v); }
-	public void Direction(float v) { ReRender(); direction = v; }
-	public void Steps(float v) { ReRender(); steps = Mathf.RoundToInt(v); }
+	public float O_Direction {
+		get => direction;
+		set => direction = value;
+	}
+	
+	public float O_Steps {
+		get => steps;
+		set => steps = Mathf.RoundToInt(value);
+	}
 }

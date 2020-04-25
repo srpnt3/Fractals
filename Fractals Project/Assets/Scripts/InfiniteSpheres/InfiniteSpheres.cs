@@ -31,9 +31,24 @@ public class InfiniteSpheres : App {
 	}
 	
 	// options
+
+	public float O_Radius {
+		get => radius;
+		set => radius = value;
+	}
+
+	public float O_Fog {
+		get => fogStrength;
+		set => fogStrength = value;
+	}
 	
-	public void Radius(float v) { ReRender(); radius = v; }
-	public void Fog(float v) { ReRender(); fogStrength = v; }
-	public void Repeat(bool v) { ReRender(); repeat = v; }
-	public void Invert(bool v) { ReRender(); invert = v; }
+	public bool O_Repeat {
+		get => repeat;
+		set => repeat = value;
+	}
+	
+	public bool O_Invert {
+		get => invert;
+		set => invert = value;
+	}
 }

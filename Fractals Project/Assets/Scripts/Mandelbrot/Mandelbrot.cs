@@ -95,11 +95,29 @@ public class Mandelbrot : App {
 	}
 
 	// options
-	public void Zoom(string v) { zoom = float.Parse(v); if (zoom < 1) zoom = 1; ReRender(); }
-	public void CoordinatesX(string v) { center.x = float.Parse(v); ReRender(); }
-	public void CoordinatesY(string v) { center.y = float.Parse(v); ReRender(); }
-	public void Iterations(float v) { iterations = Mathf.RoundToInt(v); ReRender(); }
-	public void Julia(bool v) { julia = v; ReRender(); }
-	public void CX(string v) { c.x = float.Parse(v); ReRender(); }
-	public void CY(string v) { c.y = float.Parse(v); ReRender(); }
+
+	public float O_Zoom {
+		get => zoom;
+		set => zoom = value;
+	}
+	
+	public Vector2 O_Coordinates {
+		get => center;
+		set => center = value;
+	}
+	
+	public float O_Iterations {
+		get => iterations;
+		set => iterations = Mathf.RoundToInt(value);
+	}
+	
+	public bool O_Julia {
+		get => julia;
+		set => julia = value;
+	}
+	
+	public Vector2 O_C {
+		get => c;
+		set => c = value;
+	}
 }
