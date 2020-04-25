@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Numerics;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using Object = UnityEngine.Object;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -98,7 +94,7 @@ public abstract class App : MonoBehaviour {
 		c.Default.Tilt.canceled += ctx => tilt = 0;
 		c.Default.ScreenClick.performed += ctx => { StartDrag(); };
 		c.Default.ScreenClick.canceled += ctx => { EndDrag(); SwitchCursor(); };
-		c.Default.Back.canceled += ctx => { GetComponent<SceneLoader>().Load(0); };
+		c.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; GetComponent<SceneLoader>().Load(0); };
 		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;

@@ -19,7 +19,14 @@ public class Sierpinski : App {
 	}
 	
 	// options
+
+	public float O_N {
+		get => n;
+		set => n = Mathf.RoundToInt(value);
+	}
 	
-	public void N(float v) { ReRender(); n = Mathf.RoundToInt(v); }
-	public void Iterations(float v) { ReRender(); iterations = Mathf.RoundToInt(v); }
+	public float O_Iterations {
+		get => iterations;
+		set => iterations = Mathf.RoundToInt(value);
+	}
 }

@@ -38,11 +38,20 @@ public class AppManager : MonoBehaviour {
 		date = content.transform.GetChild(3).GetChild(1).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
 		
 		// create all apps
-		apps.Add(new App("Mandelbrot", false, 3670, "02 FEB", 1));
-		apps.Add(new App("Sierpinski", false, 1830, "11 FEB", 2));
-		apps.Add(new App("Ray Marching 2D", false, 5736, "11 FEB", 3));
-		apps.Add(new App("Ray Marching 3D", true, 0, "", 4));
-		apps.Add(new App("Infinite Spheres", true, 0, "", 5));
+		apps.Add(new App("Mandelbrot", false, 4640, "02 FEB", 1, 
+			"Press R to open the options menu in which you can modify certain variables." +
+			"\n\nUse the mouse to move around and the scroll wheel to zoom."));
+		apps.Add(new App("Sierpinski", false, 1800, "11 FEB", 2, 
+			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Ray Marching 2D", false, 6370, "11 FEB", 3, 
+			"Press R to open the options menu in which you can modify certain variables." +
+			"\n\nClick to set the starting position of the ray and drag the mouse to control the direction."));
+		apps.Add(new App("Ray Marching 3D", true, 2710, "28 MAR", 4, 
+			"In Progress..."));
+		apps.Add(new App("Infinite Spheres", true, 4000, "29 MAR", 5, 
+			"Press R to open the options menu in which you can modify certain variables." +
+			"\n\nClick to toggle between a normal mouse and the camera controls." +
+			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
 
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);
@@ -103,9 +112,9 @@ public class AppManager : MonoBehaviour {
 		// update the content
 		App a = apps[id - 1];
 		title.text = a.Name;
-		text.text = "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. ";
+		text.text = a.Description;
 		type.text = a.Type ? "3D" : "2D";
-		size.text = Math.Round(a.Size / 10f) / 100f + " KB";
+		size.text = (Math.Round(a.Size / 10f) / 100f).ToString("0.00") + " KB";
 		date.text = a.Date;
 	}
 
@@ -115,17 +124,19 @@ public class AppManager : MonoBehaviour {
 
 	private class App {
 		public string Name { get; }
+		public string Description { get; }
 		public bool Type { get; }
 		public short Size { get; }
 		public string Date { get; }
 		public byte ID { get; }
 
-		public App(string name, bool type, short size, string date, byte id) {
-			this.Name = name;
-			this.Type = type;
-			this.Size = size;
-			this.Date = date;
-			this.ID = id;
+		public App(string name, bool type, short size, string date, byte id, String description) {
+			Name = name;
+			Description = description; 
+			Type = type;
+			Size = size;
+			Date = date;
+			ID = id;
 		}
 	}
 
