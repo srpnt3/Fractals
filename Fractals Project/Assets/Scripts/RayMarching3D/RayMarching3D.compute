@@ -8,26 +8,48 @@ Texture2D<float4> Source;
 float4x4 CamToWorld;
 float4x4 CamInverseProjection;
 
+// variables
+float3 Sun;
+
+static const float epsilon = 0.0001f;
+
 // ray
 struct Ray {
     float3 origin;
     float3 direction;
 };
 
-// vector lenght
-float Lenght(float3 p) {
-	return sqrt(pow(p.x, 2) + pow(p.y, 2) + pow(p.z, 2));
-}
-
 // sphere distance estimator
 float DESphere(float3 p, float r) {
-	return Lenght(p) - r;
+	return length(p) - r;
 }
 
-// the distance to the sphere
-float MinDistance(float3 pos) {
-	float3 spherePos = float3(0, 0, 0);
-	return DESphere(spherePos - pos, 1);
+// box distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+float DEBox (float3 p, float3 s) {
+	float3 q = abs(p) - s;
+	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
+}
+
+// the distance to the scene
+float DE(float3 pos) {
+	
+	const float l = 5;
+	float d[l] = {
+		DESphere(float3(0, .3, -.5) - pos, 1),
+		DESphere(float3(1, 1, 2) - pos, .5),
+		DESphere(float3(-2, 0, .5) - pos, .7),
+		DEBox(float3(0, -1, 0) - pos, float3(5, .05, 5)),
+		DEBox(float3(3, 0, 3) - pos, float3(.5, .5, .5))
+	};
+	
+	float dMin = d[0];
+	for(int i = 1; i < l; i++) {
+		if (d[i] < dMin) {
+			dMin = d[i];
+		}
+	}
+	
+	return max(dMin, -DESphere(float3(3, 0, 3) - pos, .65));
 }
 
 // from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
@@ -47,10 +69,59 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(origin, direction);
 }
 
-// march along the ray
-Ray March(Ray ray, float distance) {
-	ray.origin += ray.direction * distance;
-	return ray;
+// from https://github.com/SebLague
+float3 EstimateNormal(float3 p) {
+    float x = DE(float3(p.x+epsilon,p.y,p.z)) - DE(float3(p.x-epsilon,p.y,p.z));
+    float y = DE(float3(p.x,p.y+epsilon,p.z)) - DE(float3(p.x,p.y-epsilon,p.z));
+    float z = DE(float3(p.x,p.y,p.z+epsilon)) - DE(float3(p.x,p.y,p.z-epsilon));
+    return normalize(float3(x,y,z));
+}
+
+// difference between two vectors
+float Diff(float3 a, float3 b) {
+	return 1/(length(float3(abs(a.x - b.x), abs(a.y - b.y), abs(a.z - b.z))) + .1) / 6;
+}
+
+// result of the march
+struct MarchData {
+	bool hit;
+	float3 pos;
+	float fog;
+};
+
+// march the ray and return the result
+MarchData March(Ray ray) {
+	
+	float3 cam = ray.origin;
+	
+	for (uint i = 0; i < 1000; i++) {
+		
+		float dst = DE(ray.origin);
+		
+		if (length(dst - cam) > 1000) {
+			MarchData m;
+			m.hit = false;
+			m.pos = ray.origin;
+			m.fog = max(1 - length(ray.origin - cam) / 40, 0);
+			return m;
+		}
+		
+		if (dst < epsilon) {
+			MarchData m;
+			m.hit = true;
+			m.pos = ray.origin;// + ray.direction * epsilon;
+			m.fog = max(1 - length(ray.origin - cam) / 40, 0);
+			return m;
+		}
+		
+		ray.origin += ray.direction * dst;
+	}
+	
+	MarchData m;
+	m.hit = false;
+	m.pos = ray.origin;
+	m.fog = max(1 - length(ray.origin - cam) / 40, 0);
+	return m;
 }
 
 // main function
@@ -58,44 +129,33 @@ Ray March(Ray ray, float distance) {
 void CSMain (uint3 id : SV_DispatchThreadID) {
 	
 	// add the background
-	Texture[id.xy] = Source[id.xy];
+	Texture[id.xy] = float4(0, 0, 0, 0);
 	
 	// convert into range [-1, 1]
 	float w, h; Texture.GetDimensions(w, h);
 	float2 uv = id.xy / float2(w, h) * 2 - 1;
 	
-	// create the ray
+	// create the ray & set color
 	Ray ray = CreateCameraRay(uv);
-	float ol = 0; // outline
-	float3 eye = ray.origin; // camera position
-	float dst = 0; // current distance
-	
-	// marching
-	for(uint i = 0; i < 1000; i++) {
-		
-		// calculate distance
-		dst = MinDistance(ray.origin);
-		
-		// ray too far away
-		if (Lenght(ray.origin - eye) > 100) {
-			break;
-		}
-		
-		// ray hits an object
-		if (dst < 0.0001) {
+	float s = Diff(normalize(ray.direction), normalize(-Sun));
+	MarchData m = March(ray);
+	if (m.hit) {
+		Ray sun;
+		sun.origin = m.pos += EstimateNormal(m.pos) * epsilon * 30;
+		sun.direction = -Sun;
+		if (!March(sun).hit) {
 			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0);
-			break;
+		} else {
+			Texture[id.xy] = float4(0.08, 0.02, 0.02, 0);
 		}
-		
-		// outline
-		if (dst < 0.01) {
-			ol += dst * 2;
-		}
-		
-		// repeat
-		ray = March(ray, dst);
+		Texture[id.xy] = (Source[id.xy] * (1 - s) + float4(0.46, 0.17, 0.37, 0) * s) * (1 - m.fog) + Texture[id.xy] * m.fog;
+	} else {
+	
+		// add sun / "skybox" and background
+		Texture[id.xy] = Source[id.xy] * (1 - s) + float4(0.46, 0.17, 0.37, 0) * s + Texture[id.xy];
 	}
 	
-	// add outline
-	Texture[id.xy] += ol;
+	// add sun / "skybox" and background
+	/*float s = Diff(normalize(ray.direction), normalize(-Sun));
+	Texture[id.xy] = Source[id.xy] * (1 - s) + float4(0.46, 0.17, 0.37, 0) * s + Texture[id.xy];*/
 }

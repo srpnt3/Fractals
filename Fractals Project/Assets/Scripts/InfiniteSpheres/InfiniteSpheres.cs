@@ -4,10 +4,8 @@ public class InfiniteSpheres : App {
 
 	// variables
 	private float radius = 1;
-	private float fogStrength = 1;
 	private bool repeat = false;
 	private bool invert= false;
-	private bool outline = false;
 
 	private void Start() {
 		cameraType = CameraType.Free;
@@ -20,10 +18,8 @@ public class InfiniteSpheres : App {
 		shader.SetTexture(0, "Texture", tex);
 		shader.SetTexture(0, "Source", s);
 		shader.SetFloat("Radius", radius);
-		shader.SetFloat("FogStrength", fogStrength);
 		shader.SetBool("Repeat", repeat);
 		shader.SetBool("Invert", invert);
-		shader.SetBool("Outline", outline);
 		shader.SetMatrix("CamToWorld", cam.cameraToWorldMatrix);
 		shader.SetMatrix("CamInverseProjection", cam.projectionMatrix.inverse);
 		
@@ -35,11 +31,6 @@ public class InfiniteSpheres : App {
 	public float O_Radius {
 		get => radius;
 		set => radius = value;
-	}
-
-	public float O_Fog {
-		get => fogStrength;
-		set => fogStrength = value;
 	}
 	
 	public bool O_Repeat {

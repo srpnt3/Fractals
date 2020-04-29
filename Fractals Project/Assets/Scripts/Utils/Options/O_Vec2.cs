@@ -10,6 +10,7 @@ public class O_Vec2 : MonoBehaviour {
 	public TMP_InputField inputFieldA;
 	public TMP_InputField inputFieldB;
 	private bool typing;
+	private bool ready;
 
 	private void Start() {
 		inputFieldA.text = ((Vector2) app.GetOption(optionName)).x.ToString();
@@ -19,6 +20,7 @@ public class O_Vec2 : MonoBehaviour {
 		transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
 		inputFieldA.textComponent.alignment = TextAlignmentOptions.MidlineRight;
 		inputFieldB.textComponent.alignment = TextAlignmentOptions.MidlineRight;
+		ready = true;
 	}
 
 	private void Update() {
@@ -29,7 +31,9 @@ public class O_Vec2 : MonoBehaviour {
 	}
 
 	public void OnValueChanged() {
-		app.SetOption(optionName, new Vector2(float.Parse(inputFieldA.text), float.Parse(inputFieldB.text)));
+		if (ready) {
+			app.SetOption(optionName, new Vector2(float.Parse(inputFieldA.text), float.Parse(inputFieldB.text)));
+		}
 	}
 
 	public void OnSelect() {

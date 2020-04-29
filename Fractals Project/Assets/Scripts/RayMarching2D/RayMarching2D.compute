@@ -17,6 +17,7 @@ struct Shape {
 StructuredBuffer<Shape> Shapes;
 
 // distance estimators
+
 float Length(float2 a) {
 	return sqrt(a.x * a.x + a.y * a.y);
 }
@@ -25,6 +26,7 @@ float DECircle(float2 c, float2 pos, float radius) { // c: your coords, pos: cir
 	return Length(c - pos) - radius;
 }
 
+// from https://iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm
 float DEBox(float2 c, float2 pos, float2 size) { // c: your coords, pos: box position, radius: box size
 	float2 d = abs(c - pos) - size;
 	return Length(max(d, float2(0, 0))) + min(max(d.x, d.y), 0);

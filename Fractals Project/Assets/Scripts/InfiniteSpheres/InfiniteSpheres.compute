@@ -6,10 +6,8 @@ Texture2D<float4> Source;
 
 // variables
 float Radius;
-float FogStrength;
 bool Repeat;
 bool Invert;
-bool Outline;
 
 // matrixes
 float4x4 CamToWorld;
@@ -115,11 +113,6 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 		ray = March(ray, dst);
 	}
 	
-	// add outline
-	if (Outline) {
-		Texture[id.xy] += ol;
-	};
-	
 	// add fog
-	Texture[id.xy] *= (1 - (fog * FogStrength));
+	Texture[id.xy] *= (1 - fog);
 }

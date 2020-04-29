@@ -47,7 +47,9 @@ public class AppManager : MonoBehaviour {
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to set the starting position of the ray and drag the mouse to control the direction."));
 		apps.Add(new App("Ray Marching 3D", true, 2710, "28 MAR", 4, 
-			"In Progress..."));
+			"Press R to open the options menu in which you can modify certain variables." +
+			"\n\nClick to toggle between a normal mouse and the camera controls." +
+			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
 		apps.Add(new App("Infinite Spheres", true, 4000, "29 MAR", 5, 
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to toggle between a normal mouse and the camera controls." +

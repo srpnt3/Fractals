@@ -82,6 +82,7 @@ public class RayMarching2D : App {
 	}
 	
 	// distance estimators
+	
 	private float GetDistance(Vector2 pos, Shape shape) {
 		return shape.type == 0 ? DECircle(pos, shape.pos, shape.size[0]) : DESquare(pos, shape.pos, shape.size);
 	}
@@ -94,6 +95,7 @@ public class RayMarching2D : App {
 		return Length(pos - c) - radius;
 	}
 
+	// from https://iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm
 	private float DESquare(Vector2 c, Vector2 pos, Vector2 size) {
 		Vector2 d = Abs(pos - c) - size;
 		return Length(Vector2.Max(d, new Vector2(0, 0))) + Mathf.Min(Mathf.Max(d[0], d[1]), 0);
