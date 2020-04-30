@@ -73,6 +73,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Screenshot"",
+                    ""type"": ""Button"",
+                    ""id"": ""75bb3290-d3ff-431c-9508-828dba69c5cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -339,6 +347,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Zoom"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b4989325-1692-4e68-bfe0-a0ecb7d06849"",
+                    ""path"": ""<Keyboard>/f12"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e5564fee-4dd7-46e3-9958-fd65260a3f63"",
+                    ""path"": ""<Gamepad>/select"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -354,6 +384,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Default_ToggleOptions = m_Default.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Default_Back = m_Default.FindAction("Back", throwIfNotFound: true);
         m_Default_Zoom = m_Default.FindAction("Zoom", throwIfNotFound: true);
+        m_Default_Screenshot = m_Default.FindAction("Screenshot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -410,6 +441,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Default_ToggleOptions;
     private readonly InputAction m_Default_Back;
     private readonly InputAction m_Default_Zoom;
+    private readonly InputAction m_Default_Screenshot;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
@@ -421,6 +453,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @ToggleOptions => m_Wrapper.m_Default_ToggleOptions;
         public InputAction @Back => m_Wrapper.m_Default_Back;
         public InputAction @Zoom => m_Wrapper.m_Default_Zoom;
+        public InputAction @Screenshot => m_Wrapper.m_Default_Screenshot;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -451,6 +484,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Zoom.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnZoom;
+                @Screenshot.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenshot;
+                @Screenshot.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenshot;
+                @Screenshot.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenshot;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -476,6 +512,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
+                @Screenshot.started += instance.OnScreenshot;
+                @Screenshot.performed += instance.OnScreenshot;
+                @Screenshot.canceled += instance.OnScreenshot;
             }
         }
     }
@@ -489,5 +528,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnToggleOptions(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
+        void OnScreenshot(InputAction.CallbackContext context);
     }
 }

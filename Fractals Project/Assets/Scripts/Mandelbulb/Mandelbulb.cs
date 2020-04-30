@@ -7,6 +7,7 @@ public class Mandelbulb : App {
 	private float power = 11;
 	private int steps = 100;
 	private int iterations = 8;
+	private float mix = 0.5f;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
@@ -24,6 +25,7 @@ public class Mandelbulb : App {
 		shader.SetFloat("Power", power);
 		shader.SetInt("Steps", steps);
 		shader.SetInt("Iterations", iterations);
+		shader.SetFloat("Mix", mix);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
 	}
@@ -43,5 +45,10 @@ public class Mandelbulb : App {
 	public float O_Iterations {
 		get => iterations;
 		set => iterations = Mathf.RoundToInt(value);
+	}
+	
+	public float O_Mix {
+		get => mix;
+		set => mix = value;
 	}
 }

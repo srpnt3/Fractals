@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.IO;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -50,7 +51,28 @@ public abstract class App : MonoBehaviour {
 			ReRender(); // rerender needed
 		}
 	}
-	
+
+	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html and modified
+	private IEnumerator TakeScreenshot() {
+
+		// prepare
+		yield return null;
+		options.transform.parent.gameObject.SetActive(false);
+		ReRender();
+ 
+		// take
+		yield return new WaitForEndOfFrame();
+		String path = Application.persistentDataPath + "/screenshots/";
+		String name = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+		ScreenCapture.CaptureScreenshot(path + name);
+		Debug.Log("Screenshot saved as " + name);
+		yield return null;
+ 
+		// reset
+		options.transform.parent.gameObject.SetActive(true);
+		ReRender();
+	}
+
 	// option stuff
 	
 	public void SetOption(string n, object value) {
@@ -101,10 +123,12 @@ public abstract class App : MonoBehaviour {
 		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;
+		c.Default.Screenshot.canceled += ctx => { StartCoroutine(TakeScreenshot()); };
 	}
 
 	// enable controls
 	private void OnEnable() {
+		Directory.CreateDirectory(Application.persistentDataPath + "/screenshots");
 		cam = GetComponent<Camera>();
 		c.Enable();
 	}
