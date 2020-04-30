@@ -11,6 +11,7 @@ float4x4 CamInverseProjection;
 // variables
 float3 Sun;
 
+// constants
 static const float epsilon = 0.0001f;
 
 // ray
@@ -141,7 +142,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	MarchData m = March(ray);
 	if (m.hit) {
 		Ray sun;
-		sun.origin = m.pos += EstimateNormal(m.pos) * epsilon * 30;
+		sun.origin = m.pos += EstimateNormal(m.pos) * epsilon * 10;
 		sun.direction = -Sun;
 		if (!March(sun).hit) {
 			Texture[id.xy] = float4(0.8, 0.2, 0.2, 0);

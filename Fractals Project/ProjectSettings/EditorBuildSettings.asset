@@ -23,4 +23,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/InfiniteSpheres.unity
     guid: 921e01f25e110e7488217b0daaa6414e
+  - enabled: 1
+    path: Assets/Scenes/Mandelbulb.unity
+    guid: 452249e557a60c343b157f9dd74c7dec
   m_configObjects: {}

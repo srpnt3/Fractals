@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -76,6 +77,7 @@ public abstract class App : MonoBehaviour {
 	protected float sens = 10f;
 	protected CameraType cameraType = CameraType.None;
 	
+	// input variables
 	private Controls c;
 	private Vector2 move;
 	private Vector2 cursor;
@@ -84,6 +86,7 @@ public abstract class App : MonoBehaviour {
 	protected bool drag;
 	protected Vector2 dp;
 
+	// register all controls
 	private void Awake() {
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
@@ -100,12 +103,16 @@ public abstract class App : MonoBehaviour {
 		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 	}
 
+	// enable controls
 	private void OnEnable() {
 		cam = GetComponent<Camera>();
 		c.Enable();
 	}
+	
+	// disable controls
 	private void OnDisable() { c.Disable(); }
 
+	// switch the cursor
 	private void SwitchCursor() {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
@@ -118,6 +125,7 @@ public abstract class App : MonoBehaviour {
 		}
 	}
 
+	// drag start
 	private void StartDrag() {
 		if (!EventSystem.current.IsPointerOverGameObject()) {
 			drag = true;
@@ -125,10 +133,12 @@ public abstract class App : MonoBehaviour {
 		}
 	}
 
+	// drag end
 	private void EndDrag() {
 		drag = false;
 	}
 	
+	// update
 	void Update () {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
@@ -136,21 +146,65 @@ public abstract class App : MonoBehaviour {
 					
 					// free view camera controls
 					case CameraType.Free:
-						ReRender();
 						transform.Rotate(-cursor.y * Time.smoothDeltaTime * sens, cursor.x * Time.smoothDeltaTime * sens, -tilt * Time.deltaTime * sens);
 						transform.Translate(new Vector3(move.x * Time.deltaTime * sens, 0, move.y * Time.deltaTime * sens));
+						ReRender();
 						break;
 					
 					// orbit camera controls
 					case CameraType.Orbit:
+						Vector3 pos = transform.position;
+						float r = pos.magnitude - deltaZoom * Time.smoothDeltaTime * sens / 30;
+						Vector2 angles = CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * Time.smoothDeltaTime * sens, -cursor.y * Time.smoothDeltaTime * sens);
+						Vector3 vars = ClampOrbitVars(r, angles);
+						transform.position = SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
+						transform.LookAt(new Vector3(0,0,0));
 						ReRender();
 						break;
 					
 				}
 			}
 		}
+
+		Vector3 ClampOrbitVars(float r, Vector2 angles) {
+			r = Mathf.Clamp(r, 1, 3);
+			if (angles.x < 0) angles.x += 360;
+			if (angles.x >= 360) angles.x -= 360;
+			angles.y = Mathf.Clamp(angles.y, -80, 80);
+			return new Vector3(angles.x, angles.y, r);
+		}
 	}
 
+	// convert spherical coordinates to a point on a unit sphere
+	protected Vector3 SphericalCoordsToCartesianCoords(float azimuth, float elevation) {
+		float x = Mathf.Cos(ToRadians(azimuth)) * Mathf.Cos(ToRadians(elevation));
+		float y = Mathf.Sin(ToRadians(elevation));
+		float z = Mathf.Sin(ToRadians(azimuth)) * Mathf.Cos(ToRadians(elevation));
+		return new Vector3(x, y, z).normalized; // just in case
+
+		// convert to radians
+		float ToRadians(float angle) {
+			return angle * Mathf.PI / 180;
+		}
+	}
+
+	// convert a point on a unit sphere to spherical coordinates
+	protected Vector2 CartesianCoordsToSphericalCoords(Vector3 c) {
+		c.Normalize(); // just in case
+		float elevation = ToDegree(Mathf.Atan(c.y / Mathf.Sqrt(c.x * c.x + c.z * c.z)));
+		float azimuth = 90 - ToDegree(Mathf.Atan(c.x / c.z));
+		if (c.z < 0) azimuth += 180;
+		return new Vector2(azimuth, elevation);
+		
+		// convert to degrees
+		float ToDegree(float angle) {
+			float a = angle / Mathf.PI * 180;
+			return a;
+		}
+	}
+	
+	
+	
 	protected enum CameraType {
 		None, Orbit, Free
 	}

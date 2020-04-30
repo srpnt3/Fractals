@@ -1,0 +1,107 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// matrixes
+float4x4 CamToWorld;
+float4x4 CamInverseProjection;
+
+// variables
+float Power;
+int Steps;
+int Iterations;
+
+// constants
+static const float epsilon = 0.0001;
+
+// ray
+struct Ray {
+    float3 origin;
+    float3 direction;
+};
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateRay(float3 origin, float3 direction) {
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateCameraRay(float2 uv) {
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    return CreateRay(origin, direction);
+}
+
+// mandelbulb distance estimator from http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
+float2 DE(float3 p) {
+    float3 z = p;
+	float dr = 1.0;
+	float r = 0.0;
+
+	int i = 0;
+	while(i < Iterations) {
+		r = length(z);
+
+		if (r > 2) break;
+        
+		// convert to polar coordinates
+		float theta = acos(z.z / r);
+		float phi = atan2(z.y, z.x);
+		dr = pow(r, Power - 1.0) * Power * dr + 1.0;
+
+		// scale and rotate the point
+		float zr = pow(r, Power);
+		theta = theta * Power;
+		phi = phi * Power;
+		
+		// convert back to cartesian coordinates
+		z = zr * float3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+		z += p;
+		
+		// next iteration
+		i++;
+	}
+    float dst = 0.5 * log(r) * r / dr;
+	return float2(dst, sin(i));
+}
+
+// cast a ray and return the result
+float3 March(Ray ray) {
+	float2 d = 0;
+	float3 eye = ray.origin;
+	
+	int s = 0;
+	while (s < Steps) {
+		d = DE(ray.origin); // calculate distance
+		if (length(eye - ray.origin) > 100) s = Steps; // to far away
+		if (d.x < epsilon) break; // hit
+		ray.origin += ray.direction * d.x; // march
+		s++; // next iteration
+	}
+	
+	return float3(1 - s / float(Steps), length(eye - ray.origin), d.y);
+}
+
+// main function
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+	
+	// convert into range [-1, 1]
+	float w, h; Texture.GetDimensions(w, h);
+	float2 uv = id.xy / float2(w, h) * 2 - 1;
+	
+	// create ray
+	Ray ray = CreateCameraRay(uv);
+	
+	// render
+	float3 res = March(ray);
+	float a = res.x + res.z;
+	Texture[id.xy] = Source[id.xy] + (float4(a, a, a, 0) * float4(0.8, 0.2, 0.2, 0));
+}

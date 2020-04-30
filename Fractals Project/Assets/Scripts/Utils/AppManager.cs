@@ -54,6 +54,8 @@ public class AppManager : MonoBehaviour {
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to toggle between a normal mouse and the camera controls." +
 			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
+		apps.Add(new App("Mandelbulb", true, 4000, "30 APR", 6, 
+			"Press R to open the options menu in which you can modify certain variables."));
 
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);
