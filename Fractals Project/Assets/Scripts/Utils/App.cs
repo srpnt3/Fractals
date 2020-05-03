@@ -62,8 +62,8 @@ public abstract class App : MonoBehaviour {
  
 		// take
 		yield return new WaitForEndOfFrame();
-		String path = Application.persistentDataPath + "/screenshots/";
-		String name = DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss") + ".png";
+		String path = Application.persistentDataPath + "/screenshots/" + shader.name + "/";
+		String name = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
 		ScreenCapture.CaptureScreenshot(path + name);
 		Debug.Log("Screenshot saved as " + name);
 		yield return null;
@@ -128,7 +128,7 @@ public abstract class App : MonoBehaviour {
 
 	// enable controls
 	private void OnEnable() {
-		Directory.CreateDirectory(Application.persistentDataPath + "/screenshots");
+		Directory.CreateDirectory(Application.persistentDataPath + "/screenshots/" + shader.name + "/");
 		cam = GetComponent<Camera>();
 		c.Enable();
 	}
@@ -191,7 +191,7 @@ public abstract class App : MonoBehaviour {
 		}
 
 		Vector3 ClampOrbitVars(float r, Vector2 angles) {
-			r = Mathf.Clamp(r, 1, 3);
+			r = Mathf.Clamp(r, 1, 5);
 			if (angles.x < 0) angles.x += 360;
 			if (angles.x >= 360) angles.x -= 360;
 			angles.y = Mathf.Clamp(angles.y, -80, 80);

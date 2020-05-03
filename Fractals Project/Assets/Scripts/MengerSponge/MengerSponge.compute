@@ -1,0 +1,126 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// matrixes
+float4x4 CamToWorld;
+float4x4 CamInverseProjection;
+
+// variables
+int Iterations;
+float Size;
+bool Repeat;
+
+// constants
+static const int steps = 300;
+static const float epsilon = 0.0001;
+
+// ray
+struct Ray {
+    float3 origin;
+    float3 direction;
+};
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateRay(float3 origin, float3 direction) {
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateCameraRay(float2 uv) {
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    return CreateRay(origin, direction);
+}
+
+// box distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+float DEBox(float3 p, float s) {
+	float3 q = abs(p) - float3(s, s, s);
+	return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
+}
+
+// 2D box distance estimator from https://iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm
+float DEBox2D(float2 p, float s) {
+	float2 d = abs(p) - s;
+	return length(max(d, 0.0)) + min(max(d.x, d.y), 0);
+}
+
+// cross distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+float DECross(float3 p, float s) {
+	s = s / 3;
+	float d = DEBox2D(p.xy, s);
+	d = min(d, DEBox2D(p.xz, s));
+	return min(d, DEBox2D(p.yz, s));
+}
+
+// repeat space from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+float3 RepeatSpace(float3 p) {
+	float a = Size / 3 * 4;
+	float x = abs(p.x - a / 2) % a - a / 2;
+	float y = abs(p.y - a / 2) % a - a / 2;
+	float z = abs(p.z - a / 2) % a - a / 2;
+	return float3(x, y, z);
+}
+
+// the distance to the scene
+float DE(float3 p) {
+
+	if (Repeat) p = RepeatSpace(p);
+
+	float d = DEBox(p, Size);
+	if (Iterations > 0) d = max(-DECross(p, Size), d);
+	
+	// iterate and subtract
+	int i = 0;
+	while(i < Iterations - 1) {
+		p *= 3;
+		p = abs(p);
+		p -= float3(Size, Size, Size);
+		p = abs(p);
+		p -= float3(Size, Size, Size);
+		i++;
+		d = max(d, -DECross(p, Size) / pow(3, i));
+	}
+	
+	return d;
+}
+
+// cast a ray and return the result
+float2 March(Ray ray) {
+	float d = 0;
+	float3 eye = ray.origin;
+	
+	int s = 0;
+	while (s < steps) {
+		d = DE(ray.origin); // calculate distance
+		if (length(eye - ray.origin) > 200) s = steps; // to far away
+		if (d < epsilon) break; // hit
+		ray.origin += ray.direction * d; // march
+		s++; // next iteration
+	}
+	
+	return float2(s / float(steps), length(eye - ray.origin));
+}
+
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+		
+	// convert into range [-1, 1]
+	float w, h; Texture.GetDimensions(w, h);
+	float2 uv = id.xy / float2(w, h) * 2 - 1;
+	
+	// create ray
+	Ray ray = CreateCameraRay(uv);
+	
+	float2 res = March(ray);
+	float4 ao = res.x;// * float4(0.1, 0.74, 0.61, 0);
+	float4 fog = res.y;// * float4(0.1, 0.74, 0.61, 0) / 100;
+	Texture[id.xy] = Source[id.xy] + ao;// + fog / 2;
+}

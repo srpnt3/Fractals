@@ -11,7 +11,6 @@ public class Mandelbulb : App {
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
-		sens = 10;
 	}
 	
 	// main render method
