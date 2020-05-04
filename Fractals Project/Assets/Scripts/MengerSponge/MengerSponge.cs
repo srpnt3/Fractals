@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MengerSponge : App {
 	
 	private int iterations = 0;
 	private float size = 1;
+	private float edge = 1;
 	private bool repeat = false;
+	private float dof = 1;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
@@ -21,7 +21,9 @@ public class MengerSponge : App {
 		shader.SetMatrix("CamInverseProjection", cam.projectionMatrix.inverse);
 		shader.SetInt("Iterations", iterations);
 		shader.SetFloat("Size", size);
+		shader.SetFloat("Edge", edge);
 		shader.SetBool("Repeat", repeat);
+		shader.SetFloat("DOF", dof);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
 	}
@@ -36,6 +38,11 @@ public class MengerSponge : App {
 		set => size = value;
 	}
 	
+	public float O_Edge {
+		get => edge;
+		set => edge = value;
+	}
+	
 	public bool O_Repeat {
 		get => repeat;
 		set {
@@ -45,11 +52,16 @@ public class MengerSponge : App {
 				} else {
 					cameraType = CameraType.Orbit;
 					transform.LookAt(Vector3.zero);
-					transform.position = transform.position.normalized * 5;
+					transform.position = transform.position.normalized * Mathf.Clamp(transform.position.magnitude, 1, 5);
 					ReRender();
 				}
 			}
 			repeat = value;
 		}
+	}
+	
+	public float O_DOF {
+		get => dof;
+		set => dof = value;
 	}
 }

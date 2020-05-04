@@ -170,7 +170,7 @@ public abstract class App : MonoBehaviour {
 					
 					// free view camera controls
 					case CameraType.Free:
-						transform.Rotate(-cursor.y * Time.smoothDeltaTime * sens, cursor.x * Time.smoothDeltaTime * sens, -tilt * Time.deltaTime * sens);
+						transform.Rotate(-cursor.y * Time.smoothDeltaTime * 5, cursor.x * Time.smoothDeltaTime * 5, -tilt * Time.deltaTime * 5);
 						transform.Translate(new Vector3(move.x * Time.deltaTime * sens, 0, move.y * Time.deltaTime * sens));
 						ReRender();
 						break;

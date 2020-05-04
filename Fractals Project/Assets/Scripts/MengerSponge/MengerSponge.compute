@@ -11,7 +11,9 @@ float4x4 CamInverseProjection;
 // variables
 int Iterations;
 float Size;
+float Edge;
 bool Repeat;
+float DOF;
 
 // constants
 static const int steps = 300;
@@ -74,7 +76,7 @@ float DE(float3 p) {
 
 	if (Repeat) p = RepeatSpace(p);
 
-	float d = DEBox(p, Size);
+	float d = DEBox(p, Size / Edge);
 	if (Iterations > 0) d = max(-DECross(p, Size), d);
 	
 	// iterate and subtract
@@ -92,6 +94,20 @@ float DE(float3 p) {
 	return d;
 }
 
+/*float rand(float2 uv) {
+    float2 noise = (frac(sin(dot(uv ,float2(12.9898,78.233)*2.0)) * 43758.5453));
+    return abs(noise.x + noise.y);
+}
+
+float3 PosToRand(float3 eye, float3 p, float d) {
+	float totalD = length(eye - p);
+	float x = rand(p.yz) - 1;
+	float y = rand(p.xz) - 1;
+	float z = rand(p.xy) - 1;
+	float3 disp = normalize(float3(x, y, z));
+	return disp * totalD * d * (DOF / 50);
+}*/
+
 // cast a ray and return the result
 float2 March(Ray ray) {
 	float d = 0;
@@ -100,8 +116,9 @@ float2 March(Ray ray) {
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
-		if (length(eye - ray.origin) > 200) s = steps; // to far away
+		if (length(eye - ray.origin) > 200) break; // to far away
 		if (d < epsilon) break; // hit
+		//ray.origin += PosToRand(eye, ray.origin, d); // DOF
 		ray.origin += ray.direction * d; // march
 		s++; // next iteration
 	}
@@ -120,7 +137,8 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Ray ray = CreateCameraRay(uv);
 	
 	float2 res = March(ray);
-	float4 ao = res.x;// * float4(0.1, 0.74, 0.61, 0);
-	float4 fog = res.y;// * float4(0.1, 0.74, 0.61, 0) / 100;
-	Texture[id.xy] = Source[id.xy] + ao;// + fog / 2;
+	float4 ao = res.x * float4(0.1, 0.74, 0.61, 0);
+	float4 fog = 1 / (res.y + 1);
+	Texture[id.xy] = Source[id.xy] + ao;
+	//Texture[id.xy] = fog;
 }

@@ -38,23 +38,25 @@ public class AppManager : MonoBehaviour {
 		date = content.transform.GetChild(3).GetChild(1).GetChild(2).gameObject.GetComponent<TextMeshProUGUI>();
 		
 		// create all apps
-		apps.Add(new App("Mandelbrot", false, 4640, "02 FEB", 1, 
+		apps.Add(new App("Mandelbrot", false, 0, "02 FEB", 1,
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nUse the mouse to move around and the scroll wheel to zoom."));
-		apps.Add(new App("Sierpinski", false, 1800, "11 FEB", 2, 
+		apps.Add(new App("Sierpinski", false, 0, "11 FEB", 2,
 			"Press R to open the options menu in which you can modify certain variables."));
-		apps.Add(new App("Ray Marching 2D", false, 6370, "11 FEB", 3, 
+		apps.Add(new App("Ray Marching 2D", false, 0, "11 FEB", 3,
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to set the starting position of the ray and drag the mouse to control the direction."));
-		apps.Add(new App("Ray Marching 3D", true, 2710, "28 MAR", 4, 
+		apps.Add(new App("Ray Marching 3D", true, 0, "28 MAR", 4,
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to toggle between a normal mouse and the camera controls." +
 			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
-		apps.Add(new App("Infinite Spheres", true, 4000, "29 MAR", 5, 
+		apps.Add(new App("Infinite Spheres", true, 0, "29 MAR", 5,
 			"Press R to open the options menu in which you can modify certain variables." +
 			"\n\nClick to toggle between a normal mouse and the camera controls." +
 			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
-		apps.Add(new App("Mandelbulb", true, 4000, "30 APR", 6, 
+		apps.Add(new App("Mandelbulb", true, 0, "30 APR", 6,
+			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Menger Sponge", true, 0, "03 MAR", 7,
 			"Press R to open the options menu in which you can modify certain variables."));
 
 		for (int i = 0; i < apps.Count; i++) {
