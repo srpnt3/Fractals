@@ -10,11 +10,13 @@ float4x4 CamInverseProjection;
 
 // variables
 float Power;
-int Steps;
 int Iterations;
+bool Julia;
+float3 C;
 float Mix;
 
 // constants
+static const int steps = 300;
 static const float epsilon = 0.0001;
 
 // ray
@@ -50,7 +52,7 @@ float2 DE(float3 p) {
 	while(i < Iterations) {
 		r = length(z);
 
-		if (r > 2) break;
+		if (r > 3) break;
         
 		// convert to polar coordinates
 		float theta = acos(z.z / r);
@@ -64,13 +66,13 @@ float2 DE(float3 p) {
 		
 		// convert back to cartesian coordinates
 		z = zr * float3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
-		z += p;
+		z += Julia ? C : p;
 		
 		// next iteration
 		i++;
 	}
     float dst = 0.5 * log(r) * r / dr;
-	return float2(dst, sin(i));
+	return float2(dst / 2, sin(i));
 }
 
 // cast a ray and return the result
@@ -79,15 +81,15 @@ float3 March(Ray ray) {
 	float3 eye = ray.origin;
 	
 	int s = 0;
-	while (s < Steps) {
+	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
-		if (length(eye - ray.origin) > 100) s = Steps; // to far away
+		if (length(eye - ray.origin) > 100) /*break;*/ s = steps; // to far away
 		if (d.x < epsilon) break; // hit
 		ray.origin += ray.direction * d.x; // march
 		s++; // next iteration
 	}
 	
-	return float3(1 - s / float(Steps), length(eye - ray.origin), d.y);
+	return float3(1 - s / float(steps), length(eye - ray.origin), d.y);
 }
 
 // main function
@@ -105,4 +107,6 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	float3 res = March(ray);
 	float a = res.x * (2 - Mix * 2) + res.z * (Mix * 2);
 	Texture[id.xy] = Source[id.xy] + (float4(a, a, a, 0) * float4(0.8, 0.2, 0.2, 0));
+	/*float4 ao = res.x * float4(0.1, 0.74, 0.61, 0);
+	Texture[id.xy] = Source[id.xy] + ao;*/
 }

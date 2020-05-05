@@ -1,7 +1,7 @@
 ﻿using TMPro;
 using UnityEngine;
 
-public class O_Vec2 : MonoBehaviour {
+public class O_Vec3 : MonoBehaviour {
 	
 	public App app;
 	public string optionName;
@@ -9,30 +9,36 @@ public class O_Vec2 : MonoBehaviour {
 	// included in prefab
 	public TMP_InputField inputFieldA;
 	public TMP_InputField inputFieldB;
+	public TMP_InputField inputFieldC;
 	private bool typing;
 	private bool ready;
 
 	private void Start() {
-		inputFieldA.text = ((Vector2) app.GetOption(optionName)).x.ToString();
-		inputFieldB.text = ((Vector2) app.GetOption(optionName)).y.ToString();
+		Vector3 value = (Vector3) app.GetOption(optionName);
+		inputFieldA.text = value.x.ToString();
+		inputFieldB.text = value.y.ToString();
+		inputFieldC.text = value.z.ToString();
 
 		// design stuff
 		transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = name;
 		inputFieldA.textComponent.alignment = TextAlignmentOptions.MidlineRight;
 		inputFieldB.textComponent.alignment = TextAlignmentOptions.MidlineRight;
+		inputFieldC.textComponent.alignment = TextAlignmentOptions.MidlineRight;
 		ready = true;
 	}
 
 	private void Update() {
 		if (!typing) {
-			inputFieldA.text = ((Vector2) app.GetOption(optionName)).x.ToString();
-			inputFieldB.text = ((Vector2) app.GetOption(optionName)).y.ToString();
+			Vector3 value = (Vector3) app.GetOption(optionName);
+			inputFieldA.text = value.x.ToString();
+			inputFieldB.text = value.y.ToString();
+			inputFieldC.text = value.z.ToString();
 		}
 	}
 
-	public void OnValueChanged() {
+	public void OnEndEdit() {
 		if (ready) {
-			app.SetOption(optionName, new Vector2(float.Parse(inputFieldA.text), float.Parse(inputFieldB.text)));
+			app.SetOption(optionName, new Vector3(float.Parse(inputFieldA.text), float.Parse(inputFieldB.text), float.Parse(inputFieldC.text)));
 		}
 	}
 

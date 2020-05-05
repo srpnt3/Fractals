@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class O_Single : MonoBehaviour {
@@ -28,7 +26,7 @@ public class O_Single : MonoBehaviour {
 		}
 	}
 
-	public void OnValueChanged(string val) {
+	public void OnEndEdit(string val) {
 		if (ready) {
 			app.SetOption(optionName, float.Parse(val));
 		}

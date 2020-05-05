@@ -62,7 +62,8 @@ public abstract class App : MonoBehaviour {
  
 		// take
 		yield return new WaitForEndOfFrame();
-		String path = Application.persistentDataPath + "/screenshots/" + shader.name + "/";
+		String path = Application.persistentDataPath + "/screenshots/" + shader.name + "/" + w + "x" + h + "/";
+		Directory.CreateDirectory(path);
 		String name = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
 		ScreenCapture.CaptureScreenshot(path + name);
 		Debug.Log("Screenshot saved as " + name);
@@ -117,8 +118,8 @@ public abstract class App : MonoBehaviour {
 		c.Default.Look.canceled += ctx => cursor = Vector2.zero;
 		c.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
 		c.Default.Tilt.canceled += ctx => tilt = 0;
-		c.Default.ScreenClick.performed += ctx => { StartDrag(); };
-		c.Default.ScreenClick.canceled += ctx => { EndDrag(); SwitchCursor(); };
+		c.Default.ScreenClick.performed += ctx => { StartDrag(); SwitchCursor(); };
+		c.Default.ScreenClick.canceled += ctx => { EndDrag(); };
 		c.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; GetComponent<SceneLoader>().Load(0); };
 		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
@@ -128,7 +129,6 @@ public abstract class App : MonoBehaviour {
 
 	// enable controls
 	private void OnEnable() {
-		Directory.CreateDirectory(Application.persistentDataPath + "/screenshots/" + shader.name + "/");
 		cam = GetComponent<Camera>();
 		c.Enable();
 	}

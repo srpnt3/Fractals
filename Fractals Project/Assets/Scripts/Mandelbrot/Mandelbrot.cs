@@ -28,7 +28,6 @@ public class Mandelbrot : App {
 		
 		// calculate some things
 		CalculateArea();
-		iterations = iterations / 20 * 20;
 		ComputeBuffer colors = new ComputeBuffer(colorGradient.Length, sizeof(float) * 3);
 		colors.SetData(colorGradient);
 
@@ -107,8 +106,8 @@ public class Mandelbrot : App {
 	}
 	
 	public float O_Iterations {
-		get => iterations;
-		set => iterations = Mathf.RoundToInt(value);
+		get => iterations;	
+		set => iterations = Mathf.RoundToInt(value / 20) * 20;
 	}
 	
 	public bool O_Julia {
