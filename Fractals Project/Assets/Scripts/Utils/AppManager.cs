@@ -58,6 +58,8 @@ public class AppManager : MonoBehaviour {
 			"Press R to open the options menu in which you can modify certain variables."));
 		apps.Add(new App("Menger Sponge", true, 0, "03 MAR", 7,
 			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Octahedron Flake", true, 0, "05 MAR", 8,
+			"Press R to open the options menu in which you can modify certain variables."));
 
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);

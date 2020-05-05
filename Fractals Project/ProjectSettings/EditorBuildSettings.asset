@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MengerSponge.unity
     guid: c4a3be4271829e14fa075f54d785c185
+  - enabled: 1
+    path: Assets/Scenes/OctahedronFlake.unity
+    guid: ab8cc282b4f3dfe4db2fb17f4e5ad301
   m_configObjects: {}
