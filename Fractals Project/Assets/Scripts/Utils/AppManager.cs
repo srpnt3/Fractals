@@ -56,9 +56,11 @@ public class AppManager : MonoBehaviour {
 			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
 		apps.Add(new App("Mandelbulb", true, 0, "30 APR", 6,
 			"Press R to open the options menu in which you can modify certain variables."));
-		apps.Add(new App("Menger Sponge", true, 0, "03 MAR", 7,
+		apps.Add(new App("Menger Sponge", true, 0, "03 MAY", 7,
 			"Press R to open the options menu in which you can modify certain variables."));
-		apps.Add(new App("Octahedron Flake", true, 0, "05 MAR", 8,
+		apps.Add(new App("Octahedron Flake", true, 0, "05 MAY", 8,
+			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Mandelbox", true, 0, "17 MAY", 9,
 			"Press R to open the options menu in which you can modify certain variables."));
 
 		for (int i = 0; i < apps.Count; i++) {

@@ -1,0 +1,144 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// matrixes
+float4x4 CamToWorld;
+float4x4 CamInverseProjection;
+
+// variables
+int Iterations;
+float Scale;
+bool Julia;
+float3 C;
+float Color;
+
+// constants
+static const int steps = 400;
+static const float epsilon = 0.0001;
+
+// sphere fold from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
+void SphereFold(inout float3 z, inout float dz) {
+
+	float fixedRadius = 1;
+	float fixedRadius2 = fixedRadius * fixedRadius;
+	float minRadius2 = 0.5 * 0.5;
+
+	float r2 = dot(z, z);
+	if (fixedRadius < minRadius2) {
+		float temp = (fixedRadius2 / minRadius2);
+		z *= temp;
+		dz *= temp;
+	} else if (r2 < fixedRadius2) {
+		float temp =(fixedRadius2 / r2);
+		z *= temp;
+		dz *= temp;
+	}
+}
+
+// box fold from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
+void BoxFold(inout float3 z, inout float dz) {
+	
+	float foldingLimit = 1;
+	z = clamp(z, -foldingLimit, foldingLimit) * 2.0 - z;
+}
+
+struct Data {
+	float n;
+	float3 p;
+};
+
+Data DataConstr(float n, float3 p) {
+	Data data;
+	data.n = n;
+	data.p = p;
+	return data;
+}
+
+// mandelbox distance estimator from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
+Data DE(float3 p) {
+
+	float3 trap = p;
+	float3 z = p;
+	float dr = 1.0;
+	int i = 0;
+	while (i < Iterations) {
+		BoxFold(z, dr);
+		SphereFold(z, dr);
+		
+		z *= Scale;
+		z += Julia ? C : p;
+		dr = dr * abs(Scale) + 1.0;
+		
+		if (length(z) < length(trap)) {
+			trap = z;
+		}
+		
+		i++;
+	}
+	
+	return DataConstr(length(z) / abs(dr), trap);
+}
+
+// ray
+struct Ray {
+    float3 origin;
+    float3 direction;
+};
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateRay(float3 origin, float3 direction) {
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateCameraRay(float2 uv) {
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    return CreateRay(origin, direction);
+}
+
+// cast a ray and return the result
+Data March(Ray ray) {
+	Data d;
+	float3 eye = ray.origin;
+	
+	int s = 0;
+	while (s < steps) {
+		d = DE(ray.origin); // calculate distance
+		if (length(eye - ray.origin) > 100) s = steps; // to far away
+		if (d.n < epsilon) break; // hit
+		ray.origin += ray.direction * d.n; // march
+		s++; // next iteration
+	}
+	
+	//return float3(1 - s / float(steps), length(eye - ray.origin), d.y / 10);
+	return DataConstr(1 - s / float(steps), d.p);
+}
+
+// main function
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+		
+	// convert into range [-1, 1]
+	float w, h; Texture.GetDimensions(w, h);
+	float2 uv = id.xy / float2(w, h) * 2 - 1;
+	
+	// create ray
+	Ray ray = CreateCameraRay(uv);
+	
+	// render
+	Data res = March(ray);
+	float4 a = float4(normalize(abs(res.p)), 0);
+	float4 b = length(res.p / 5);
+	Texture[id.xy] = Source[id.xy] + res.n * (a * Color + b * (1 - Color));
+	//Texture[id.xy] = Source[id.xy] + (res.n * float4(normalize(abs(res.p)), 0));
+	//Texture[id.xy] = Source[id.xy] + res.n * length(res.p / 5);
+}

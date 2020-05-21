@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Vector2 = UnityEngine.Vector2;
@@ -10,7 +11,7 @@ public abstract class App : MonoBehaviour {
 	
 	// variables
 	public ComputeShader shader;
-	public GameObject options;
+	public GameObject canvas;
 	protected RenderTexture tex;
 	protected Camera cam;
 	protected int w;
@@ -57,7 +58,7 @@ public abstract class App : MonoBehaviour {
 
 		// prepare
 		yield return null;
-		options.transform.parent.gameObject.SetActive(false);
+		canvas.SetActive(false);
 		ReRender();
  
 		// take
@@ -70,7 +71,7 @@ public abstract class App : MonoBehaviour {
 		yield return null;
  
 		// reset
-		options.transform.parent.gameObject.SetActive(true);
+		canvas.SetActive(true);
 		ReRender();
 	}
 
@@ -98,6 +99,7 @@ public abstract class App : MonoBehaviour {
 	// below are just camera/player controls
 
 	protected float sens = 10f;
+	protected float maxR = 5;
 	protected CameraType cameraType = CameraType.None;
 	
 	// input variables
@@ -111,6 +113,7 @@ public abstract class App : MonoBehaviour {
 
 	// register all controls
 	private void Awake() {
+		GameObject options = canvas.transform.GetChild(1).gameObject;
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
 		c.Default.Move.canceled += ctx => move = Vector2.zero;
@@ -163,7 +166,7 @@ public abstract class App : MonoBehaviour {
 	}
 	
 	// update
-	void Update () {
+	private void Update () {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
 				switch (cameraType) {
@@ -191,12 +194,14 @@ public abstract class App : MonoBehaviour {
 		}
 
 		Vector3 ClampOrbitVars(float r, Vector2 angles) {
-			r = Mathf.Clamp(r, 1, 5);
+			r = Mathf.Clamp(r, 1, maxR);
 			if (angles.x < 0) angles.x += 360;
 			if (angles.x >= 360) angles.x -= 360;
 			angles.y = Mathf.Clamp(angles.y, -80, 80);
 			return new Vector3(angles.x, angles.y, r);
 		}
+
+		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / Time.smoothDeltaTime) + " FPS";
 	}
 
 	// convert spherical coordinates to a point on a unit sphere

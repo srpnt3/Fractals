@@ -62,32 +62,29 @@ public class Mandelbrot : App {
 		area = new Vector4(x, y, width, height);
 	}
 	
-	// display coordinates
-	public TextMeshProUGUI info;
-	
-	private Vector2 converCoords(Vector2 coords) {
+	private Vector2 convertCoords(Vector2 coords) {
 		return new Vector2(coords[0] / (w / area[2]) + area[0], coords[1] / (h / area[3]) - area[1]);
 	}
 	
-	private void Update() {
+	private void LateUpdate() {
 		
 		// update coordinates
-		Vector2 coords = converCoords(Input.mousePosition);
-		info.text = "P ( " + coords.x + " / " + coords.y + "i )";
-
+		Vector2 coords = convertCoords(Input.mousePosition);
+		canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "P ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
+		
 		// controls
 		if (Math.Abs(deltaZoom) > 0) {
 			zoom += deltaZoom * Time.deltaTime;
 			if (zoom < 1) zoom = 1;
 			center = coords;
 			CalculateArea();
-			Vector2 d = center - converCoords(Input.mousePosition);
+			Vector2 d = center - convertCoords(Input.mousePosition);
 			center += d;
 			ReRender();	
 		}
 
 		if (drag) {
-			center += converCoords(dp) - converCoords(Input.mousePosition);
+			center += convertCoords(dp) - convertCoords(Input.mousePosition);
 			dp = Input.mousePosition;
 			ReRender();
 		}

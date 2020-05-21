@@ -138,6 +138,7 @@ float March(Ray ray) {
 	return 1 - float(s / float(steps));
 }
 
+// main method
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 			

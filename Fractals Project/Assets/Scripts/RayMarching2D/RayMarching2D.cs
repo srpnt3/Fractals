@@ -109,7 +109,7 @@ public class RayMarching2D : App {
 
 	private bool posSet;
 	
-	private void Update() {
+	private void LateUpdate() {
 		
 		if (drag) {
 			if (posSet) {
