@@ -23,7 +23,7 @@ public class InfiniteSpheres : App {
 		shader.SetMatrix("CamToWorld", cam.cameraToWorldMatrix);
 		shader.SetMatrix("CamInverseProjection", cam.projectionMatrix.inverse);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
 	// options

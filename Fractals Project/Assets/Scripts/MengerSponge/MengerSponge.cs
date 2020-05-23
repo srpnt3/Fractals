@@ -6,7 +6,9 @@ public class MengerSponge : App {
 	private float size = 1;
 	private float edge = 1;
 	private bool repeat = false;
-	private float dof = 1;
+	//private float dof = 1;
+
+	//public ComputeShader dof;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
@@ -23,9 +25,19 @@ public class MengerSponge : App {
 		shader.SetFloat("Size", size);
 		shader.SetFloat("Edge", edge);
 		shader.SetBool("Repeat", repeat);
-		shader.SetFloat("DOF", dof);
+		//shader.SetFloat("DOF", dof);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
+		
+		// dof
+		/*Graphics.CopyTexture(tex, tex2);
+		dof.SetTexture(0, "Texture", tex);
+		dof.SetTexture(0, "Source", tex2);
+		dof.SetFloat("W", w);
+		dof.SetFloat("H", h);
+		dof.SetFloat("FocalPlane", 0f);
+		dof.SetFloat("Strength", 10f);
+		dof.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);*/
 	}
 	
 	public float O_Iterations {
@@ -60,8 +72,8 @@ public class MengerSponge : App {
 		}
 	}
 	
-	public float O_DOF {
+	/*public float O_DOF {
 		get => dof;
 		set => dof = value;
-	}
+	}*/
 }

@@ -25,7 +25,7 @@ public class O_Bool : MonoBehaviour {
         ready = true;
     }
 
-    private void Update() {
+    private void OnGUI() {
         toggle.isOn = (bool) app.GetOption(optionName);
     }
 

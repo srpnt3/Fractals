@@ -23,7 +23,7 @@ public class OctahedronFlake : App {
 		shader.SetVector("Offset", offset);
 		shader.SetFloat("SizeDec", sizeDec);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
 	public float O_Iterations {

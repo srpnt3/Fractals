@@ -31,7 +31,7 @@ public class O_Slider : MonoBehaviour {
 		ready = true;
 	}
 	
-	private void Update() {
+	private void OnGUI() {
 		float value = (float) app.GetOption(optionName);
 		slider.value = value;
 		if (!typing) {

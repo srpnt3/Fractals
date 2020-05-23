@@ -1,0 +1,52 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// variables
+float W;
+float H;
+float FocalPlane;
+float Strength;
+
+// constants
+static const float PI = 3.14159265f;
+static const float E = 2.7182818284;
+
+// gaussian blur https://en.wikipedia.org/wiki/Gaussian_blur
+float G(float2 pos, float size) {
+	float size2 = pow(size, 2);
+	float pos2 = pow(length(pos), 2);
+	float tmp1 = 1 / (2 * PI * size2);
+	float tmp2 = -pos2 / (2 * size2);
+	return tmp1 * pow(E, tmp2);
+}
+
+int2 clampPos(int2 pos) {
+	return clamp(pos, int2(0, 0), int2(W - 1, H - 1));
+}
+
+// get the blurred pixel
+float4 GetColor(int2 pos, float size) {
+	float4 color = 0;
+	int a = size * 3; // size * accuracy
+	
+	for (int i = -a; i <= a; i++) {
+		for (int j = -a; j <= a; j++) {
+			color += Source[clampPos(pos + int2(i, j))] * G(float2(i, j), size);
+		}
+	}
+	
+	return color;
+}
+
+// main method
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	float distance = Source[id.xy].w * 10.0;
+	float d = abs(distance - FocalPlane) * Strength + 1;
+
+	Texture[id.xy] = GetColor(int2(id.xy), clamp(d, 1, 7));
+}

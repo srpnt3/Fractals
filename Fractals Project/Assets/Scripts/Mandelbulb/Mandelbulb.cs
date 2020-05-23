@@ -7,6 +7,8 @@ public class Mandelbulb : App {
 	private bool julia = false;
 	private Vector3 c = Vector3.zero;
 	private float mix = 0.5f;
+	private float eyeOffset = -0.1f;
+	private bool crossEye = false;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
@@ -25,8 +27,26 @@ public class Mandelbulb : App {
 		shader.SetBool("Julia", julia);
 		shader.SetVector("C", c);
 		shader.SetFloat("Mix", mix);
+		shader.SetBool("CrossEye", crossEye);
+		if (crossEye) setEyes(); // calculate left and right eye for 3D effect
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
+
+		void setEyes() {
+			
+			// left eye
+			cam.transform.Translate(new Vector3(-eyeOffset, 0));
+			shader.SetMatrix("CamToWorldL", cam.cameraToWorldMatrix);
+			shader.SetMatrix("CamInverseProjectionL", cam.projectionMatrix.inverse);
+		
+			// right eye
+			cam.transform.Translate(new Vector3(eyeOffset * 2, 0));
+			shader.SetMatrix("CamToWorldR", cam.cameraToWorldMatrix);
+			shader.SetMatrix("CamInverseProjectionR", cam.projectionMatrix.inverse);
+			
+			// reset camera
+			cam.transform.Translate(new Vector3(-eyeOffset, 0));
+		}
 	}
 	
 	// options
@@ -55,4 +75,15 @@ public class Mandelbulb : App {
 		get => mix;
 		set => mix = value;
 	}
+	
+	// animate
+	/*private int sx = 1, sy = 1, sz = 1;
+	private void LateUpdate() {
+		cursor = new Vector2(50f, 0) * Time.deltaTime;
+		c += new Vector3(sx * 0.93f, sy * 0.52f, sz * 0.751f) * Time.smoothDeltaTime / 10;
+		if (c.x > 1 || c.x < -1) sx *= -1;
+		if (c.y > 1 || c.y < -1) sy *= -1;
+		if (c.z > 1 || c.z < -1) sz *= -1;
+		ReRender();
+	}*/
 }

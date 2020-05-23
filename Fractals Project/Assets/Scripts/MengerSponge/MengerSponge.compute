@@ -137,7 +137,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Ray ray = CreateCameraRay(uv);
 	
 	float2 res = March(ray);
-	float4 ao = res.x * float4(0.1, 0.74, 0.61, 0);
+	float4 ao = res.x * float4(0.1, 0.74, 0.61, res.y / 10.0);
 	float4 fog = 1 / (res.y + 1);
 	Texture[id.xy] = Source[id.xy] + ao;
 	//Texture[id.xy] = fog;

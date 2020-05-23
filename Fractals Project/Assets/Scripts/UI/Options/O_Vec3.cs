@@ -27,7 +27,7 @@ public class O_Vec3 : MonoBehaviour {
 		ready = true;
 	}
 
-	private void Update() {
+	private void OnGUI() {
 		if (!typing) {
 			Vector3 value = (Vector3) app.GetOption(optionName);
 			inputFieldA.text = value.x.ToString();

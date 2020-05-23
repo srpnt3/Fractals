@@ -14,6 +14,7 @@ float Scale;
 bool Julia;
 float3 C;
 float Color;
+RWStructuredBuffer<float3> Colors;
 
 // constants
 static const int steps = 400;
@@ -57,10 +58,16 @@ Data DataConstr(float n, float3 p) {
 	return data;
 }
 
+float3 Trap(float3 z, float3 trap) {
+	if (length(z) < trap.x)
+		trap.x = length(z);
+	return trap;
+}
+
 // mandelbox distance estimator from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
 Data DE(float3 p) {
 
-	float3 trap = p;
+	float3 trap = float3(length(p), 0, 0);
 	float3 z = p;
 	float dr = 1.0;
 	int i = 0;
@@ -72,9 +79,7 @@ Data DE(float3 p) {
 		z += Julia ? C : p;
 		dr = dr * abs(Scale) + 1.0;
 		
-		if (length(z) < length(trap)) {
-			trap = z;
-		}
+		trap = Trap(z, trap);
 		
 		i++;
 	}
@@ -136,9 +141,5 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	
 	// render
 	Data res = March(ray);
-	float4 a = float4(normalize(abs(res.p)), 0);
-	float4 b = length(res.p / 5);
-	Texture[id.xy] = Source[id.xy] + res.n * (a * Color + b * (1 - Color));
-	//Texture[id.xy] = Source[id.xy] + (res.n * float4(normalize(abs(res.p)), 0));
-	//Texture[id.xy] = Source[id.xy] + res.n * length(res.p / 5);
+	Texture[id.xy] = Source[id.xy] + res.n * length(res.p.x / 5);
 }

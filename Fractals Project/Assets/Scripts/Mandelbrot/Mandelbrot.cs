@@ -40,7 +40,7 @@ public class Mandelbrot : App {
 		shader.SetInt("Iterations", iterations);
 		shader.SetBuffer(0, "Colors", colors);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 		
 		// dispose buffers
 		colors.Dispose();

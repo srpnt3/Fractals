@@ -15,7 +15,7 @@ public class Sierpinski : App {
 		shader.SetInt("N", n);
 		shader.SetInt("Iterations", iterations);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
 	// options

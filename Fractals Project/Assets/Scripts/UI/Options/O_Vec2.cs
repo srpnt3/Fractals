@@ -24,7 +24,7 @@ public class O_Vec2 : MonoBehaviour {
 		ready = true;
 	}
 
-	private void Update() {
+	private void OnGUI() {
 		if (!typing) {
 			Vector2 value = (Vector2) app.GetOption(optionName);
 			inputFieldA.text = value.x.ToString();

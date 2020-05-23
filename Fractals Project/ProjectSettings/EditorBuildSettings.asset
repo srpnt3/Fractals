@@ -32,4 +32,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/OctahedronFlake.unity
     guid: ab8cc282b4f3dfe4db2fb17f4e5ad301
+  - enabled: 1
+    path: Assets/Scenes/Mandelbox.unity
+    guid: acc60374f1d4bf440ab2c63c8cc0ce55
   m_configObjects: {}

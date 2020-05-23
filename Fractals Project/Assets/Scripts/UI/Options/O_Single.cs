@@ -20,7 +20,7 @@ public class O_Single : MonoBehaviour {
 		ready = true;
 	}
 	
-	private void Update() {
+	private void OnGUI() {
 		if (!typing) {
 			inputField.text = ((float) app.GetOption(optionName)).ToString();
 		}

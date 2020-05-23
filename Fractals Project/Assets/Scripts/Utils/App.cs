@@ -13,6 +13,7 @@ public abstract class App : MonoBehaviour {
 	public ComputeShader shader;
 	public GameObject canvas;
 	protected RenderTexture tex;
+	protected RenderTexture tex2;
 	protected Camera cam;
 	protected int w;
 	protected int h;
@@ -44,11 +45,15 @@ public abstract class App : MonoBehaviour {
 		if (tex == null || tex.width != w || tex.height != h) {
 			if (tex != null) {
 				tex.Release();
+				tex2.Release();
 			}
 
 			tex = new RenderTexture(w, h, 32);
 			tex.enableRandomWrite = true;
 			tex.Create();
+			
+			tex2 = new RenderTexture(w, h, 32);
+			tex2.Create();
 			ReRender(); // rerender needed
 		}
 	}
@@ -79,6 +84,7 @@ public abstract class App : MonoBehaviour {
 	
 	public void SetOption(string n, object value) {
 		try {
+			ReRender();
 			GetType().GetProperty(n).SetValue(this, value);
 		} catch (Exception e) {
 			Debug.LogError("Invalid option name");
@@ -88,7 +94,6 @@ public abstract class App : MonoBehaviour {
 
 	public object GetOption(string n) {
 		try {
-			ReRender();
 			return GetType().GetProperty(n).GetValue(this);
 		} catch (Exception e) {
 			Debug.LogError("Invalid option name");

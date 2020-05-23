@@ -26,7 +26,7 @@ float DESphere(float3 p, float r) {
 }
 
 // box distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
-float DEBox (float3 p, float3 s) {
+float DEBox(float3 p, float3 s) {
 	float3 q = abs(p) - s;
 	return length(max(q,0.0)) + min(max(q.x,max(q.y,q.z)),0.0);
 }

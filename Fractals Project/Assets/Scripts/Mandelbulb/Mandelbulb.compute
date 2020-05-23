@@ -7,6 +7,10 @@ Texture2D<float4> Source;
 // matrixes
 float4x4 CamToWorld;
 float4x4 CamInverseProjection;
+float4x4 CamToWorldL;
+float4x4 CamInverseProjectionL;
+float4x4 CamToWorldR;
+float4x4 CamInverseProjectionR;
 
 // variables
 float Power;
@@ -14,6 +18,7 @@ int Iterations;
 bool Julia;
 float3 C;
 float Mix;
+bool CrossEye;
 
 // constants
 static const int steps = 300;
@@ -35,9 +40,25 @@ Ray CreateRay(float3 origin, float3 direction) {
 
 // from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
-    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
-    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
-    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+
+	float4x4 ctw = CamToWorld;
+	float4x4 cip = CamInverseProjection;
+
+	if (CrossEye) {
+		if (uv.x < 0) {
+			uv.x += 0.4;
+			ctw = CamToWorldL;
+			cip = CamInverseProjectionL;
+		} else {
+			uv.x -= 0.4;
+			ctw = CamToWorldR;
+			cip = CamInverseProjectionR;
+		}
+	}
+	
+    float3 origin = mul(ctw, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(cip, float4(uv, 0, 1)).xyz;
+    direction = mul(ctw, float4(direction, 0)).xyz;
     direction = normalize(direction);
     return CreateRay(origin, direction);
 }

@@ -1302,6 +1302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 48cf9e093e9510f49934b23cd58f1670, type: 3}
   canvas: {fileID: 1620219076}
+  dof: {fileID: 7200000, guid: dff2e43a0d6503646801503442117e2c, type: 3}
 --- !u!4 &650338642
 Transform:
   m_ObjectHideFlags: 0

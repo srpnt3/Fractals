@@ -6,12 +6,11 @@ public class Mandelbox : App  {
 	private int iterations = 20;
 	private bool julia = false;
 	private Vector3 c = Vector3.zero;
-	private float color = 0.5f;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
 		maxR = 20;
-		sens = 1;
+		sens = 4;
 	}
 	
 	protected override void Render(RenderTexture s) {
@@ -25,9 +24,8 @@ public class Mandelbox : App  {
 		shader.SetInt("Iterations", iterations);
 		shader.SetBool("Julia", julia);
 		shader.SetVector("C", c);
-		shader.SetFloat("Color", color);
 		
-		shader.Dispatch(0, Mathf.CeilToInt(w / 8), Mathf.CeilToInt(h / 8), 1);
+		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
 	// options
@@ -50,10 +48,5 @@ public class Mandelbox : App  {
 	public Vector3 O_C {
 		get => c;
 		set => c = value;
-	}
-
-	public float O_Color {
-		get => color;
-		set => color = value;
 	}
 }

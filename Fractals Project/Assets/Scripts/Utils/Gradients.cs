@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -9,6 +10,11 @@ public static class Gradients {
 	public static Vector3[] CreateGradient(Vector4[] c, int steps) {
 		List<Colors.LCHColor> colors = new List<Colors.LCHColor>();
 
+		if (steps < c.Length) {
+			Debug.LogError("not enough steps");
+			throw new Exception();
+		}
+		
 		// loop through c
 		for (int i = 0; i < c.Length; i++) {
 			
@@ -20,11 +26,21 @@ public static class Gradients {
 			if (i < c.Length - 1) {
 				Colors.LCHColor b = RGBtoLCH(Vec4toRGB(c[i + 1]));
 
-				int s = Mathf.FloorToInt(c[i + 1][3] * steps) - Mathf.FloorToInt(c[i][3] * steps) - 2;
-				List<Colors.LCHColor> g = new List<Colors.LCHColor>(LCHGradient(a, b, s));
+				int s = Mathf.CeilToInt(c[i + 1][3] * steps) - Mathf.FloorToInt(c[i][3] * steps) - 2;
+				if (s > 0) {
+					List<Colors.LCHColor> g = new List<Colors.LCHColor>(LCHGradient(a, b, s));
 
-				// add the gradient
-				colors = colors.Concat(g).ToList();
+					// add the gradient
+					colors = colors.Concat(g).ToList();
+				}
+			}
+		}
+
+		// fix some bugs
+		if (colors.Count < steps) {
+			int error = steps - colors.Count;
+			for (int e = 0; e < error; e++) {
+				colors.Add(RGBtoLCH(Vec4toRGB(c[c.Length - 1])));
 			}
 		}
 
@@ -66,7 +82,7 @@ public static class Gradients {
 				if (result[i].H >= 360f) result[i].H = result[i].H - 360f;
 				if (result[i].H < 0) result[i].H = result[i].H + 360f;
 			}
-
+			
 			return result;
 		}
 
