@@ -95,7 +95,7 @@ float DE(float3 p) {
 		p -= Offset * Size;
 		i++;
 	}
-	return DEOctahedron(p, Size) / pow(SizeDec, i);
+	return DEOctahedron(p, Size) / pow(abs(SizeDec), i);
 }
 
 // ray

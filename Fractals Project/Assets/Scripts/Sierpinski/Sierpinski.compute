@@ -29,7 +29,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	
 	// scale and position the fractal
 	float w, h; Texture.GetDimensions(w, h);
-	float s = pow(N, Iterations) / min(w, h); // scale it
+	float s = pow(abs(N), Iterations) / min(w, h); // scale it
 	float ox = 0, oy = 0; // calculate the offset
 	if (w > h)
 		ox = (w - h) / 2;

@@ -59,15 +59,15 @@ Data DataConstr(float n, float3 p) {
 }
 
 float3 Trap(float3 z, float3 trap) {
-	if (length(z) < trap.x)
-		trap.x = length(z);
+	if (length(z) < length(trap))
+		trap = z;
 	return trap;
 }
 
 // mandelbox distance estimator from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
 Data DE(float3 p) {
 
-	float3 trap = float3(length(p), 0, 0);
+	float3 trap = p; //float3(length(p), 0, 0);
 	float3 z = p;
 	float dr = 1.0;
 	int i = 0;
@@ -140,6 +140,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Ray ray = CreateCameraRay(uv);
 	
 	// render
-	Data res = March(ray);
-	Texture[id.xy] = Source[id.xy] + res.n * length(res.p.x / 5);
+	Data res = March(ray); 
+	//Texture[id.xy] = Source[id.xy] + res.n * length(res.p.x / 5);// * float4(1, 0.5, 0.8, 1);
+	Texture[id.xy] = Source[id.xy] + res.n * float4(normalize(abs(res.p)), 0);// * float4(1, 0.5, 0.8, 1);
 }

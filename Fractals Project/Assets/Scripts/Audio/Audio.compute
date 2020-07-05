@@ -1,0 +1,138 @@
+﻿#pragma kernel CSMain
+
+// textures
+RWTexture2D<float4> Texture;
+Texture2D<float4> Source;
+
+// matrixes
+float4x4 CamToWorld;
+float4x4 CamInverseProjection;
+
+// variables
+float Power;
+int Iterations;
+int MinF;
+int MaxF;
+RWStructuredBuffer<float> Audio;
+
+// constants
+static const int steps = 400;
+static const float epsilon = 0.0001;
+
+float GetDataByFrequency(int f) {
+	uint c, s; Audio.GetDimensions(c, s);
+	float index = float(f - MinF) / (MaxF - MinF);
+	return Audio[round(index * (c - 1))];
+}
+
+float3 CalculateC() {
+	return float3(
+		GetDataByFrequency(400) * 2.5,
+		GetDataByFrequency(5000) * 2.5,
+		GetDataByFrequency(3000) * 3
+	);
+}
+
+float CalculateSize() {
+	return GetDataByFrequency(30) * 0.7 + 1;
+}
+
+float3 CalculateColor() {
+	return float3(
+		GetDataByFrequency(400) * 0.5,
+		GetDataByFrequency(5000) * 0.3,
+		GetDataByFrequency(3000) * 0.8
+	) * 3;
+}
+
+float DE(float3 p) {
+	float size = CalculateSize();
+	p /= size;
+	float3 z = p;
+	float dr = 1.0;
+	float r = 0.0;
+
+	int i = 0;
+	while(i < Iterations) {
+		r = length(z);
+
+		if (r > 3) break;
+        
+		// convert to polar coordinates
+		float theta = acos(z.z / r);
+		float phi = atan2(z.y, z.x);
+		dr = pow(r, Power - 1.0) * Power * dr + 1.0;
+
+		// scale and rotate the point
+		float zr = pow(r, Power);
+		theta = theta * Power;
+		phi = phi * Power;
+		
+		// convert back to cartesian coordinates
+		z = zr * float3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
+		z += CalculateC();
+		
+		// next iteration
+		i++;
+	}
+	
+	float dst = 0.5 * log(r) * r / dr * size;
+	
+	return dst;
+}
+
+// ray
+struct Ray {
+    float3 origin;
+    float3 direction;
+};
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateRay(float3 origin, float3 direction) {
+    Ray ray;
+    ray.origin = origin;
+    ray.direction = direction;
+    return ray;
+}
+
+// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
+Ray CreateCameraRay(float2 uv) {
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
+    direction = normalize(direction);
+    return CreateRay(origin, direction);
+}
+
+// cast a ray and return the result
+float March(Ray ray) {
+	float d;
+	float3 eye = ray.origin;
+	
+	int s = 0;
+	while (s < steps) {
+		d = DE(ray.origin); // calculate distance
+		if (length(eye - ray.origin) > 100) s = steps; // to far away
+		if (d < epsilon) break; // hit
+		ray.origin += ray.direction * d; // march
+		s++; // next iteration
+	}
+	
+	return s / float(steps);
+}
+
+// main function
+[numthreads(8,8,1)]
+void CSMain (uint3 id : SV_DispatchThreadID) {
+			
+	// convert into range [-1, 1]
+	float w, h; Texture.GetDimensions(w, h);
+	float2 uv = id.xy / float2(w, h) * 2 - 1;
+	
+	// create ray
+	Ray ray = CreateCameraRay(uv);
+	
+	// render
+	float res = March(ray); 
+	Texture[id.xy] = Source[id.xy] + res * float4(CalculateColor(), 1);
+}

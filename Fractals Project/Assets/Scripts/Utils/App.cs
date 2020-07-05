@@ -59,7 +59,7 @@ public abstract class App : MonoBehaviour {
 	}
 
 	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html and modified
-	private IEnumerator TakeScreenshot() {
+	protected IEnumerator TakeScreenshot() {
 
 		// prepare
 		yield return null;
@@ -104,6 +104,7 @@ public abstract class App : MonoBehaviour {
 	// below are just camera/player controls
 
 	protected float sens = 10f;
+	protected float minR = 1;
 	protected float maxR = 5;
 	protected CameraType cameraType = CameraType.None;
 	
@@ -117,7 +118,7 @@ public abstract class App : MonoBehaviour {
 	protected Vector2 dp;
 
 	// register all controls
-	private void Awake() {
+	protected void Awake() {
 		GameObject options = canvas.transform.GetChild(1).gameObject;
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
@@ -136,13 +137,13 @@ public abstract class App : MonoBehaviour {
 	}
 
 	// enable controls
-	private void OnEnable() {
+	protected void OnEnable() {
 		cam = GetComponent<Camera>();
 		c.Enable();
 	}
 	
 	// disable controls
-	private void OnDisable() { c.Disable(); }
+	protected void OnDisable() { c.Disable(); }
 
 	// switch the cursor
 	private void SwitchCursor() {
@@ -171,7 +172,7 @@ public abstract class App : MonoBehaviour {
 	}
 	
 	// update
-	private void Update () {
+	protected void Update () {
 		if (cameraType != CameraType.None) {
 			if (Cursor.lockState == CursorLockMode.Locked) {
 				switch (cameraType) {
@@ -185,12 +186,12 @@ public abstract class App : MonoBehaviour {
 					
 					// orbit camera controls
 					case CameraType.Orbit:
-						Vector3 pos = transform.position;
+						Vector3 pos = transform.localPosition;
 						float r = pos.magnitude - deltaZoom * Time.smoothDeltaTime * sens / 30;
 						Vector2 angles = CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * Time.smoothDeltaTime * sens, -cursor.y * Time.smoothDeltaTime * sens);
 						Vector3 vars = ClampOrbitVars(r, angles);
-						transform.position = SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
-						transform.LookAt(new Vector3(0,0,0));
+						transform.localPosition = SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
+						transform.LookAt(transform.parent ? transform.parent.position : Vector3.zero);
 						ReRender();
 						break;
 					
@@ -199,7 +200,7 @@ public abstract class App : MonoBehaviour {
 		}
 
 		Vector3 ClampOrbitVars(float r, Vector2 angles) {
-			r = Mathf.Clamp(r, 1, maxR);
+			r = Mathf.Clamp(r, minR, maxR);
 			if (angles.x < 0) angles.x += 360;
 			if (angles.x >= 360) angles.x -= 360;
 			angles.y = Mathf.Clamp(angles.y, -80, 80);

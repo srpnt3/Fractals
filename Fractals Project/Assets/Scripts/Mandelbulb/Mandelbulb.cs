@@ -28,11 +28,11 @@ public class Mandelbulb : App {
 		shader.SetVector("C", c);
 		shader.SetFloat("Mix", mix);
 		shader.SetBool("CrossEye", crossEye);
-		if (crossEye) setEyes(); // calculate left and right eye for 3D effect
+		if (crossEye) SetEyes(); // calculate left and right eye for 3D effect
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 
-		void setEyes() {
+		void SetEyes() {
 			
 			// left eye
 			cam.transform.Translate(new Vector3(-eyeOffset, 0));

@@ -62,6 +62,8 @@ public class AppManager : MonoBehaviour {
 			"Press R to open the options menu in which you can modify certain variables."));
 		apps.Add(new App("Mandelbox", true, 0, "17 MAY", 9,
 			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Audio", true, 0, "29 JUN", 10,
+			"Press R to open the options menu in which you can modify certain variables."));
 
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);
