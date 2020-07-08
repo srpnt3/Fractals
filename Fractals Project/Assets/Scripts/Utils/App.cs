@@ -4,6 +4,8 @@ using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
 
@@ -119,6 +121,11 @@ public abstract class App : MonoBehaviour {
 
 	// register all controls
 	protected void Awake() {
+		
+		// Load the _Loading scene if necessary
+		if (SceneManager.sceneCount == 1)
+			SceneManager.LoadSceneAsync((int) SceneLoader.SceneNames.Loading, LoadSceneMode.Additive);
+		
 		GameObject options = canvas.transform.GetChild(1).gameObject;
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
@@ -129,11 +136,13 @@ public abstract class App : MonoBehaviour {
 		c.Default.Tilt.canceled += ctx => tilt = 0;
 		c.Default.ScreenClick.performed += ctx => { StartDrag(); SwitchCursor(); };
 		c.Default.ScreenClick.canceled += ctx => { EndDrag(); };
-		c.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; GetComponent<SceneLoader>().Load(0); };
+		c.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu); };
 		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 		c.Default.Screenshot.canceled += ctx => { StartCoroutine(TakeScreenshot()); };
+
+		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
 	}
 
 	// enable controls

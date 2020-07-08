@@ -6,8 +6,11 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MainMenu.unity
+    path: Assets/Scenes/_MainMenu.unity
     guid: 8f100c5585adbe64db90d248d3b632bb
+  - enabled: 1
+    path: Assets/Scenes/_Loading.unity
+    guid: aad78bea88381f04ebae7bfc4e7fe8e5
   - enabled: 1
     path: Assets/Scenes/Mandelbrot.unity
     guid: e50eaccf95d458e41b955db892f214a2
