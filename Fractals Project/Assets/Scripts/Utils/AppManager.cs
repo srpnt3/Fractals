@@ -24,7 +24,7 @@ public class AppManager : MonoBehaviour {
 
 	private int s;
 
-	private int Selected {
+	public int Selected {
 		get => s;
 		set {
 			s = value;
@@ -52,31 +52,39 @@ public class AppManager : MonoBehaviour {
 		
 		// create all apps
 		apps.Add(new App("Mandelbrot", false, 0, "02 FEB",
-			"Press R to open the options menu in which you can modify certain variables." +
+			"The Mandelbrot fractal and its Julia Sets." +
 			"\n\nUse the mouse to move around and the scroll wheel to zoom."));
-		apps.Add(new App("Sierpinski", false, 0, "11 FEB",
-			"Press R to open the options menu in which you can modify certain variables."));
+		apps.Add(new App("Sierpinski", false, 0, "11 FEB", "The Sierpinski Triangle and the Sierpinski Carpet. Both can be created using the same algorithm."));
 		apps.Add(new App("Ray Marching 2D", false, 0, "11 FEB",
-			"Press R to open the options menu in which you can modify certain variables." +
-			"\n\nClick to set the starting position of the ray and drag the mouse to control the direction."));
+			"A 2D demonstration of Ray Marching." +
+			"\n\nClick on the screen to set the starting position of the ray." +
+			"\nDrag your mouse to control the direction in which the ray will march."));
 		apps.Add(new App("Ray Marching 3D", true, 0, "28 MAR",
-			"Press R to open the options menu in which you can modify certain variables." +
-			"\n\nClick to toggle between a normal mouse and the camera controls." +
-			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
+			"A simple 3D scene, which was rendered using Ray Marching. The scene contains different objects to showcase different features of Ray Marching." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nWhile in camera mode use the mouse to look around, WASD keys to move and Q and E to rotate the camera."));
 		apps.Add(new App("Infinite Spheres", true, 0, "29 MAR",
-			"Press R to open the options menu in which you can modify certain variables." +
-			"\n\nClick to toggle between a normal mouse and the camera controls." +
-			"\nWhile camera controls are active use the mouse to look around, WASD key to move and Q and E to rotate"));
+			"A demonstration of the capabilities of Ray Marching. A single modification to the position causes the space to repeat and thus gives the illusion of infinite objects." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nWhile in camera mode use the mouse to look around, WASD keys to move and Q and E to rotate the camera."));
 		apps.Add(new App("Mandelbulb", true, 0, "30 APR",
-			"Press R to open the options menu in which you can modify certain variables."));
+			"A 3D version of the Mandelbrot fractal." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nWhile in camera mode use the mouse to turn the fractal."));
 		apps.Add(new App("Menger Sponge", true, 0, "03 MAY",
-			"Press R to open the options menu in which you can modify certain variables."));
+			"A 3D version of the Sierpinski Carpet." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nToggling the option REPEAT will switch between a free camera (same controls as Ray Marching 3D and Infinite Spheres) and an orbit camera (same controls as Mandelbulb)."));
 		apps.Add(new App("Octahedron Flake", true, 0, "05 MAY",
-			"Press R to open the options menu in which you can modify certain variables."));
+			"A cooler version of the Sierpinski Triangle that consists of octahedrons instead of pyramids." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nWhile in camera mode use the mouse to turn the fractal."));
 		apps.Add(new App("Mandelbox", true, 0, "17 MAY",
-			"Press R to open the options menu in which you can modify certain variables."));
+			"A box like 3D version of the Mandelbrot fractal." +
+			"\n\nClick on the screen to toggle between a normal mouse and the camera controls." +
+			"\nWhile in camera mode use the mouse to turn the fractal."));
 		apps.Add(new App("Audio", true, 0, "29 JUN",
-			"Press R to open the options menu in which you can modify certain variables."));
+			"A Julia set of the Mandelbulb fractal that reacts to audio. The different frequencies control the size and C value of the fractal."));
 
 		for (int i = 0; i < apps.Count; i++) {
 			CreateElement(i);
@@ -112,7 +120,15 @@ public class AppManager : MonoBehaviour {
 
 			// update the content
 			title.text = "The Project";
-			text.text = "TODO: Write introduction";
+			text.text = "This program is a collection of all the fractals, games and other little projects that I have programmed as part of my Matura Paper." + 
+						"\nThe name of the paper is \"Fraktale und ihre Anwendung im Game-Design\". In it I analyze different fractals, explain how I implemented them and discuss different applications." +
+						"\n" +
+						"\nBy selecting one of the apps on the left a quick description, the controls and some additional info about the app will be displayed. An app can be loaded by clicking the LOAD button on the bottom right of the screen." +
+						"\nBy pressing R inside an app the Options menu will be opened, in which the parameters and other setting of the app can be modified. The F12 button can be used to take a screenshot. To exit the app simply press ESCAPE or click the arrow on the top left of the screen." +
+						"\n" +
+						"\nI recommend having a decent graphics card to run this program unless you enjoy stop motion fractals." +
+						"\n" +
+						"\nThe source code of \"Fractals\" is available on GitHub: https://github.com/AutisticSlav/Fractals.";
 			return;
 		}
 		

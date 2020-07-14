@@ -35,8 +35,8 @@ Cmplx Multiply(Cmplx a, Cmplx b) {
 	return x;
 }
 
-double GetAbsolute(Cmplx x) {
-	return sqrt(x.re * x.re + x.im * x.im);
+float GetAbsolute(Cmplx x) {
+	return sqrt(float(x.re * x.re) + float(x.im * x.im));
 }
 
 // the math
@@ -80,6 +80,6 @@ void CSMain(uint3 id : SV_DispatchThreadID) {
 		uint c, s; Colors.GetDimensions(c, s); // get the size of the array
 		int x = a * (c - 1); // calculate the index
 		float3 clr = Colors[x]; // get the corresponding color
-		Texture[id.xy] = float4(clr[0], clr[1], clr[2], 1); // apply
+		Texture[id.xy] = float4(clr, 1); // apply
 	}
 }

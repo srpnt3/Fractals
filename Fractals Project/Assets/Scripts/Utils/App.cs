@@ -125,7 +125,7 @@ public abstract class App : MonoBehaviour {
 		// Load the _Loading scene if necessary
 		if (SceneManager.sceneCount == 1)
 			SceneManager.LoadSceneAsync((int) SceneLoader.SceneNames.Loading, LoadSceneMode.Additive);
-		
+
 		GameObject options = canvas.transform.GetChild(1).gameObject;
 		c = new Controls();
 		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
