@@ -14,7 +14,6 @@ public class O_Slider : MonoBehaviour {
 	public Slider slider;
 	public TMP_InputField inputField;
 	private bool typing;
-	//public TextMeshProUGUI value;
 	private bool ready;
 
 	private void Start() {

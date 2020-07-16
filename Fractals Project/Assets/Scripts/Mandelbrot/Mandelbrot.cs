@@ -4,20 +4,17 @@ using UnityEngine;
 
 public class Mandelbrot : App {
 	
-	// variables
 	private float zoom = 1;
 	private Vector2 center = new Vector2(-0.5f, 0);
 	private int iterations = 100;
-	private bool julia = false;
+	private bool julia;
 	private Vector2 c = Vector2.zero;
-
-	// private vars
 	private Vector4 area; // (re, im, width, height)
 	private Vector3[] colorGradient;
 
 	// create the Gradient
 	private void Start() {
-		colorGradient = Gradients.CreateGradient(new Vector4[] {
+		colorGradient = Gradients.CreateGradient(new[] {
 			new Vector4(29, 31, 42, 0f),
 			new Vector4(204, 51, 51, 1f),
 		}, 10);
@@ -26,7 +23,7 @@ public class Mandelbrot : App {
 	// main render method
 	protected override void Render(RenderTexture s) {
 		
-		// calculate some things
+		// calculate area and buffer
 		CalculateArea();
 		ComputeBuffer colors = new ComputeBuffer(colorGradient.Length, sizeof(float) * 3);
 		colors.SetData(colorGradient);
@@ -42,7 +39,7 @@ public class Mandelbrot : App {
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 		
-		// dispose buffers
+		// dispose buffer
 		colors.Dispose();
 	}
 
@@ -62,35 +59,37 @@ public class Mandelbrot : App {
 		area = new Vector4(x, y, width, height);
 	}
 	
-	private Vector2 convertCoords(Vector2 coords) {
+	private Vector2 ConvertCoords(Vector2 coords) {
 		return new Vector2(coords[0] / (w / area[2]) + area[0], coords[1] / (h / area[3]) - area[1]);
 	}
 	
 	private void LateUpdate() {
 		
 		// update coordinates
-		Vector2 coords = convertCoords(Input.mousePosition);
+		Vector2 coords = ConvertCoords(Input.mousePosition);
 		canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "P ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
 		
 		// controls
-		if (Math.Abs(deltaZoom) > 0) {
-			zoom += deltaZoom * Time.deltaTime;
+		if (Math.Abs(controls.deltaZoom) > 0) {
+			zoom += controls.deltaZoom * Time.deltaTime;
 			if (zoom < 1) zoom = 1;
 			center = coords;
 			CalculateArea();
-			Vector2 d = center - convertCoords(Input.mousePosition);
+			Vector2 d = center - ConvertCoords(Input.mousePosition);
 			center += d;
 			ReRender();	
 		}
 
-		if (drag) {
-			center += convertCoords(dp) - convertCoords(Input.mousePosition);
-			dp = Input.mousePosition;
+		if (controls.dragging) {
+			center += ConvertCoords(controls.dragPosition) - ConvertCoords(Input.mousePosition);
+			controls.dragPosition = Input.mousePosition;
 			ReRender();
 		}
 	}
 
-	// options
+	/*
+	 * options
+	 */
 
 	public float O_Zoom {
 		get => zoom;

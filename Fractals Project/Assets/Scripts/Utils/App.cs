@@ -3,11 +3,8 @@ using System.Collections;
 using System.IO;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using Vector2 = UnityEngine.Vector2;
-using Vector3 = UnityEngine.Vector3;
 
 public abstract class App : MonoBehaviour {
 	
@@ -15,21 +12,53 @@ public abstract class App : MonoBehaviour {
 	public ComputeShader shader;
 	public GameObject canvas;
 	protected RenderTexture tex;
-	protected RenderTexture tex2;
+	protected RenderTexture tex2; // second render texture (serves different purposes)
 	protected Camera cam;
 	protected int w;
 	protected int h;
-
-	// only update when needed
-	private bool update = false;
-	protected void ReRender() { update = true; }
 	
+	// controls
+	protected readonly ControlsHelper controls;
+	public CameraType cameraType = CameraType.None;
+
+	// rerender
+	private bool update;
+	public void ReRender() { update = true; }
+
+	// render function
 	protected abstract void Render(RenderTexture s);
 	
-	// render update method
+	protected App() { controls = new ControlsHelper(this); }
+	
+	// awake
+	protected void Awake() {
+		
+		// Load the _Loading scene if necessary
+		if (SceneManager.sceneCount == 1)
+			SceneManager.LoadSceneAsync((int) SceneLoader.SceneNames.Loading, LoadSceneMode.Additive);
+
+		// register the controls
+		controls.RegisterControls();
+		
+		//
+		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
+	}
+
+	// enable and disable
+	protected void OnEnable() { controls.Enable(); cam = GetComponent<Camera>(); InitRenderTexture(); }
+	protected void OnDisable() { controls.Disable(); }
+
+	// update
+	protected void Update () {
+		controls.Update();
+		
+		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / Time.smoothDeltaTime) + " FPS";
+	}
+
+	// on render image
 	[ImageEffectOpaque]
 	private void OnRenderImage(RenderTexture s, RenderTexture d) {
-		Init();
+		InitRenderTexture();
 		if (update) {
 			Render(s);
 			update = false;
@@ -37,12 +66,12 @@ public abstract class App : MonoBehaviour {
 		Graphics.Blit(tex, d);
 	}
 
-	// init function
-	private void Init() {
+	// init the render texture
+	private void InitRenderTexture() {
 		w = cam.pixelWidth;
 		h = cam.pixelHeight;
 		
-		// create the texture only if it hasn't been created yet or the window has been rescaled
+		// create the texture if it hasn't been created yet or the window has been rescaled
 		// from https://github.com/SebLague
 		if (tex == null || tex.width != w || tex.height != h) {
 			if (tex != null) {
@@ -56,12 +85,13 @@ public abstract class App : MonoBehaviour {
 			
 			tex2 = new RenderTexture(w, h, 32);
 			tex2.Create();
-			ReRender(); // rerender needed
+			ReRender();
 		}
 	}
 
-	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html and modified
-	protected IEnumerator TakeScreenshot() {
+	// take a screenshot without the ui
+	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html (modified)
+	public IEnumerator TakeScreenshot() {
 
 		// prepare
 		yield return null;
@@ -72,9 +102,9 @@ public abstract class App : MonoBehaviour {
 		yield return new WaitForEndOfFrame();
 		String path = Application.persistentDataPath + "/screenshots/" + shader.name + "/" + w + "x" + h + "/";
 		Directory.CreateDirectory(path);
-		String name = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
-		ScreenCapture.CaptureScreenshot(path + name);
-		Debug.Log("Screenshot saved as " + name);
+		string n = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss") + ".png";
+		ScreenCapture.CaptureScreenshot(path + n);
+		Debug.Log("Screenshot saved as " + n);
 		yield return null;
  
 		// reset
@@ -82,145 +112,23 @@ public abstract class App : MonoBehaviour {
 		ReRender();
 	}
 
-	// option stuff
-	
+	// option setter
 	public void SetOption(string n, object value) {
-		try {
-			ReRender();
-			GetType().GetProperty(n).SetValue(this, value);
-		} catch (Exception e) {
-			Debug.LogError("Invalid option name");
-			throw e;
-		}
+		GetType().GetProperty(n)?.SetValue(this, value);
+		ReRender();
 	}
 
+	// option getter
 	public object GetOption(string n) {
-		try {
-			return GetType().GetProperty(n).GetValue(this);
-		} catch (Exception e) {
-			Debug.LogError("Invalid option name");
-			throw e;
-		}
-	}
-
-	// below are just camera/player controls
-
-	protected float sens = 10f;
-	protected float minR = 1;
-	protected float maxR = 5;
-	protected CameraType cameraType = CameraType.None;
-	
-	// input variables
-	private Controls c;
-	private Vector2 move;
-	private Vector2 cursor;
-	private float tilt;
-	protected float deltaZoom;
-	protected bool drag;
-	protected Vector2 dp;
-
-	// register all controls
-	protected void Awake() {
-		
-		// Load the _Loading scene if necessary
-		if (SceneManager.sceneCount == 1)
-			SceneManager.LoadSceneAsync((int) SceneLoader.SceneNames.Loading, LoadSceneMode.Additive);
-
-		GameObject options = canvas.transform.GetChild(1).gameObject;
-		c = new Controls();
-		c.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
-		c.Default.Move.canceled += ctx => move = Vector2.zero;
-		c.Default.Look.performed += ctx => cursor = ctx.ReadValue<Vector2>();
-		c.Default.Look.canceled += ctx => cursor = Vector2.zero;
-		c.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
-		c.Default.Tilt.canceled += ctx => tilt = 0;
-		c.Default.ScreenClick.performed += ctx => { StartDrag(); SwitchCursor(); };
-		c.Default.ScreenClick.canceled += ctx => { EndDrag(); };
-		c.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu); };
-		c.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
-		c.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
-		c.Default.Zoom.canceled += ctx => deltaZoom = 0f;
-		c.Default.Screenshot.canceled += ctx => { StartCoroutine(TakeScreenshot()); };
-
-		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
-	}
-
-	// enable controls
-	protected void OnEnable() {
-		cam = GetComponent<Camera>();
-		c.Enable();
+		return GetType().GetProperty(n)?.GetValue(this);
 	}
 	
-	// disable controls
-	protected void OnDisable() { c.Disable(); }
-
-	// switch the cursor
-	private void SwitchCursor() {
-		if (cameraType != CameraType.None) {
-			if (Cursor.lockState == CursorLockMode.Locked) {
-				Cursor.lockState = CursorLockMode.None;
-				Cursor.visible = true;
-			} else if (!EventSystem.current.IsPointerOverGameObject()) {
-				Cursor.lockState = CursorLockMode.Locked;
-				Cursor.visible = false;
-			}
-		}
-	}
-
-	// drag start
-	private void StartDrag() {
-		if (!EventSystem.current.IsPointerOverGameObject()) {
-			drag = true;
-			dp = Input.mousePosition;
-		}
-	}
-
-	// drag end
-	private void EndDrag() {
-		drag = false;
-	}
-	
-	// update
-	protected void Update () {
-		if (cameraType != CameraType.None) {
-			if (Cursor.lockState == CursorLockMode.Locked) {
-				switch (cameraType) {
-					
-					// free view camera controls
-					case CameraType.Free:
-						transform.Rotate(-cursor.y * Time.smoothDeltaTime * 5, cursor.x * Time.smoothDeltaTime * 5, -tilt * Time.deltaTime * 5);
-						transform.Translate(new Vector3(move.x * Time.deltaTime * sens, 0, move.y * Time.deltaTime * sens));
-						ReRender();
-						break;
-					
-					// orbit camera controls
-					case CameraType.Orbit:
-						Vector3 pos = transform.localPosition;
-						float r = pos.magnitude - deltaZoom * Time.smoothDeltaTime * sens / 30;
-						Vector2 angles = CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * Time.smoothDeltaTime * sens, -cursor.y * Time.smoothDeltaTime * sens);
-						Vector3 vars = ClampOrbitVars(r, angles);
-						transform.localPosition = SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
-						transform.LookAt(transform.parent ? transform.parent.position : Vector3.zero);
-						ReRender();
-						break;
-					
-				}
-			}
-		}
-
-		Vector3 ClampOrbitVars(float r, Vector2 angles) {
-			r = Mathf.Clamp(r, minR, maxR);
-			if (angles.x < 0) angles.x += 360;
-			if (angles.x >= 360) angles.x -= 360;
-			angles.y = Mathf.Clamp(angles.y, -80, 80);
-			return new Vector3(angles.x, angles.y, r);
-		}
-
-		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / Time.smoothDeltaTime) + " FPS";
-	}
+	/*
+	 * Utils
+	 */
 
 	// convert spherical coordinates to a point on a unit sphere
-	protected Vector3 SphericalCoordsToCartesianCoords(float azimuth, float elevation) {
+	public Vector3 SphericalCoordsToCartesianCoords(float azimuth, float elevation) {
 		float x = Mathf.Cos(ToRadians(azimuth)) * Mathf.Cos(ToRadians(elevation));
 		float y = Mathf.Sin(ToRadians(elevation));
 		float z = Mathf.Sin(ToRadians(azimuth)) * Mathf.Cos(ToRadians(elevation));
@@ -233,7 +141,7 @@ public abstract class App : MonoBehaviour {
 	}
 
 	// convert a point on a unit sphere to spherical coordinates
-	protected Vector2 CartesianCoordsToSphericalCoords(Vector3 c) {
+	public Vector2 CartesianCoordsToSphericalCoords(Vector3 c) {
 		c.Normalize(); // just in case
 		float elevation = ToDegree(Mathf.Atan(c.y / Mathf.Sqrt(c.x * c.x + c.z * c.z)));
 		float azimuth = 90 - ToDegree(Mathf.Atan(c.x / c.z));
@@ -246,10 +154,8 @@ public abstract class App : MonoBehaviour {
 			return a;
 		}
 	}
-	
-	
-	
-	protected enum CameraType {
+
+	public enum CameraType {
 		None, Orbit, Free
 	}
 }

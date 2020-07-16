@@ -40,11 +40,13 @@ public class Audio : App {
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 		
-		// dispose buffers
+		// dispose buffer
 		buffer.Dispose();
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 	
 	public float O_Power {
 		get => power;

@@ -24,6 +24,7 @@ public class AudioProvider {
 		this.callback = callback;
 	}
 
+	// start capturing
 	public void Start() {
 		capture = new WasapiLoopbackCapture();
 		capture.Initialize();
@@ -51,6 +52,7 @@ public class AudioProvider {
 		stream.SingleBlockRead += SingleBlockReadEvent;
 	}
 
+	// stop capturing
 	public void Stop() {
 		stream.SingleBlockRead -= SingleBlockReadEvent;
 		source.Dispose();
@@ -59,6 +61,7 @@ public class AudioProvider {
 		capture.Dispose();
 	}
 
+	// map the results
 	private void ConvertData(float[] audio) {
 		int f = source.WaveFormat.SampleRate / 2;
 		float[] data = new float[size];

@@ -2,14 +2,11 @@
 
 public class InfiniteSpheres : App {
 
-	// variables
 	private float radius = 1;
-	private bool repeat = false;
-	private bool invert= false;
+	private bool repeat;
+	private bool invert;
 
-	private void Start() {
-		cameraType = CameraType.Free;
-	}
+	private void Start() { cameraType = CameraType.Free; }
 
 	// main render method
 	protected override void Render(RenderTexture s) {
@@ -26,7 +23,9 @@ public class InfiniteSpheres : App {
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 
 	public float O_Radius {
 		get => radius;

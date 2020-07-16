@@ -11,8 +11,9 @@ public class Mandelbox : App  {
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
-		maxR = 20;
-		sens = 4;
+		controls.sensitivity = 4;
+		controls.minRadius = 0.5f;
+		controls.maxRadius = 20;
 	}
 	
 	protected override void Render(RenderTexture s) {
@@ -32,7 +33,9 @@ public class Mandelbox : App  {
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 	
 	public float O_Scale {
 		get => scale;

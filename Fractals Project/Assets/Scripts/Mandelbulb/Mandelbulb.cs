@@ -4,15 +4,13 @@ public class Mandelbulb : App {
 	
 	private float power = 11;
 	private int iterations = 10;
-	private bool julia = false;
+	private bool julia;
 	private Vector3 c = Vector3.zero;
 	private float mix = 0.5f;
 	private float eyeOffset = -0.1f;
 	private bool crossEye = false;
 	
-	private void Start() {
-		cameraType = CameraType.Orbit;
-	}
+	private void Start() { cameraType = CameraType.Orbit; }
 
 	// main render method
 	protected override void Render(RenderTexture s) {
@@ -49,7 +47,9 @@ public class Mandelbulb : App {
 		}
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 	
 	public float O_Power {
 		get => power;
@@ -75,15 +75,4 @@ public class Mandelbulb : App {
 		get => mix;
 		set => mix = value;
 	}
-	
-	// animate
-	/*private int sx = 1, sy = 1, sz = 1;
-	private void LateUpdate() {
-		cursor = new Vector2(50f, 0) * Time.deltaTime;
-		c += new Vector3(sx * 0.93f, sy * 0.52f, sz * 0.751f) * Time.smoothDeltaTime / 10;
-		if (c.x > 1 || c.x < -1) sx *= -1;
-		if (c.y > 1 || c.y < -1) sy *= -1;
-		if (c.z > 1 || c.z < -1) sz *= -1;
-		ReRender();
-	}*/
 }

@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class SceneLoader : MonoBehaviour {
 	
-	public static SceneLoader instance;
+	private static SceneLoader instance;
 	private Color clr;
 
 	private void Awake() {
@@ -15,7 +15,8 @@ public class SceneLoader : MonoBehaviour {
 		StartCoroutine(Fade(false, () => { }));
 	}
 
-	public IEnumerator Fade(bool inout, Action callback) {
+	// fade animation
+	private IEnumerator Fade(bool inout, Action callback) {
 		Color a = clr, b = clr;
 		a.a = inout ? 0 : 1;
 		b.a = inout ? 1 : 0;
@@ -27,6 +28,7 @@ public class SceneLoader : MonoBehaviour {
 		callback();
 	}
 
+	// fade to another scene
 	private void Load(int i) {
 		StartCoroutine(Fade(true, () => {
 			SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
@@ -37,6 +39,7 @@ public class SceneLoader : MonoBehaviour {
 		}));
 	}
 
+	// load a scene by its name
 	public static void LoadByName(string n) {
 		try {
 			instance.Load((int) Enum.Parse(typeof(SceneNames), n));
@@ -45,6 +48,7 @@ public class SceneLoader : MonoBehaviour {
 		}
 	}
 
+	// load a scene by its build index
 	public static void LoadByIndex(int i) {
 		instance.Load(i);
 	}

@@ -1,0 +1,79 @@
+[
+	{
+		"Name": "The Project",
+		"Description": "This program is a collection of all the fractals, games and other little projects that I have programmed as part of my Matura Paper.\nThe name of the paper is \"Fraktale und ihre Anwendung im Game-Design\". In it I analyze different fractals, explain how I implemented them and discuss different applications.\n\nBy selecting one of the apps on the left a quick description, the controls and some additional info about the app will be displayed. An app can be loaded by clicking the LOAD button on the bottom right of the screen.\nBy pressing R inside an app the Options menu will be opened, in which the parameters and other setting of the app can be modified. The F12 button can be used to take a screenshot. To exit the app simply press ESCAPE or click the arrow on the top left of the screen.\n\nI recommend having a decent graphics card to run this program unless you enjoy stop motion fractals.\n\nThe source code of \"Fractals\" is available on GitHub: https://github.com/AutisticSlav/Fractals.",
+		"Type": false,
+		"Size": 0,
+		"Date": ""
+	},
+	{
+		"Name": "Mandelbrot",
+		"Description": "The Mandelbrot fractal and its Julia Sets.\n\nUse the mouse to move around and the scroll wheel to zoom.",
+		"Type": false,
+		"Size": 0,
+		"Date": "02 FEB"
+	},
+	{
+		"Name": "Sierpinski",
+		"Description": "The Sierpinski Triangle and the Sierpinski Carpet. Both can be created using the same algorithm.",
+		"Type": false,
+		"Size": 0,
+		"Date": "11 FEB"
+	},
+	{
+		"Name": "Ray Marching 2D",
+		"Description": "A 2D demonstration of Ray Marching.\n\nClick on the screen to set the starting position of the ray.\nDrag your mouse to control the direction in which the ray will march.",
+		"Type": false,
+		"Size": 0,
+		"Date": "11 FEB"
+	},
+	{
+		"Name": "Ray Marching 3D",
+		"Description": "A simple 3D scene, which was rendered using Ray Marching. The scene contains different objects to showcase different features of Ray Marching.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to look around, WASD keys to move and Q and E to rotate the camera.",
+		"Type": true,
+		"Size": 0,
+		"Date": "28 MAR"
+	},
+	{
+		"Name": "Infinite Spheres",
+		"Description": "A demonstration of the capabilities of Ray Marching. A single modification to the position causes the space to repeat and thus gives the illusion of infinite objects.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to look around, WASD keys to move and Q and E to rotate the camera.",
+		"Type": true,
+		"Size": 0,
+		"Date": "29 MAR"
+	},
+	{
+		"Name": "Mandelbulb",
+		"Description": "A 3D version of the Mandelbrot fractal.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to turn the fractal.",
+		"Type": true,
+		"Size": 0,
+		"Date": "30 APR"
+	},
+	{
+		"Name": "Menger Sponge",
+		"Description" : "A 3D version of the Sierpinski Carpet.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nToggling the option REPEAT will switch between a free camera (same controls as Ray Marching 3D and Infinite Spheres) and an orbit camera (same controls as Mandelbulb).",
+		"Type": true,
+		"Size": 0,
+		"Date": "03 MAY"
+	},
+	{
+		"Name": "Octahedron Flake",
+		"Description": "A cooler version of the Sierpinski Triangle that consists of octahedrons instead of pyramids.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to turn the fractal.",
+		"Type": true,
+		"Size": 0,
+		"Date": "05 MAY"
+	},
+	{
+		"Name": "Mandelbox",
+		"Description": "A box like 3D version of the Mandelbrot fractal.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to turn the fractal.",
+		"Type": true,
+		"Size": 0,
+		"Date": "17 MAY"
+	},
+	{
+		"Name": "Audio",
+		"Description": "A Julia set of the Mandelbulb fractal that reacts to audio. The different frequencies control the size and C value of the fractal.",
+		"Type": true,
+		"Size": 0,
+		"Date": "29 JUN"
+	}
+]

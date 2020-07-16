@@ -2,11 +2,9 @@
 
 public class Sierpinski : App {
 
-	// variables
 	private int n = 3;
 	private int iterations = 5;
 
-	// main render method
 	protected override void Render(RenderTexture s) {
 		
 		// shader
@@ -18,7 +16,9 @@ public class Sierpinski : App {
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 
 	public float O_N {
 		get => n;

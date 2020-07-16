@@ -2,14 +2,12 @@
 
 public class OctahedronFlake : App {
 
-	private int iterations = 0;
+	private int iterations;
 	private float size = 1;
 	private Vector3 offset = new Vector3(0, 1, 0);
 	private float sizeDec = 2;
 	
-	private void Start() {
-		cameraType = CameraType.Orbit;
-	}
+	private void Start() { cameraType = CameraType.Orbit; }
 	
 	protected override void Render(RenderTexture s) {
 		
@@ -25,6 +23,10 @@ public class OctahedronFlake : App {
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
+	
+	/*
+	 * options
+	 */
 	
 	public float O_Iterations {
 		get => iterations;

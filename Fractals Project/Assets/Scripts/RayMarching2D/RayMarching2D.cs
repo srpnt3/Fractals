@@ -1,29 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class RayMarching2D : App {
-	
-	// variables
-	private Vector2 origin = new Vector2(960, 540);
-	private float direction = 0;
-	private int steps = 1;
 
-	// lists of the objects
+	private Vector2 origin;
+	private float direction;
+	private int steps = 1;
 	private ComputeBuffer shapes;
 	private List<Shape> objects;
 	private List<Shape> visuals = new List<Shape>();
 
-	// create some objects that look random
+	// start
 	private void Start() {
+		
+		// set origin
+		origin = new Vector2(w/2f, h/2f);
+		
+		// create some random objects
 		objects = new List<Shape>();
-		objects.Add(new Shape(new Vector2(1290, 451), new Vector2(69, 0), 0, 0, new Vector3(204, 51, 51)));
+		float s = Mathf.Sqrt(w * h);
+		for (int i = 0; i < 10; i++) {
+			float s1 = Random.Range(s / 50, s / 10); // width
+			float s2 = Random.Range(s / 50, s / 10); // height
+			float s3 = Mathf.Max(s1, s2) + s / 1000; // margin
+			objects.Add(new Shape(
+				new Vector2(Random.Range(s3, w - s3), Random.Range(s3, h - s3)),
+				new Vector2(s1, s2),
+				Random.Range(0, 2),
+				0,
+				new Vector3(204, 51, 51)
+			));
+		}
+		
+		/*objects.Add(new Shape(new Vector2(1290, 451), new Vector2(69, 0), 0, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(684, 669), new Vector2(85, 0), 0, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(390, 281), new Vector2(89, 0), 0, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(410, 868), new Vector2(91, 65), 1, 0, new Vector3(204, 51, 51)));
 		objects.Add(new Shape(new Vector2(1260, 756), new Vector2(100, 100), 1, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(1739, 180), new Vector2(137, 97), 1, 0, new Vector3(204, 51, 51)));
+		objects.Add(new Shape(new Vector2(1739, 180), new Vector2(137, 97), 1, 0, new Vector3(204, 51, 51)));*/
 	}
 
 	// main render method
@@ -39,31 +54,30 @@ public class RayMarching2D : App {
 
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 		
-		// dispose buffers
+		// dispose buffer
 		shapes.Dispose();
 	}
 
 	// get the smallest distance
 	private float Min(Vector2 pos) {
-		int d = Int32.MaxValue;
+		float d = w * h;
 		foreach (Shape shape in objects) {
-			float x = GetDistance(pos, shape);
-			if (x < d) d = Mathf.RoundToInt(x);
+			d = Mathf.Min(d, GetDistance(pos, shape));
 		}
 		visuals.Add(new Shape(pos, new Vector2(Mathf.Abs(d), 0), 0, 1, new Vector3(246, 246, 246)));
 		return d;
 	}
 
-	// march n times until the ray hits an object (gets smaller than 1)
+	// march n times until the ray hits an object (d gets smaller than 1)
 	private void March() {
 		Vector2 pos = origin;
 		for (int i = 0; i < steps; i++) {
-			float d = Min(pos);
+			float d = Mathf.Abs(Min(pos));
 			pos = new Vector2(
 				pos.x + d * Mathf.Cos(direction * (Mathf.PI / 180)),
 				pos.y + d * Mathf.Sin(direction * (Mathf.PI / 180))
 			);
-			if (Mathf.Abs(d) < 1 || Mathf.Abs(d) > 1000) break;
+			if (d < 1 || d > 1000) break;
 		}
 		visuals.Add(new Shape(origin, new Vector3(pos.x, pos.y, 1), 2, 0, new Vector3(246, 246, 246)));
 	}
@@ -81,7 +95,9 @@ public class RayMarching2D : App {
 		visuals = new List<Shape>();
 	}
 	
-	// distance estimators
+	/*
+	 * distance estimators
+	 */
 	
 	private float GetDistance(Vector2 pos, Shape shape) {
 		return shape.type == 0 ? DECircle(pos, shape.pos, shape.size[0]) : DESquare(pos, shape.pos, shape.size);
@@ -101,20 +117,22 @@ public class RayMarching2D : App {
 		return Length(Vector2.Max(d, new Vector2(0, 0))) + Mathf.Min(Mathf.Max(d[0], d[1]), 0);
 	}
 
+	// abs of a vector
 	private Vector2 Abs(Vector2 x) {
 		return new Vector2(Mathf.Abs(x[0]), Mathf.Abs(x[1]));
 	}
 	
-	// controls
+	/*
+	 * controls
+	 */
 
 	private bool posSet;
-	
-	private void LateUpdate() {
+	private new void Update() {
+		base.Update();
 		
-		if (drag) {
+		if (controls.dragging) {
 			if (posSet) {
 				Vector2 d = origin - new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-				//steps = Mathf.RoundToInt(d.magnitude / 10f);
 				if (steps < 1) steps = 1;
 				if (steps > 100) steps = 100;
 				direction = getAngle(d);
@@ -128,6 +146,7 @@ public class RayMarching2D : App {
 		}
 	}
 
+	// vector angle
 	private float getAngle(Vector2 p) {
 		float a = Vector2.SignedAngle(Vector2.left, p);
 		if (a < 0) {
@@ -136,7 +155,7 @@ public class RayMarching2D : App {
 		return a;
 	}
 
-	// the shape object
+	// shape struct
 	struct Shape {
 		public Vector2 pos;
 		public Vector3 size;
@@ -153,7 +172,9 @@ public class RayMarching2D : App {
 		}
 	}
 	
-	// options
+	/*
+	 * options
+	 */
 
 	public Vector2 O_Position {
 		get => origin;

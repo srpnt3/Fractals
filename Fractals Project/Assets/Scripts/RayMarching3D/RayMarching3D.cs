@@ -6,11 +6,8 @@ public class RayMarching3D : App {
 	private float azimuth = 70;
 	private float shadows = 1;
 	
-	private void Start() {
-		cameraType = CameraType.Free;
-	}
+	private void Start() { cameraType = CameraType.Free; }
 
-	// main render method
 	protected override void Render(RenderTexture s) {
 		
 		// shader
@@ -24,7 +21,9 @@ public class RayMarching3D : App {
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
 
-	// options
+	/*
+	 * options
+	 */
 	
 	public float O_Elevation {
 		get => elevation;

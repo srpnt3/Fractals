@@ -36,6 +36,10 @@ public static class Colors {
         public Vector3 ToVec3() {
             return new Vector3(R, G, B);
         }
+
+        public static RGBColor Random() {
+            return new RGBColor(UnityEngine.Random.Range(0f, 1), UnityEngine.Random.Range(0f, 1), UnityEngine.Random.Range(0f, 1));
+        }
     }
 
     // XYZ Color
