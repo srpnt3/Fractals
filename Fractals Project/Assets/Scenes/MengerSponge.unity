@@ -1108,13 +1108,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 650338635}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c84d3223adeccb84abecee5abc28d572, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   shader: {fileID: 7200000, guid: 48cf9e093e9510f49934b23cd58f1670, type: 3}
   canvas: {fileID: 1620219076}
+  cameraType: 0
 --- !u!4 &650338642
 Transform:
   m_ObjectHideFlags: 0
