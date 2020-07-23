@@ -18,7 +18,7 @@ public abstract class App : MonoBehaviour {
 	protected int h;
 	
 	// controls
-	protected readonly ControlsHelper controls;
+	public readonly ControlsHelper controls;
 	public CameraType cameraType = CameraType.None;
 
 	// rerender
@@ -40,7 +40,7 @@ public abstract class App : MonoBehaviour {
 		// register the controls
 		controls.RegisterControls();
 		
-		//
+		// back button
 		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
 	}
 
@@ -84,6 +84,7 @@ public abstract class App : MonoBehaviour {
 			tex.Create();
 			
 			tex2 = new RenderTexture(w, h, 32);
+			tex2.format = RenderTextureFormat.ARGBFloat;
 			tex2.Create();
 			ReRender();
 		}

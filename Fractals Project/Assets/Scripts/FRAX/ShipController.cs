@@ -1,0 +1,79 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.VFX;
+
+public class ShipController : MonoBehaviour {
+
+	public VisualEffect engine1;
+	public VisualEffect engine2;
+	
+	// (velocity, acceleration, "air resistance")
+	private Vector3 position = new Vector3(0, 0, 1);
+	private Vector3 roll = new Vector3(0, 0, 5); // delta roll
+	private Vector3 yaw = new Vector3(0, 0, 2); // delta yaw
+	private Vector3 pitch = new Vector3(0, 0, 2); // delta pitch
+	//public int dodge; // left: -1; right: 1; none: 0;
+	
+	private Transform t;
+	private App app;
+	private Vector3 cam;
+	private ControlsHelper c;
+
+	private void Start() {
+		t = GetComponent<Transform>();
+		app = t.GetChild(0).GetComponent<App>();
+		cam = GetCameraCoords(app.transform.localPosition);
+		c = app.controls;
+	}
+
+	private void Update() {
+		
+		// update values
+		position[1] = c.throttle * 10;
+		UpdateValue(ref position, -3, 20);
+		roll[1] = c.roll * 10;
+		UpdateValue(ref roll, -5, 5);
+		yaw[1] = c.yaw * 4;
+		UpdateValue(ref yaw, -2, 2);
+		pitch[1] = c.pitch * 4;
+		UpdateValue(ref pitch, -2, 2);
+		
+		
+		// update ship
+		t.position += t.forward * (position.x * Time.deltaTime);
+		t.Rotate(new Vector3(pitch[0], yaw[0], roll[0]) * (Time.deltaTime * Mathf.PI * 20));
+		UpdateEngines();
+		
+		// update camera
+		app.transform.localPosition = app.SphericalCoordsToCartesianCoords(cam.x - yaw[0] * 3, cam.y - pitch[0] * 3) * cam.z;
+		app.transform.localRotation = Quaternion.Euler(0, 0 , -roll[0] * 3);
+
+	}
+
+	private void UpdateValue(ref Vector3 v, float min, float max) { // min and max velocity
+		v[0] += v[1] * Time.deltaTime; // velocity += acceleration
+		if (v[0] < 0) { // |velocity| -= "air resistance"
+			v[0] += v[2] * Time.deltaTime;
+			v[0] = Mathf.Clamp(v[0], min, 0);
+		} else if (v[0] > 0) {
+			v[0] -= v[2] * Time.deltaTime;
+			v[0] = Mathf.Clamp(v[0], 0, max);
+		}
+	}
+
+	private void UpdateEngines() {
+		float v = Mathf.Abs(position[0] / 20);
+		float a = position[1] / 10;
+		engine1.SetFloat("Power", 0.1f + Mathf.Abs(a) * v);
+		engine2.SetFloat("Power", 0.1f + Mathf.Abs(a) * v);
+		engine1.SetFloat("Irregularity", 12 - a * 10  * v);
+		engine2.SetFloat("Irregularity", 12 - a * 10  * v);
+	}
+	
+	private Vector3 GetCameraCoords(Vector3 pos) {
+		Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized);
+		return new Vector3(angles.x, angles.y, pos.magnitude);
+	}
+}

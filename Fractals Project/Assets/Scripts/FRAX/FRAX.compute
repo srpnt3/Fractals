@@ -16,6 +16,8 @@ float zFar;
 static const int steps = 300;
 static const float epsilon = 0.0001;
 static const float size = 5;
+static const int iterations = 0;
+static const float edge = 2.5;
 
 // ray
 struct Ray {
@@ -69,16 +71,25 @@ float3 RepeatSpace(float3 p) {
 	return float3(x, y, z);
 }
 
+// from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm (modified)
+float3 ClampPosition(float3 p) {
+	float a = size / 3 * 4;
+	float x = (p.x - a / 2) % a + a / 2;
+	float y = (p.y - a / 2) % a + a / 2;
+	float z = (p.z - a / 2) % a + a / 2;
+	return float3(x, y, z);
+}
+
 // the distance to the scene
 float DE(float3 p) {
 	p = RepeatSpace(p);
 
-	float d = DEBox(p, size / 1.6);
+	float d = DEBox(p, size / edge);
 	d = max(-DECross(p, size), d);
 	
 	// iterate and subtract
 	int i = 0;
-	while(i < 10 - 1) {
+	while(i < iterations - 1) {
 		p *= 3;
 		p = abs(p);
 		p -= float3(size, size, size);
@@ -99,9 +110,8 @@ float2 March(Ray ray) {
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
-		if (length(eye - ray.origin) > 200) break; // to far away
+		if (length(eye - ray.origin) > 500) break; // to far away
 		if (d < epsilon) break; // hit
-		//ray.origin += PosToRand(eye, ray.origin, d); // DOF
 		ray.origin += ray.direction * d; // march
 		s++; // next iteration
 	}
@@ -126,9 +136,10 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	// create ray
 	Ray ray = CreateCameraRay(uv);
 	
+	ray.origin = ClampPosition(ray.origin);
+	
 	float2 res = March(ray);
-	float4 ao = res.x * float4(0.1, 0.74, 0.61, res.y / 10.0);
-	float4 fog = 1 / (res.y + 1);
+	float4 ao = res.x * float4(0.3, 0.6, 0.7, 1);
 	if (DecodeDepth(Source[id.xy].w) > res.y) {
 		Texture[id.xy] = float4(0.11, 0.12, 0.17, 0) + ao;
 	} else {

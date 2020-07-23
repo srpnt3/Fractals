@@ -5,7 +5,7 @@ public class FRAX : App {
 	private Material depth;
 	
 	private void Start() {
-		cameraType = CameraType.Orbit;
+		//cameraType = CameraType.Orbit;
 		cam.depthTextureMode = DepthTextureMode.Depth;
 		depth = new Material(Shader.Find("Custom/DepthBuffer"));
 		controls.minRadius = 2;

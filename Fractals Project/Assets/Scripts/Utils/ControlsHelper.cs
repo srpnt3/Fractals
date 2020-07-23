@@ -11,13 +11,19 @@ public class ControlsHelper {
 	public float minRadius = 1;
 	public float maxRadius = 5;
 	
-	// inputs
+	// default
 	public Vector2 move;
 	public Vector2 cursor;
 	public float tilt;
 	public float deltaZoom;
 	public bool dragging;
 	public Vector2 dragPosition;
+	
+	// flight
+	public float throttle;
+	public float roll;
+	public float yaw;
+	public float pitch;
 
 	public ControlsHelper(App app) {
 		this.app = app;
@@ -28,7 +34,7 @@ public class ControlsHelper {
 		// some variables
 		GameObject options = app.canvas.transform.GetChild(1).gameObject;
 		
-		// register the controls
+		// register default controls
 		controls = new Controls();
 		controls.Default.Move.performed += ctx => move = ctx.ReadValue<Vector2>();
 		controls.Default.Move.canceled += ctx => move = Vector2.zero;
@@ -43,6 +49,16 @@ public class ControlsHelper {
 		controls.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		controls.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 		controls.Default.Screenshot.canceled += ctx => { app.StartCoroutine(app.TakeScreenshot()); };
+		
+		// register flight controls
+		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();
+		controls.Flight.Throttle.canceled += ctx => throttle = 0;
+		controls.Flight.Roll.performed += ctx => roll = ctx.ReadValue<float>();
+		controls.Flight.Roll.canceled += ctx => roll = 0;
+		controls.Flight.Yaw.performed += ctx => yaw = ctx.ReadValue<float>();
+		controls.Flight.Yaw.canceled += ctx => yaw = 0;
+		controls.Flight.Pitch.performed += ctx => pitch = ctx.ReadValue<float>();
+		controls.Flight.Pitch.canceled += ctx => pitch = 0;
 	}
 
 	// update
