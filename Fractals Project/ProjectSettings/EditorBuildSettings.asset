@@ -41,4 +41,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Audio.unity
     guid: 92d455b22ddf0e8439e1e5f4a8b388ec
+  - enabled: 1
+    path: Assets/Scenes/FRAX.unity
+    guid: 11aa6c0b416ace44b93b32ad09d4163a
   m_configObjects: {}

@@ -30,9 +30,17 @@
                     "interactions": ""
                 },
                 {
-                    "name": "ScreenClick",
+                    "name": "LetfClick",
                     "type": "Button",
                     "id": "1121e82c-7cda-4b6b-bd52-2bb8a75380fa",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RightClick",
+                    "type": "Button",
+                    "id": "796d86b5-5d1d-41b5-941e-2e62c3fd774e",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
@@ -208,7 +216,7 @@
                     "id": "2b109b53-d543-403d-8d59-b286a4755b5e",
                     "path": "<Gamepad>/rightStick",
                     "interactions": "",
-                    "processors": "ScaleVector2(x=6,y=6)",
+                    "processors": "ScaleVector2(x=20,y=20)",
                     "groups": "",
                     "action": "Look",
                     "isComposite": false,
@@ -232,7 +240,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ScreenClick",
+                    "action": "LetfClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -243,14 +251,14 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "ScreenClick",
+                    "action": "LetfClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
                     "id": "0968489a-560c-43d7-a907-ef6034c3f296",
-                    "path": "<Gamepad>/buttonWest",
+                    "path": "<Gamepad>/start",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -307,7 +315,7 @@
                     "id": "3b4f5ef6-cd74-4191-bae1-22969c118343",
                     "path": "1DAxis",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "Scale(factor=20)",
                     "groups": "",
                     "action": "Zoom",
                     "isComposite": true,
@@ -354,6 +362,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Screenshot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3194aee0-6f56-49cf-a028-ea73b2cc2c87",
+                    "path": "<Gamepad>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d4735cd2-7d4f-4902-b1c9-5a8b4e20b7cf",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RightClick",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -577,6 +607,39 @@
                     "name": "positive",
                     "id": "b62d1017-c8d0-4ad4-8642-92541693e308",
                     "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Yaw",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "8da59a63-ec95-4b85-85a9-93f4b9577a78",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Yaw",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "0a792486-f76b-4044-9c2f-620affa233d0",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Yaw",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "5fcc0134-d68c-49e2-96ce-790f1d1f10e9",
+                    "path": "<Gamepad>/rightShoulder",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

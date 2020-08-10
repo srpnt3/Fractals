@@ -14,16 +14,15 @@ public class ShipController : MonoBehaviour {
 	private Vector3 roll = new Vector3(0, 0, 5); // delta roll
 	private Vector3 yaw = new Vector3(0, 0, 2); // delta yaw
 	private Vector3 pitch = new Vector3(0, 0, 2); // delta pitch
-	//public int dodge; // left: -1; right: 1; none: 0;
 	
 	private Transform t;
-	private App app;
+	private FRAX app;
 	private Vector3 cam;
 	private ControlsHelper c;
 
 	private void Start() {
 		t = GetComponent<Transform>();
-		app = t.GetChild(0).GetComponent<App>();
+		app = t.GetChild(0).GetComponent<FRAX>();
 		cam = GetCameraCoords(app.transform.localPosition);
 		c = app.controls;
 	}
@@ -47,7 +46,7 @@ public class ShipController : MonoBehaviour {
 		UpdateEngines();
 		
 		// update camera
-		app.transform.localPosition = app.SphericalCoordsToCartesianCoords(cam.x - yaw[0] * 3, cam.y - pitch[0] * 3) * cam.z;
+		app.transform.localPosition = app.SphericalCoordsToCartesianCoords(cam.x - yaw[0] * 3, cam.y - pitch[0] * 3) * (cam.z + position[0] / 20);
 		app.transform.localRotation = Quaternion.Euler(0, 0 , -roll[0] * 3);
 
 	}
@@ -66,10 +65,15 @@ public class ShipController : MonoBehaviour {
 	private void UpdateEngines() {
 		float v = Mathf.Abs(position[0] / 20);
 		float a = position[1] / 10;
-		engine1.SetFloat("Power", 0.1f + Mathf.Abs(a) * v);
-		engine2.SetFloat("Power", 0.1f + Mathf.Abs(a) * v);
-		engine1.SetFloat("Irregularity", 12 - a * 10  * v);
-		engine2.SetFloat("Irregularity", 12 - a * 10  * v);
+		engine1.SetFloat("Power", 0.1f + Mathf.Max(Mathf.Abs(a), 0.5f) * v);
+		engine2.SetFloat("Power", 0.1f + Mathf.Max(Mathf.Abs(a), 0.5f) * v);
+		engine1.SetFloat("Irregularity", 10 - a * 10  * v);
+		engine2.SetFloat("Irregularity", 10 - a * 10  * v);
+		
+		Vector2 directionL = new Vector2(-pitch[0] + roll[0], -yaw[0]) / 4;
+		Vector2 directionR = new Vector2(-pitch[0] - roll[0], -yaw[0]) / 4;
+		engine1.SetVector2("Direction", directionL);
+		engine2.SetVector2("Direction", directionR);
 	}
 	
 	private Vector3 GetCameraCoords(Vector3 pos) {

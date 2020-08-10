@@ -12,12 +12,12 @@ float4x4 CamInverseProjection;
 int Iterations;
 float Size;
 float Edge;
-bool Repeat;
-float DOF;
+float Cut;
+bool Cantor;
 
 // constants
 static const int steps = 300;
-static const float epsilon = 0.0001;
+static const float epsilon = 0.00001;
 
 // ray
 struct Ray {
@@ -50,7 +50,7 @@ float DEBox(float3 p, float s) {
 
 // 2D box distance estimator from https://iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm
 float DEBox2D(float2 p, float s) {
-	float2 d = abs(p) - s;
+	float2 d = abs(Cantor ? p[0] : p) - s;
 	return length(max(d, 0.0)) + min(max(d.x, d.y), 0);
 }
 
@@ -58,8 +58,13 @@ float DEBox2D(float2 p, float s) {
 float DECross(float3 p, float s) {
 	s = s / 3;
 	float d = DEBox2D(p.xy, s);
-	d = min(d, DEBox2D(p.xz, s));
+	d = min(d, DEBox2D(p.zx, s));
 	return min(d, DEBox2D(p.yz, s));
+}
+
+float DECuttingPlane(float3 p) {
+	float3 n = normalize(float3(1, -1, 1));
+	return dot(p, n) - (Cut * 2 - 1) * length(float3(Size, Size, Size));
 }
 
 // repeat space from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
@@ -74,7 +79,7 @@ float3 RepeatSpace(float3 p) {
 // the distance to the scene
 float DE(float3 p) {
 
-	if (Repeat) p = RepeatSpace(p);
+	float plane = DECuttingPlane(p);
 
 	float d = DEBox(p, Size / Edge);
 	if (Iterations > 0) d = max(-DECross(p, Size), d);
@@ -91,22 +96,8 @@ float DE(float3 p) {
 		d = max(d, -DECross(p, Size) / pow(3, i));
 	}
 	
-	return d;
+	return max(d, -plane);
 }
-
-/*float rand(float2 uv) {
-    float2 noise = (frac(sin(dot(uv ,float2(12.9898,78.233)*2.0)) * 43758.5453));
-    return abs(noise.x + noise.y);
-}
-
-float3 PosToRand(float3 eye, float3 p, float d) {
-	float totalD = length(eye - p);
-	float x = rand(p.yz) - 1;
-	float y = rand(p.xz) - 1;
-	float z = rand(p.xy) - 1;
-	float3 disp = normalize(float3(x, y, z));
-	return disp * totalD * d * (DOF / 50);
-}*/
 
 // cast a ray and return the result
 float2 March(Ray ray) {
@@ -118,7 +109,6 @@ float2 March(Ray ray) {
 		d = DE(ray.origin); // calculate distance
 		if (length(eye - ray.origin) > 200) break; // to far away
 		if (d < epsilon) break; // hit
-		//ray.origin += PosToRand(eye, ray.origin, d); // DOF
 		ray.origin += ray.direction * d; // march
 		s++; // next iteration
 	}
@@ -140,5 +130,4 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	float4 ao = res.x * float4(0.3, 0.6, 0.7, 1);
 	float4 fog = 1 / (res.y + 1);
 	Texture[id.xy] = Source[id.xy] + ao;
-	//Texture[id.xy] = fog;
 }

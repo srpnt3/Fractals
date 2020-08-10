@@ -15,14 +15,14 @@ float4x4 CamInverseProjectionR;
 // variables
 float Power;
 int Iterations;
-bool Julia;
+float Julia;
 float3 C;
 float Mix;
-bool CrossEye;
+bool Alt;
 
 // constants
-static const int steps = 300;
-static const float epsilon = 0.0001;
+static const int steps = 500;
+static const float epsilon = 0.00001;
 
 // ray
 struct Ray {
@@ -40,25 +40,9 @@ Ray CreateRay(float3 origin, float3 direction) {
 
 // from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
-
-	float4x4 ctw = CamToWorld;
-	float4x4 cip = CamInverseProjection;
-
-	if (CrossEye) {
-		if (uv.x < 0) {
-			uv.x += 0.4;
-			ctw = CamToWorldL;
-			cip = CamInverseProjectionL;
-		} else {
-			uv.x -= 0.4;
-			ctw = CamToWorldR;
-			cip = CamInverseProjectionR;
-		}
-	}
-	
-    float3 origin = mul(ctw, float4(0, 0, 0, 1)).xyz;
-    float3 direction = mul(cip, float4(uv, 0, 1)).xyz;
-    direction = mul(ctw, float4(direction, 0)).xyz;
+    float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
+    float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
+    direction = mul(CamToWorld, float4(direction, 0)).xyz;
     direction = normalize(direction);
     return CreateRay(origin, direction);
 }
@@ -76,7 +60,7 @@ float2 DE(float3 p) {
 		if (r > 3) break;
         
 		// convert to polar coordinates
-		float theta = acos(z.z / r);
+		float theta = Alt ? asin(z.z / r) : acos(z.z / r);
 		float phi = atan2(z.y, z.x);
 		dr = pow(r, Power - 1.0) * Power * dr + 1.0;
 
@@ -86,8 +70,9 @@ float2 DE(float3 p) {
 		phi = phi * Power;
 		
 		// convert back to cartesian coordinates
-		z = zr * float3(sin(theta) * cos(phi), sin(phi) * sin(theta), cos(theta));
-		z += Julia ? C : p;
+		if (Alt) z = zr * float3(cos(theta) * cos(phi), cos(theta) * sin(phi), sin(theta));
+		else z = zr * float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+		z += Julia * C + (1 - Julia) * p;
 		
 		// next iteration
 		i++;

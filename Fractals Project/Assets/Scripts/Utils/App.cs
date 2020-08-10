@@ -92,11 +92,11 @@ public abstract class App : MonoBehaviour {
 
 	// take a screenshot without the ui
 	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html (modified)
-	public IEnumerator TakeScreenshot() {
-
+	public IEnumerator TakeScreenshot(bool ui) {
+		
 		// prepare
 		yield return null;
-		canvas.SetActive(false);
+		if (!ui) canvas.SetActive(false);
 		ReRender();
  
 		// take
@@ -109,7 +109,7 @@ public abstract class App : MonoBehaviour {
 		yield return null;
  
 		// reset
-		canvas.SetActive(true);
+		if (!ui) canvas.SetActive(true);
 		ReRender();
 	}
 

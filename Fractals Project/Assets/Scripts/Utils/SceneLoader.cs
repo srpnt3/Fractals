@@ -66,5 +66,6 @@ public class SceneLoader : MonoBehaviour {
 		OctahedronFlake = 9,
 		Mandelbox = 10,
 		Audio = 11,
+		FRAX = 12
 	}
 }

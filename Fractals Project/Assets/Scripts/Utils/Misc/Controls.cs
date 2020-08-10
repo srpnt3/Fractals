@@ -43,9 +43,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
-                    ""name"": ""ScreenClick"",
+                    ""name"": ""LetfClick"",
                     ""type"": ""Button"",
                     ""id"": ""1121e82c-7cda-4b6b-bd52-2bb8a75380fa"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RightClick"",
+                    ""type"": ""Button"",
+                    ""id"": ""796d86b5-5d1d-41b5-941e-2e62c3fd774e"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -221,7 +229,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""2b109b53-d543-403d-8d59-b286a4755b5e"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
-                    ""processors"": ""ScaleVector2(x=6,y=6)"",
+                    ""processors"": ""ScaleVector2(x=20,y=20)"",
                     ""groups"": """",
                     ""action"": ""Look"",
                     ""isComposite"": false,
@@ -245,7 +253,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ScreenClick"",
+                    ""action"": ""LetfClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -256,14 +264,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""ScreenClick"",
+                    ""action"": ""LetfClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
                 {
                     ""name"": """",
                     ""id"": ""0968489a-560c-43d7-a907-ef6034c3f296"",
-                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""path"": ""<Gamepad>/start"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -320,7 +328,7 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""id"": ""3b4f5ef6-cd74-4191-bae1-22969c118343"",
                     ""path"": ""1DAxis"",
                     ""interactions"": """",
-                    ""processors"": """",
+                    ""processors"": ""Scale(factor=20)"",
                     ""groups"": """",
                     ""action"": ""Zoom"",
                     ""isComposite"": true,
@@ -367,6 +375,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Screenshot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3194aee0-6f56-49cf-a028-ea73b2cc2c87"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d4735cd2-7d4f-4902-b1c9-5a8b4e20b7cf"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RightClick"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -596,6 +626,39 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Yaw"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""8da59a63-ec95-4b85-85a9-93f4b9577a78"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Yaw"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""negative"",
+                    ""id"": ""0a792486-f76b-4044-9c2f-620affa233d0"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Yaw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""positive"",
+                    ""id"": ""5fcc0134-d68c-49e2-96ce-790f1d1f10e9"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Yaw"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -607,7 +670,8 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Default_Move = m_Default.FindAction("Move", throwIfNotFound: true);
         m_Default_Look = m_Default.FindAction("Look", throwIfNotFound: true);
         m_Default_Tilt = m_Default.FindAction("Tilt", throwIfNotFound: true);
-        m_Default_ScreenClick = m_Default.FindAction("ScreenClick", throwIfNotFound: true);
+        m_Default_LetfClick = m_Default.FindAction("LetfClick", throwIfNotFound: true);
+        m_Default_RightClick = m_Default.FindAction("RightClick", throwIfNotFound: true);
         m_Default_ToggleOptions = m_Default.FindAction("ToggleOptions", throwIfNotFound: true);
         m_Default_Back = m_Default.FindAction("Back", throwIfNotFound: true);
         m_Default_Zoom = m_Default.FindAction("Zoom", throwIfNotFound: true);
@@ -670,7 +734,8 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Default_Move;
     private readonly InputAction m_Default_Look;
     private readonly InputAction m_Default_Tilt;
-    private readonly InputAction m_Default_ScreenClick;
+    private readonly InputAction m_Default_LetfClick;
+    private readonly InputAction m_Default_RightClick;
     private readonly InputAction m_Default_ToggleOptions;
     private readonly InputAction m_Default_Back;
     private readonly InputAction m_Default_Zoom;
@@ -682,7 +747,8 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_Default_Move;
         public InputAction @Look => m_Wrapper.m_Default_Look;
         public InputAction @Tilt => m_Wrapper.m_Default_Tilt;
-        public InputAction @ScreenClick => m_Wrapper.m_Default_ScreenClick;
+        public InputAction @LetfClick => m_Wrapper.m_Default_LetfClick;
+        public InputAction @RightClick => m_Wrapper.m_Default_RightClick;
         public InputAction @ToggleOptions => m_Wrapper.m_Default_ToggleOptions;
         public InputAction @Back => m_Wrapper.m_Default_Back;
         public InputAction @Zoom => m_Wrapper.m_Default_Zoom;
@@ -705,9 +771,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Tilt.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
                 @Tilt.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
                 @Tilt.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnTilt;
-                @ScreenClick.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
-                @ScreenClick.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
-                @ScreenClick.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnScreenClick;
+                @LetfClick.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLetfClick;
+                @LetfClick.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLetfClick;
+                @LetfClick.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnLetfClick;
+                @RightClick.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRightClick;
+                @RightClick.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRightClick;
+                @RightClick.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRightClick;
                 @ToggleOptions.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
                 @ToggleOptions.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnToggleOptions;
@@ -733,9 +802,12 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Tilt.started += instance.OnTilt;
                 @Tilt.performed += instance.OnTilt;
                 @Tilt.canceled += instance.OnTilt;
-                @ScreenClick.started += instance.OnScreenClick;
-                @ScreenClick.performed += instance.OnScreenClick;
-                @ScreenClick.canceled += instance.OnScreenClick;
+                @LetfClick.started += instance.OnLetfClick;
+                @LetfClick.performed += instance.OnLetfClick;
+                @LetfClick.canceled += instance.OnLetfClick;
+                @RightClick.started += instance.OnRightClick;
+                @RightClick.performed += instance.OnRightClick;
+                @RightClick.canceled += instance.OnRightClick;
                 @ToggleOptions.started += instance.OnToggleOptions;
                 @ToggleOptions.performed += instance.OnToggleOptions;
                 @ToggleOptions.canceled += instance.OnToggleOptions;
@@ -814,7 +886,8 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
         void OnTilt(InputAction.CallbackContext context);
-        void OnScreenClick(InputAction.CallbackContext context);
+        void OnLetfClick(InputAction.CallbackContext context);
+        void OnRightClick(InputAction.CallbackContext context);
         void OnToggleOptions(InputAction.CallbackContext context);
         void OnBack(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);

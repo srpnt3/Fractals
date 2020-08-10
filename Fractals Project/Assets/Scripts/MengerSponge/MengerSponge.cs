@@ -5,7 +5,8 @@ public class MengerSponge : App {
 	private int iterations;
 	private float size = 1;
 	private float edge = 1;
-	private bool repeat;
+	private float cut;
+	private bool cantor;
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;
@@ -21,7 +22,8 @@ public class MengerSponge : App {
 		shader.SetInt("Iterations", iterations);
 		shader.SetFloat("Size", size);
 		shader.SetFloat("Edge", edge);
-		shader.SetBool("Repeat", repeat);
+		shader.SetFloat("Cut", cut);
+		shader.SetBool("Cantor", cantor);
 		
 		shader.Dispatch(0, Mathf.CeilToInt(w / 8f), Mathf.CeilToInt(h / 8f), 1);
 	}
@@ -45,18 +47,13 @@ public class MengerSponge : App {
 		set => edge = value;
 	}
 	
-	public bool O_Repeat {
-		get => repeat;
-		set {
-			if (value) {
-				cameraType = CameraType.Free;
-			} else {
-				cameraType = CameraType.Orbit;
-				transform.LookAt(Vector3.zero);
-				transform.position = transform.position.normalized * Mathf.Clamp(transform.position.magnitude, 1, 5);
-				ReRender();
-			}
-			repeat = value;
-		}
+	public float O_Cut {
+		get => cut;
+		set => cut = value;
+	}
+	
+	public bool O_Cantor {
+		get => cantor;
+		set => cantor = value;
 	}
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Mandelbrot : App {
 	
@@ -63,7 +64,8 @@ public class Mandelbrot : App {
 		return new Vector2(coords[0] / (w / area[2]) + area[0], coords[1] / (h / area[3]) - area[1]);
 	}
 	
-	private void LateUpdate() {
+	private new void Update() {
+		base.Update();
 		
 		// update coordinates
 		Vector2 coords = ConvertCoords(Input.mousePosition);
@@ -84,6 +86,15 @@ public class Mandelbrot : App {
 			center += ConvertCoords(controls.dragPosition) - ConvertCoords(Input.mousePosition);
 			controls.dragPosition = Input.mousePosition;
 			ReRender();
+		}
+
+		if (controls.rightClick) {
+			controls.rightClick = false;
+			if (!EventSystem.current.IsPointerOverGameObject()) {
+				c = coords;
+				julia = !julia;
+				ReRender();
+			}
 		}
 	}
 

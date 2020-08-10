@@ -11,13 +11,14 @@ float4x4 CamInverseProjection;
 // variables
 float zNear;
 float zFar;
+float Edge;
+float3 CurveSpace;
 
 // constants
 static const int steps = 300;
 static const float epsilon = 0.0001;
 static const float size = 5;
-static const int iterations = 0;
-static const float edge = 2.5;
+static const int iterations = 5;
 
 // ray
 struct Ray {
@@ -58,7 +59,7 @@ float DEBox2D(float2 p, float s) {
 float DECross(float3 p, float s) {
 	s = s / 3;
 	float d = DEBox2D(p.xy, s);
-	d = min(d, DEBox2D(p.xz, s));
+	d = min(d, DEBox2D(p.zx, s));
 	return min(d, DEBox2D(p.yz, s));
 }
 
@@ -84,7 +85,7 @@ float3 ClampPosition(float3 p) {
 float DE(float3 p) {
 	p = RepeatSpace(p);
 
-	float d = DEBox(p, size / edge);
+	float d = DEBox(p, size / Edge);
 	d = max(-DECross(p, size), d);
 	
 	// iterate and subtract
@@ -110,6 +111,7 @@ float2 March(Ray ray) {
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
+		ray.direction += CurveSpace * d / 100; // curve space
 		if (length(eye - ray.origin) > 500) break; // to far away
 		if (d < epsilon) break; // hit
 		ray.origin += ray.direction * d; // march
@@ -128,6 +130,10 @@ float DecodeDepth(float d) {
 
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
+
+	float4 accent = float4(0.55, 0.65, 1, 1);
+	float4 collision = float4(0.55, 0.4, 0.8, 1);
+	float4 background = float4(0.06, 0.06, 0.12, 0);
 			
 	// convert into range [-1, 1]
 	float w, h; Texture.GetDimensions(w, h);
@@ -139,10 +145,17 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	ray.origin = ClampPosition(ray.origin);
 	
 	float2 res = March(ray);
-	float4 ao = res.x * float4(0.3, 0.6, 0.7, 1);
+	float4 ao = res.x * accent;
 	if (DecodeDepth(Source[id.xy].w) > res.y) {
-		Texture[id.xy] = float4(0.11, 0.12, 0.17, 0) + ao;
+		Texture[id.xy] = background + ao;
 	} else {
 		Texture[id.xy] = Source[id.xy];
+	}
+	float a = DecodeDepth(Source[id.xy].w);
+	float b = res.y;
+	
+	// collision
+	if (abs(a - b) < 0.02) {
+		Texture[id.xy] = background + collision;
 	}
 }

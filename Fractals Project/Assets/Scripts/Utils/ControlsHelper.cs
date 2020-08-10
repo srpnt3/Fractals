@@ -18,6 +18,7 @@ public class ControlsHelper {
 	public float deltaZoom;
 	public bool dragging;
 	public Vector2 dragPosition;
+	public bool rightClick;
 	
 	// flight
 	public float throttle;
@@ -42,13 +43,15 @@ public class ControlsHelper {
 		controls.Default.Look.canceled += ctx => cursor = Vector2.zero;
 		controls.Default.Tilt.performed += ctx => tilt = ctx.ReadValue<float>();
 		controls.Default.Tilt.canceled += ctx => tilt = 0;
-		controls.Default.ScreenClick.performed += ctx => { StartDrag(); SwitchCursor(); };
-		controls.Default.ScreenClick.canceled += ctx => { EndDrag(); };
+		controls.Default.LetfClick.performed += ctx => { StartDrag(); SwitchCursor(); };
+		controls.Default.LetfClick.canceled += ctx => { EndDrag(); };
+		controls.Default.RightClick.performed += ctx => { rightClick = true; };
+		controls.Default.RightClick.canceled += ctx => { rightClick = false; };
 		controls.Default.Back.canceled += ctx => { Cursor.lockState = CursorLockMode.None; Cursor.visible = true; SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu); };
 		controls.Default.ToggleOptions.canceled += ctx => { options.SetActive(!options.activeSelf); };
 		controls.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		controls.Default.Zoom.canceled += ctx => deltaZoom = 0f;
-		controls.Default.Screenshot.canceled += ctx => { app.StartCoroutine(app.TakeScreenshot()); };
+		controls.Default.Screenshot.canceled += ctx => { app.StartCoroutine(app.TakeScreenshot(Input.GetKey(KeyCode.LeftShift))); };
 		
 		// register flight controls
 		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();
@@ -71,7 +74,7 @@ public class ControlsHelper {
 					
 					// free view camera controls
 					case App.CameraType.Free:
-						t.Rotate(-cursor.y * Time.smoothDeltaTime * 5, cursor.x * Time.smoothDeltaTime * 5, -tilt * Time.deltaTime * 5);
+						t.Rotate(new Vector3(-cursor.y * Time.smoothDeltaTime, cursor.x * Time.smoothDeltaTime, -tilt * Time.deltaTime * 10) * 5);
 						t.Translate(new Vector3(move.x * Time.deltaTime * sensitivity, 0, move.y * Time.deltaTime * sensitivity));
 						app.ReRender();
 						break;

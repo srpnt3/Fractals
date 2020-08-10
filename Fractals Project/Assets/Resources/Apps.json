@@ -8,7 +8,7 @@
 	},
 	{
 		"Name": "Mandelbrot",
-		"Description": "The Mandelbrot fractal and its Julia Sets.\n\nUse the mouse to move around and the scroll wheel to zoom.",
+		"Description": "The Mandelbrot fractal and its Julia Sets.\n\nUse the mouse to move around and the scroll wheel to zoom.\nRight click to display the Julia-Set of the current mouse position.",
 		"Type": false,
 		"Size": 0,
 		"Date": "02 FEB"
@@ -50,7 +50,7 @@
 	},
 	{
 		"Name": "Menger Sponge",
-		"Description" : "A 3D version of the Sierpinski Carpet.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nToggling the option REPEAT will switch between a free camera (same controls as Ray Marching 3D and Infinite Spheres) and an orbit camera (same controls as Mandelbulb).",
+		"Description" : "A 3D version of the Sierpinski Carpet.\n\nClick on the screen to toggle between a normal mouse and the camera controls.\nWhile in camera mode use the mouse to turn the fractal.",
 		"Type": true,
 		"Size": 0,
 		"Date": "03 MAY"
@@ -75,5 +75,12 @@
 		"Type": true,
 		"Size": 0,
 		"Date": "29 JUN"
+	},
+	{
+		"Name": "FRAX",
+		"Description": "Fly through infinite Menger Sponges with a space ship; An example of a game that uses fractals and ray marching.\n\nUse SHIFT and CTRL to accelerate / decelerate.\nUse W and S for pitch, A and D for yaw and Q and E for roll.",
+		"Type": true,
+		"Size": 0,
+		"Date": "10 AUG"
 	}
 ]
