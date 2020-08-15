@@ -72,7 +72,6 @@ public abstract class App : MonoBehaviour {
 		h = cam.pixelHeight;
 		
 		// create the texture if it hasn't been created yet or the window has been rescaled
-		// from https://github.com/SebLague
 		if (tex == null || tex.width != w || tex.height != h) {
 			if (tex != null) {
 				tex.Release();
@@ -91,7 +90,6 @@ public abstract class App : MonoBehaviour {
 	}
 
 	// take a screenshot without the ui
-	// from https://answers.unity.com/questions/850451/capturescreenshot-without-ui.html (modified)
 	public IEnumerator TakeScreenshot(bool ui) {
 		
 		// prepare

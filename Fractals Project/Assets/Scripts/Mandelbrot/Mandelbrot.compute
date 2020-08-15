@@ -14,11 +14,8 @@ RWStructuredBuffer<float3> Colors;
 // PI
 static const float PI = 3.14159265f;
 
-// complex number object
-struct Cmplx {
-	double re;
-	double im;
-};
+// structs
+struct Cmplx { double re; double im; };
 
 // complex functions
 Cmplx Add(Cmplx a, Cmplx b) {
@@ -66,7 +63,7 @@ Cmplx ConvertCoords(float2 c) {
 	return z;
 }
 
-// main function
+// main method
 [numthreads(8, 8, 1)]
 void CSMain(uint3 id : SV_DispatchThreadID) {
 

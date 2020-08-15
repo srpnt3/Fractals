@@ -6,8 +6,8 @@ public class Mandelbox : App  {
 	private int iterations = 20;
 	private bool julia;
 	private Vector3 c = Vector3.zero;
-	private float mix;
-	private Vector3 color = new Vector3(200, 200, 200);
+	private float mix = 0.5f;
+	private Vector3 color = new Vector3(10, 150, 200);
 	
 	private void Start() {
 		cameraType = CameraType.Orbit;

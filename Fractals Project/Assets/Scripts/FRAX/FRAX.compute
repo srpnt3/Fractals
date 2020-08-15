@@ -20,13 +20,9 @@ static const float epsilon = 0.0001;
 static const float size = 5;
 static const int iterations = 5;
 
-// ray
-struct Ray {
-    float3 origin;
-    float3 direction;
-};
+// structs
+struct Ray { float3 origin; float3 direction; };
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
     ray.origin = origin;
@@ -34,7 +30,6 @@ Ray CreateRay(float3 origin, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
@@ -72,7 +67,6 @@ float3 RepeatSpace(float3 p) {
 	return float3(x, y, z);
 }
 
-// from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm (modified)
 float3 ClampPosition(float3 p) {
 	float a = size / 3 * 4;
 	float x = (p.x - a / 2) % a + a / 2;
@@ -128,6 +122,7 @@ float DecodeDepth(float d) {
 	return b / (d - a);
 }
 
+// main method
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 

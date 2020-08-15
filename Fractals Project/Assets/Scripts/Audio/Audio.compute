@@ -19,6 +19,9 @@ RWStructuredBuffer<float> Audio;
 static const int steps = 400;
 static const float epsilon = 0.0001;
 
+// structs
+struct Ray { float3 origin; float3 direction; };
+
 float GetDataByFrequency(int f) {
 	uint c, s; Audio.GetDimensions(c, s);
 	float index = float(f - MinF) / (MaxF - MinF);
@@ -81,13 +84,6 @@ float DE(float3 p) {
 	return dst;
 }
 
-// ray
-struct Ray {
-    float3 origin;
-    float3 direction;
-};
-
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
     ray.origin = origin;
@@ -95,7 +91,6 @@ Ray CreateRay(float3 origin, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
@@ -121,7 +116,7 @@ float March(Ray ray) {
 	return s / float(steps);
 }
 
-// main function
+// main method
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 			

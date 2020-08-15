@@ -2,7 +2,7 @@
 
 public class Mandelbulb : App {
 	
-	private float power = 11;
+	private float power = 8;
 	private int iterations = 30;
 	private float julia;
 	private Vector3 c = Vector3.zero;

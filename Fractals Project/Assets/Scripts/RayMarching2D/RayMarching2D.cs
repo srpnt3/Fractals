@@ -6,7 +6,7 @@ public class RayMarching2D : App {
 
 	private Vector2 origin;
 	private float direction;
-	private int steps = 1;
+	private int steps = 30;
 	private ComputeBuffer shapes;
 	private List<Shape> objects;
 	private List<Shape> visuals = new List<Shape>();
@@ -15,7 +15,7 @@ public class RayMarching2D : App {
 	private void Start() {
 		
 		// set origin
-		origin = new Vector2(w/2f, h/2f);
+		origin = new Vector2(w / 2f, h / 2f);
 		
 		// create some random objects
 		objects = new List<Shape>();
@@ -32,13 +32,6 @@ public class RayMarching2D : App {
 				new Vector3(204, 51, 51)
 			));
 		}
-		
-		/*objects.Add(new Shape(new Vector2(1290, 451), new Vector2(69, 0), 0, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(684, 669), new Vector2(85, 0), 0, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(390, 281), new Vector2(89, 0), 0, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(410, 868), new Vector2(91, 65), 1, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(1260, 756), new Vector2(100, 100), 1, 0, new Vector3(204, 51, 51)));
-		objects.Add(new Shape(new Vector2(1739, 180), new Vector2(137, 97), 1, 0, new Vector3(204, 51, 51)));*/
 	}
 
 	// main render method

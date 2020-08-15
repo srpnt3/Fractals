@@ -11,58 +11,14 @@ float4x4 CamInverseProjection;
 // variables
 int Iterations;
 float Size;
-float3 Offset;
 float SizeDec;
 
 // constants
 static const int steps = 100;
 static const float epsilon = 0.00001;
-/*static const float PI = 3.14159265f;
 
-// rotate functions https://en.wikipedia.org/wiki/Rotation_matrix
-float DegToRad(float a) { return a * PI / 180; }
-float4x4 rotateX(float a) {
-	a = DegToRad(a);
-    float c = cos(a); float s = sin(a);
-    return float4x4(float4(1, 0, 0, 0), float4(0, c, -s, 0), float4(0, s, c, 0), float4(0, 0, 0, 1));
-}
-float4x4 rotateY(float a) {
-	a = DegToRad(a);
-    float c = cos(a); float s = sin(a);
-    return float4x4(float4(c, 0, s, 0), float4(0, 1, 0, 0), float4(-s, 0, c, 0), float4(0, 0, 0, 1));
-}
-float4x4 rotateZ(float a) {
-	a = DegToRad(a);
-    float c = cos(a); float s = sin(a);
-	return float4x4(float4(c, -s, 0, 0), float4(s, c, 0, 0), float4(0, 0, 1, 0), float4(0, 0, 0, 1));
-}
-float3 transform(float3 p, float4x4 m) {
-	return mul(m, float4(p, 1.0)).xyz;
-}
-
-// box distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
-float DEBox(float3 p, float s) {
-	float3 q = abs(p) - float3(s, s, s);
-	return length(max(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
-}
-
-// 2D box distance estimator from https://iquilezles.org/www/articles/distfunctions2d/distfunctions2d.htm
-float DEBox2D(float2 p, float s) {
-	float2 d = abs(p) - s;
-	return length(max(d, 0.0)) + min(max(d.x, d.y), 0);
-}
-
-// cross distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
-float DECross(float3 p, float s) {
-	s = s / 3;
-	float d = DEBox2D(p.xy, s);
-	d = min(d, DEBox2D(p.xz, s));
-	return min(d, DEBox2D(p.yz, s));
-}
-
-float DETest(float3 p, float s) {
-	return max(DEBox(p, s), -DECross(p, s*3));
-}*/
+// structs
+struct Ray { float3 origin; float3 direction; };
 
 // octahedron distance estimator from https://www.iquilezles.org/www/articles/distfunctions/distfunctions.htm
 float DEOctahedron(float3 p, float s) {
@@ -92,19 +48,12 @@ float DE(float3 p) {
 		p = Fold(p, normalize(float3(0, 1, -1)));
 		p = Fold(p, normalize(float3(1, 1, 0)));
 		p = Fold(p, normalize(float3(-1, 1, 0)));
-		p -= Offset * Size;
+		p -= float3(0, 1, 0) * Size;
 		i++;
 	}
 	return DEOctahedron(p, Size) / pow(abs(SizeDec), i);
 }
 
-// ray
-struct Ray {
-    float3 origin;
-    float3 direction;
-};
-
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
     ray.origin = origin;
@@ -112,7 +61,6 @@ Ray CreateRay(float3 origin, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
@@ -150,7 +98,6 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Ray ray = CreateCameraRay(uv);
 	
 	float res = March(ray);
-	//float4 ao = res * float4(0.1, 0.74, 0.61, 0);
 	float4 ao = res * float4(0.6, 0.6, 0.6, 0);
 	Texture[id.xy] = Source[id.xy] + ao;
 }

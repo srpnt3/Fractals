@@ -245,7 +245,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: FRAX
+  m_text: F.R.A.X.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 6638258ddc4d85f468270400b9a0214a, type: 2}
   m_sharedMaterial: {fileID: 4290382322653429124, guid: 6638258ddc4d85f468270400b9a0214a,

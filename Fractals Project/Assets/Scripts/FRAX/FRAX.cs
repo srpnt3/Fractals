@@ -17,7 +17,7 @@ public class FRAX : App {
 		controls.maxRadius = 2;
 		
 		anim = gameObject.AddComponent<AnimationController>();
-		anim.RegisterAnimation(0, edge, 0.4f, 1.8f, 2.5f);
+		anim.RegisterAnimation(0, edge, 0.4f, 1.8f, 2.45f);
 		anim.RegisterAnimation(1, curveSpace.x, 0.3f, -1, 1);
 		anim.RegisterAnimation(2, curveSpace.y, 0.2f, -1, 1);
 		anim.RegisterAnimation(3, curveSpace.z, 0.1f, -1, 1);

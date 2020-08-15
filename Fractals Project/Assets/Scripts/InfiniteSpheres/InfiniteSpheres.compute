@@ -13,18 +13,15 @@ bool Invert;
 float4x4 CamToWorld;
 float4x4 CamInverseProjection;
 
-// ray
-struct Ray {
-    float3 origin;
-    float3 direction;
-};
+// structs
+struct Ray { float3 origin; float3 direction; };
 
 // sphere distance estimator
 float DESphere(float3 p, float r) {
 	return length(p) - r;
 }
 
-// from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+// repeat space from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
 float3 RepeatSpace(float3 p) {
 	float a = 3;
 	float x = abs(p.x - a / 2) % a - a / 2;
@@ -41,7 +38,6 @@ float DEMain(float3 pos) {
 	return dst;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
     ray.origin = origin;
@@ -49,7 +45,6 @@ Ray CreateRay(float3 origin, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;

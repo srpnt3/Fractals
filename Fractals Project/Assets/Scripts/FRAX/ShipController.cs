@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.VFX;
 
 public class ShipController : MonoBehaviour {
@@ -70,8 +67,8 @@ public class ShipController : MonoBehaviour {
 		engine1.SetFloat("Irregularity", 10 - a * 10  * v);
 		engine2.SetFloat("Irregularity", 10 - a * 10  * v);
 		
-		Vector2 directionL = new Vector2(-pitch[0] + roll[0], -yaw[0]) / 4;
-		Vector2 directionR = new Vector2(-pitch[0] - roll[0], -yaw[0]) / 4;
+		Vector2 directionL = new Vector2(-pitch[0] + roll[0] / 3, -yaw[0]) / 3;
+		Vector2 directionR = new Vector2(-pitch[0] - roll[0] / 3, -yaw[0]) / 3;
 		engine1.SetVector2("Direction", directionL);
 		engine2.SetVector2("Direction", directionR);
 	}

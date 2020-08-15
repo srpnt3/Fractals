@@ -101,7 +101,7 @@ public class AppManager : MonoBehaviour {
 
 	// load the scene currently selected
 	public void LoadSelectedScene() {
-		SceneLoader.LoadByName(apps[Selected].Name.Replace(" ", string.Empty));
+		SceneLoader.LoadByName(apps[Selected].Name.Replace(" ", string.Empty).Replace(".", string.Empty));
 	}
 
 	[Serializable]

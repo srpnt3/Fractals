@@ -33,7 +33,7 @@ float DEBox(float3 p, float3 s) {
 }
 
 // plane distance estimator
-float DEBPlane(float p) {
+float DEPlane(float p) {
 	return abs(p);
 }
 
@@ -47,7 +47,7 @@ float DE(float3 pos) {
 		DESphere(float3(-2, 0, .5) - pos, .7),
 		DEBox(float3(0, -1, 0) - pos, float3(10, 0, 10)),
 		DEBox(float3(3, 0, 3) - pos, float3(.5, .5, .5)),
-		DEBPlane(1 + pos.y)
+		DEPlane(1 + pos.y)
 	};
 	
 	float dMin = d[0];
@@ -60,7 +60,6 @@ float DE(float3 pos) {
 	return max(dMin, -DESphere(float3(3, 0, 3) - pos, .65));
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 position, float3 direction) {
     Ray ray;
     ray.position = position;
@@ -68,7 +67,6 @@ Ray CreateRay(float3 position, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 position = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
@@ -77,7 +75,7 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(position, direction);
 }
 
-// from https://github.com/SebLague
+// estimate surface normals
 float3 EstimateNormal(float3 p) {
     float x = DE(float3(p.x+epsilon,p.y,p.z)) - DE(float3(p.x-epsilon,p.y,p.z));
     float y = DE(float3(p.x,p.y+epsilon,p.z)) - DE(float3(p.x,p.y-epsilon,p.z));
@@ -87,12 +85,11 @@ float3 EstimateNormal(float3 p) {
 
 // skybox
 float3 Skybox(float3 direction) {
-	//float x = Diff(direction, Sun) / 10 + 0.1;
-	//float x = acos(dot(direction, Sun)) / 2 - 0.8;
 	float x = acos(dot(direction, Sun)) / PI;
 	return float3(0.5, 0.2, 0.4) * x;
 }
 
+// cast a ray and return the result
 MarchResult March(Ray ray) {
 	MarchResult res;
 	res.hit = false;
@@ -117,6 +114,7 @@ MarchResult March(Ray ray) {
 	return res;
 }
 
+// soft shadows
 float Shade(float3 pos) {
 	Ray ray = CreateRay(pos, -Sun);
 	float m = 1.0;
@@ -132,7 +130,7 @@ float Shade(float3 pos) {
 	return m;
 }
 
-// main function
+// main method
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 	

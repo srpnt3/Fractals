@@ -20,22 +20,16 @@ float3 Color;
 static const int steps = 400;
 static const float epsilon = 0.0001;
 
-struct Data {
-	float n;
-	float3 p;
-};
+// structs
+struct Ray { float3 origin; float3 direction; };
+struct Data { float n; float3 p; };
 
+// data contructor
 Data DataConstr(float n, float3 p) {
 	Data data;
 	data.n = n;
 	data.p = p;
 	return data;
-}
-
-float3 Trap(float3 z, float3 trap) {
-	if (length(z) < length(trap))
-		trap = z;
-	return trap;
 }
 
 // sphere fold from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
@@ -63,10 +57,17 @@ void BoxFold(inout float3 z, inout float dz) {
 	z = clamp(z, -foldingLimit, foldingLimit) * 2.0 - z;
 }
 
+// orbit trap
+float3 Trap(float3 z, float3 trap) {
+	if (length(z) < length(trap))
+		trap = z;
+	return trap;
+}
+
 // mandelbox distance estimator from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
 Data DE(float3 p) {
 
-	float3 trap = p; //float3(length(p), 0, 0);
+	float3 trap = p;
 	float3 z = p;
 	float dr = 1.0;
 	int i = 0;
@@ -86,13 +87,6 @@ Data DE(float3 p) {
 	return DataConstr(length(z) / abs(dr), trap);
 }
 
-// ray
-struct Ray {
-    float3 origin;
-    float3 direction;
-};
-
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
     ray.origin = origin;
@@ -100,7 +94,6 @@ Ray CreateRay(float3 origin, float3 direction) {
     return ray;
 }
 
-// from http://blog.three-eyed-games.com/2018/05/03/gpu-ray-tracing-in-unity-part-1/
 Ray CreateCameraRay(float2 uv) {
     float3 origin = mul(CamToWorld, float4(0, 0, 0, 1)).xyz;
     float3 direction = mul(CamInverseProjection, float4(uv, 0, 1)).xyz;
@@ -127,7 +120,7 @@ Data March(Ray ray) {
 	return DataConstr(abs(1 - (s / steps)), d.p);
 }
 
-// main function
+// main method
 [numthreads(8,8,1)]
 void CSMain (uint3 id : SV_DispatchThreadID) {
 		
