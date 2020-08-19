@@ -9,7 +9,7 @@ public class Mandelbrot : App {
 	private Vector2 center = new Vector2(-0.5f, 0);
 	private int iterations = 100;
 	private bool julia;
-	private Vector2 c = Vector2.zero;
+	private Vector2 c;
 	private Vector4 area; // (re, im, width, height)
 	private Vector3[] colorGradient;
 
@@ -69,10 +69,10 @@ public class Mandelbrot : App {
 		
 		// update coordinates
 		Vector2 coords = ConvertCoords(Input.mousePosition);
-		canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "P ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
+		canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "C ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
 		
 		// controls
-		if (Math.Abs(controls.deltaZoom) > 0) {
+		if (Mathf.Abs(controls.deltaZoom) > 0) {
 			zoom += controls.deltaZoom * Time.deltaTime;
 			if (zoom < 1) zoom = 1;
 			center = coords;
@@ -106,15 +106,11 @@ public class Mandelbrot : App {
 		get => zoom;
 		set => zoom = value;
 	}
-	
-	public Vector2 O_Coordinates {
-		get => center;
-		set => center = value;
-	}
-	
+
 	public float O_Iterations {
 		get => iterations;	
-		set => iterations = Mathf.RoundToInt(value / 20) * 20;
+		//set => iterations = Mathf.RoundToInt(value / 20) * 20;
+		set => iterations = Mathf.RoundToInt(value);
 	}
 	
 	public bool O_Julia {

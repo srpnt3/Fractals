@@ -9,14 +9,14 @@ float N;
 int Iterations;
 
 // constants
-static const float size = 0.50001; // hole size
+static const float pos = 1.5; // hole position
+static const float size = 0.5001; // hole size
 
 bool InFractal(float x, float y) {
-	x *= N; y *= N; // scale 
 	for (int i; i < Iterations; i++) {
-		if (abs((x - size) % N - 1) < size && abs((y - size) % N - 1) < size) // check
-			return false;
 		x *= N; y *= N; // scale to next level
+		if (abs(x % N - pos) < size && abs(y % N - pos) < size) // check
+			return false;
 	}
 	return true;
 }
@@ -29,14 +29,13 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Texture[id.xy] = Source[id.xy];
 	
 	float w, h; Texture.GetDimensions(w, h);
-	float ox = 0, oy = 0; // calculate the offset
-	if (w > h) ox = (w - h) / 2;
-	if (h > w) oy = (h - w) / 2;
-	float x = id.x - ox, y = id.y - oy; // center it
-	float s = 1 / min(w, h);
+	float ox = (w - min(w, h)) / 2; // calculate the x offset
+	float oy = (h - min(w, h)) / 2; // calculate the y offset
+	float s = 1 / min(w, h); // calculate scale
+	float x = (id.x - ox) * s, y = (id.y - oy) * s; // center and normalize coordinates
 	
-	if (x / y > 0 && x < min(w, h) && y < min(w, h)) { // check boundries
-		if (InFractal(x * s, y * s)) {
+	if (min(x, y) > 0 && max(x, y) < 1) { // check boundaries 
+		if (InFractal(x, y)) {
 			Texture[id.xy] = float4(0.8, 0.2, 0.2, 1);
 		}
 	}

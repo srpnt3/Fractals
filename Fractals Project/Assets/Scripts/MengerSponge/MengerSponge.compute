@@ -73,43 +73,41 @@ float3 RepeatSpace(float3 p) {
 }
 
 // the distance to the scene
-float DE(float3 p) {
+float2 DE(float3 p) {
 
 	float plane = DECuttingPlane(p);
-
 	float d = DEBox(p, Size / Edge);
-	if (Iterations > 0) d = max(-DECross(p, Size), d);
 	
 	// iterate and subtract
-	int i = 0;
-	while(i < Iterations - 1) {
+	for (int i = 0; i < Iterations; i++) {
+		d = max(d, -DECross(p, Size) / pow(3, i));
 		p *= 3;
 		p = abs(p);
 		p -= float3(Size, Size, Size);
 		p = abs(p);
 		p -= float3(Size, Size, Size);
-		i++;
-		d = max(d, -DECross(p, Size) / pow(3, i));
 	}
 	
-	return max(d, -plane);
+	d = max(d, -plane);
+	float c = (d < 0.001 && abs(d - plane) < 0.001) ? 1 : 0; // glow for cutting plane
+	return float2(d, c);
 }
 
 // cast a ray and return the result
 float2 March(Ray ray) {
-	float d = 0;
+	float2 d;
 	float3 eye = ray.origin;
 	
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
 		if (length(eye - ray.origin) > 200) break; // to far away
-		if (d < epsilon) break; // hit
-		ray.origin += ray.direction * d; // march
+		if (d.x < epsilon) break; // hit
+		ray.origin += ray.direction * d.x; // march
 		s++; // next iteration
 	}
 	
-	return float2(s / float(steps), length(eye - ray.origin));
+	return float2(s / float(steps) + d.y, length(eye - ray.origin));
 }
 
 // main method

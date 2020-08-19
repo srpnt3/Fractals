@@ -12,54 +12,35 @@ int Iterations;
 RWStructuredBuffer<float3> Colors;
 
 // PI
-static const float PI = 3.14159265f;
+static const float PI = 3.14159265;
 
-// structs
-struct Cmplx { double re; double im; };
-
-// complex functions
-Cmplx Add(Cmplx a, Cmplx b) {
-	Cmplx x;
-	x.re = a.re + b.re;
-	x.im = a.im + b.im;
+// complex multiplication
+double2 Multiply(double2 a, double2 b) {
+	double2 x;
+	x[0] = (a[0] * b[0]) - (a[1] * b[1]);
+	x[1] = (a[0] * b[1]) + (a[1] * b[0]);
 	return x;
-}
-
-Cmplx Multiply(Cmplx a, Cmplx b) {
-	Cmplx x;
-	x.re = (a.re * b.re) - (a.im * b.im);
-	x.im = (a.re * b.im) + (a.im * b.re);
-	return x;
-}
-
-float GetAbsolute(Cmplx x) {
-	return sqrt(float(x.re * x.re) + float(x.im * x.im));
 }
 
 // the math
-int Iterate(Cmplx c) {
-	Cmplx z;
-	z.re = 0, z.im = 0;
-	if (Julia) {
-		z = c;
-		c.re = C[0], c.im = C[1];
-	}
+int Iterate(double2 c) {
+	double2 z = Julia ? c : double2(0, 0);
 	
 	for (int i = 0; i < Iterations; i++) {
-		z = Add(Multiply(z, z), c);
-		if (GetAbsolute(z) > 2) {
+		z = Multiply(z, z) + (Julia ? C : c); // z = z^2 + c
+		if (length(z) > 2) { // bailout
 			return i;
 		}
 	}
-	return Iterations + 1;
+	return Iterations;
 }
 
 // convert screen coord to imaginary coords
-Cmplx ConvertCoords(float2 c) {
+double2 ConvertCoords(double2 c) {
 	double w, h; Texture.GetDimensions(w, h);
-	Cmplx z;
-	z.re = c[0] / (w / Area[2]) + Area[0];
-	z.im = c[1] / (h / Area[3]) - Area[1];
+	double2 z;
+	z[0] = c[0] / (w / Area[2]) + Area[0];
+	z[1] = c[1] / (h / Area[3]) - Area[1];
 	return z;
 }
 
@@ -71,8 +52,8 @@ void CSMain(uint3 id : SV_DispatchThreadID) {
 	Texture[id.xy] = Source[id.xy];
 
 	// coloring
-	float i = Iterate(ConvertCoords(float2(id.x, id.y))); // number of iterations
-	if (i > 1) {
+	float i = Iterate(ConvertCoords(double2(id.x, id.y))); // number of iterations
+	if (i != Iterations) {
 		float a = (cos((i / 10 - 1) * PI) + 1) / 2; // normalize the itaration with cos
 		uint c, s; Colors.GetDimensions(c, s); // get the size of the array
 		int x = a * (c - 1); // calculate the index
