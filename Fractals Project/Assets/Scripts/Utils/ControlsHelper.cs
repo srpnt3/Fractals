@@ -82,7 +82,7 @@ public class ControlsHelper {
 					// orbit camera controls
 					case App.CameraType.Orbit:
 						Vector3 pos = app.transform.localPosition;
-						float r = pos.magnitude - deltaZoom * Time.smoothDeltaTime * sensitivity / 30;
+						float r = pos.magnitude - deltaZoom * sensitivity / 3000;
 						Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * Time.smoothDeltaTime * sensitivity, -cursor.y * Time.smoothDeltaTime * sensitivity);
 						Vector3 vars = ClampOrbitVars(r, angles);
 						t.localPosition = app.SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;

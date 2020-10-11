@@ -34,54 +34,45 @@ Data DataConstr(float n, float3 p) {
 
 // sphere fold from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
 void SphereFold(inout float3 z, inout float dz) {
-
-	float fixedRadius = 1;
-	float fixedRadius2 = fixedRadius * fixedRadius;
-	float minRadius2 = 0.5 * 0.5;
-
+	float fixedRadius = 1, minRadius = 0.5;
+	float fixedRadius2 = pow(fixedRadius, 2), minRadius2 = pow(minRadius, 2);
 	float r2 = dot(z, z);
+	
 	if (fixedRadius < minRadius2) {
 		float temp = (fixedRadius2 / minRadius2);
-		z *= temp;
-		dz *= temp;
+		z *= temp, dz *= temp;
 	} else if (r2 < fixedRadius2) {
-		float temp =(fixedRadius2 / r2);
-		z *= temp;
-		dz *= temp;
+		float temp = (fixedRadius2 / r2);
+		z *= temp, dz *= temp;
 	}
 }
 
 // box fold from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
-void BoxFold(inout float3 z, inout float dz) {
+void BoxFold(inout float3 z) {
 	float foldingLimit = 1;
 	z = clamp(z, -foldingLimit, foldingLimit) * 2.0 - z;
 }
 
 // orbit trap
-float3 Trap(float3 z, float3 trap) {
+void Trap(float3 z, inout float3 trap) {
 	if (length(z) < length(trap))
 		trap = z;
-	return trap;
 }
 
 // mandelbox distance estimator from http://blog.hvidtfeldts.net/index.php/2011/11/distance-estimated-3d-fractals-vi-the-mandelbox/
 Data DE(float3 p) {
-
-	float3 trap = p;
-	float3 z = p;
+	float3 z = p, trap = p;
 	float dr = 1.0;
-	int i = 0;
-	while (i < Iterations) {
-		BoxFold(z, dr);
-		SphereFold(z, dr);
+	
+	for (int i = 0; i < Iterations; i++) {
+		BoxFold(z); // box fold
+		SphereFold(z, dr); // sphere fold
 		
-		z *= Scale;
-		z += Julia ? C : p;
-		dr = dr * abs(Scale) + 1.0;
+		z *= Scale; // scale
+		z += Julia ? C : p; // c
+		dr = dr * abs(Scale) + 1.0; // dr
 		
-		trap = Trap(z, trap);
-		
-		i++;
+		Trap(z, trap); // trap
 	}
 	
 	return DataConstr(length(z) / abs(dr), trap);
@@ -116,7 +107,6 @@ Data March(Ray ray) {
 		s++; // next iteration
 	}
 	
-	//return float3(1 - s / float(steps), length(eye - ray.origin), d.y / 10);
 	return DataConstr(abs(1 - (s / steps)), d.p);
 }
 

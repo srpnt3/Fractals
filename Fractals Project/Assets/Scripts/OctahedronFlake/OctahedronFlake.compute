@@ -34,22 +34,20 @@ float DEOctahedron(float3 p, float s) {
 	return length(float3(q.x, q.y - s + k, q.z - k));
 }
 
-// fold space from http://blog.hvidtfeldts.net/index.php/2011/08/distance-estimated-3d-fractals-iii-folding-space
+// plane fold from http://blog.hvidtfeldts.net/index.php/2011/08/distance-estimated-3d-fractals-iii-folding-space
 float3 Fold(float3 p, float3 n) {
 	return p - 2.0 * min(0.0, dot(p, n)) * n;
 }
 
 // distance to scene
 float DE(float3 p) {
-	int i = 0;
-	while (i < Iterations) {
+	for (int i = 0; i < Iterations; i++) {
 		p *= SizeDec;
 		p = Fold(p, normalize(float3(0, 1, 1)));
 		p = Fold(p, normalize(float3(0, 1, -1)));
 		p = Fold(p, normalize(float3(1, 1, 0)));
 		p = Fold(p, normalize(float3(-1, 1, 0)));
 		p -= float3(0, 1, 0) * Size;
-		i++;
 	}
 	return DEOctahedron(p, Size) / pow(abs(SizeDec), i);
 }

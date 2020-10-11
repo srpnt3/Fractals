@@ -27,13 +27,13 @@ public class ShipController : MonoBehaviour {
 	private void Update() {
 		
 		// update values
-		position[1] = c.throttle * 10;
+		position[1] = c.throttle * 9;
 		UpdateValue(ref position, -3, 20);
-		roll[1] = c.roll * 10;
+		roll[1] = c.roll * 7;
 		UpdateValue(ref roll, -5, 5);
-		yaw[1] = c.yaw * 4;
+		yaw[1] = c.yaw * 3;
 		UpdateValue(ref yaw, -2, 2);
-		pitch[1] = c.pitch * 4;
+		pitch[1] = c.pitch * 3;
 		UpdateValue(ref pitch, -2, 2);
 		
 		
@@ -51,10 +51,10 @@ public class ShipController : MonoBehaviour {
 	private void UpdateValue(ref Vector3 v, float min, float max) { // min and max velocity
 		v[0] += v[1] * Time.deltaTime; // velocity += acceleration
 		if (v[0] < 0) { // |velocity| -= "air resistance"
-			v[0] += v[2] * Time.deltaTime;
+			if (v[1] == 0) v[0] += v[2] * Time.deltaTime;
 			v[0] = Mathf.Clamp(v[0], min, 0);
 		} else if (v[0] > 0) {
-			v[0] -= v[2] * Time.deltaTime;
+			if (v[1] == 0) v[0] -= v[2] * Time.deltaTime;
 			v[0] = Mathf.Clamp(v[0], 0, max);
 		}
 	}

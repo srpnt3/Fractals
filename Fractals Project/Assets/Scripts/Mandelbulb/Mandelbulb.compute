@@ -22,7 +22,7 @@ bool Alt;
 
 // constants
 static const int steps = 500;
-static const float epsilon = 0.00001;
+static const float epsilon = 0.00004;
 
 // structs
 struct Ray { float3 origin; float3 direction; };
@@ -42,14 +42,13 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(origin, direction);
 }
 
+
 // mandelbulb distance estimator from http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
 float2 DE(float3 p) {
     float3 z = p;
-	float dr = 1.0;
-	float r = 0.0;
+    float r, dr = 1;
 
-	int i = 0;
-	while(i < Iterations) {
+	for(int i = 0; i < Iterations; i++) {
 		r = length(z);
 
 		if (r > 3) break;
@@ -68,12 +67,10 @@ float2 DE(float3 p) {
 		if (Alt) z = zr * float3(cos(theta) * cos(phi), cos(theta) * sin(phi), sin(theta));
 		else z = zr * float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 		z += Julia * C + (1 - Julia) * p;
-		
-		// next iteration
-		i++;
 	}
-    float dst = 0.5 * log(r) * r / dr;
-	return float2(dst / 2, sin(i));
+	
+    float dst = 0.1 * log(r) * r / dr;
+	return float2(dst, sin(i));
 }
 
 // cast a ray and return the result

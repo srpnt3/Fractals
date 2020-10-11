@@ -67,7 +67,7 @@ public static class Gradients {
 				deltaH = (b.H - a.H) / (s + 1f);
 			} else {
 				deltaH = -(360f - Mathf.Abs(b.H - a.H)) / (s + 1);
-				deltaH *= Mathf.Sign(b.H - a.H);  // Sign function that H will go around the right way
+				deltaH *= Mathf.Sign(b.H - a.H);  // Sign function so that H will go around the right way
 			}
 
 			// calculate and add the colors

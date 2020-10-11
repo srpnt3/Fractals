@@ -49,7 +49,7 @@ float DEBox2D(float2 p, float s) {
 	return length(max(d, 0.0)) + min(max(d.x, d.y), 0);
 }
 
-// cross distance estimator from https://iquilezles.org/www/articles/distfunctions/distfunctions.htm
+// cross distance estimator from https://iquilezles.org/www/articles/menger/menger.htm
 float DECross(float3 p, float s) {
 	s = s / 3;
 	float d = DEBox2D(p.xy, s);
@@ -123,6 +123,5 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	
 	float2 res = March(ray);
 	float4 ao = res.x * float4(0.3, 0.6, 0.7, 1);
-	float4 fog = 1 / (res.y + 1);
 	Texture[id.xy] = Source[id.xy] + ao;
 }

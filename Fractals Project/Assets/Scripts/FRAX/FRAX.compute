@@ -115,7 +115,6 @@ float2 March(Ray ray) {
 	return float2(s / float(steps), length(eye - ray.origin));
 }
 
-// from https://answers.unity.com/questions/142958/compute-distance-from-depth-value.html
 float DecodeDepth(float d) {
 	float a = zFar / (zFar - zNear);
 	float b = zFar * zNear / (zNear - zFar);
@@ -141,11 +140,10 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	
 	float2 res = March(ray);
 	float4 ao = res.x * accent;
-	if (DecodeDepth(Source[id.xy].w) > res.y) {
+	if (DecodeDepth(Source[id.xy].w) > res.y)
 		Texture[id.xy] = background + ao;
-	} else {
+	else
 		Texture[id.xy] = Source[id.xy];
-	}
 	float a = DecodeDepth(Source[id.xy].w);
 	float b = res.y;
 	
