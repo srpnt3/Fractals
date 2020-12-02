@@ -33,12 +33,12 @@ RenderSettings:
   m_HaloTexture: {fileID: 0}
   m_SpotCookie: {fileID: 10001, guid: 0000000000000000e000000000000000, type: 0}
   m_DefaultReflectionMode: 0
-  m_DefaultReflectionResolution: 2048
+  m_DefaultReflectionResolution: 256
   m_ReflectionBounces: 5
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 1631700813}
-  m_IndirectSpecularColor: {r: 0.09017839, g: 0.099294715, b: 0.22940087, a: 1}
+  m_IndirectSpecularColor: {r: 0.08666139, g: 0.09413523, b: 0.22253886, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -70,7 +70,7 @@ LightmapSettings:
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 256
-    m_ReflectionCompression: 0
+    m_ReflectionCompression: 1
     m_MixedBakeMode: 2
     m_BakeBackend: 1
     m_PVRSampling: 1
@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 112000000, guid: 57d7846fa9f828141aa5e5374007b502,
+  m_LightingDataAsset: {fileID: 112000000, guid: fbe9e9278164a7e40b34618250bb1c08,
     type: 2}
   m_LightingSettings: {fileID: 4890085278179872738, guid: 20adbefa0d46c6b40a2c719bbc292299,
     type: 2}

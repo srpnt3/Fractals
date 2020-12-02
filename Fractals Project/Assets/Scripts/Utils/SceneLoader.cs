@@ -52,6 +52,11 @@ public class SceneLoader : MonoBehaviour {
 	public static void LoadByIndex(int i) {
 		instance.Load(i);
 	}
+	
+	// reload the current scene
+	public static void Reload() {
+		instance.Load(SceneManager.GetActiveScene().buildIndex);
+	}
 
 	public enum SceneNames {
 		MainMenu = 0,

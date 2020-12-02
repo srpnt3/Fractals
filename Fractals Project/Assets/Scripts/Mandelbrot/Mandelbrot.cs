@@ -2,9 +2,10 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = UnityEngine.Random;
 
 public class Mandelbrot : App {
-	
+
 	private float zoom = 1;
 	private Vector2 center = new Vector2(-0.5f, 0);
 	private int iterations = 100;
@@ -13,12 +14,17 @@ public class Mandelbrot : App {
 	private Vector4 area; // (re, im, width, height)
 	private Vector3[] colorGradient;
 
-	// create the Gradient
+	private Vector4 RandomColor(float x) {
+		return new Vector4(Random.Range(0, 200), Random.Range(0, 200), Random.Range(0, 200), x);
+	}
+
+// create the Gradient
 	private void Start() {
 		colorGradient = Gradients.CreateGradient(new[] {
 			new Vector4(29, 31, 42, 0f),
-			new Vector4(204, 51, 51, 1f),
-		}, 10);
+			RandomColor(0.5f),
+			RandomColor(1f)
+		}, 100);
 	}
 
 	// main render method

@@ -52,6 +52,7 @@ public class ControlsHelper {
 		controls.Default.Zoom.performed += ctx => deltaZoom = ctx.ReadValue<float>();
 		controls.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 		controls.Default.Screenshot.canceled += ctx => { app.StartCoroutine(app.TakeScreenshot(Input.GetKey(KeyCode.LeftShift))); };
+		controls.Default.Reload.canceled += ctx => { SceneLoader.Reload(); };
 		
 		// register flight controls
 		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();

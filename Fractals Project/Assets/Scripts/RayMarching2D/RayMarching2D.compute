@@ -35,6 +35,7 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 
 	// add the background
 	Texture[id.xy] = Source[id.xy];
+	//Texture[id.xy] = float4(1, 1, 1, 1);
 	uint c, s; Shapes.GetDimensions(c, s);
 
 	// loop through shapes
@@ -53,11 +54,13 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 		if (shape.border == 0) {
 			if (d <= 0) {
 				Texture[id.xy] = float4(shape.color / 255, 0);
+				//Texture[id.xy] = float4(0, 0, 0, 0);
 			};
 		};
 		if (shape.border == 1) {
 			if (-1 <= d && d <= 1) {
 				Texture[id.xy] = float4(shape.color / 255, 0);
+				//Texture[id.xy] = float4(0, 0, 0, 0);
 			};
 		};
 	}

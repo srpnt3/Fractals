@@ -105,4 +105,5 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	float3 res = March(ray);
 	float a = res.x * (2 - Mix * 2) + res.z * (Mix * 2);
 	Texture[id.xy] = Source[id.xy] + (float4(a, a, a, 0) * float4(0.8, 0.2, 0.2, 0));
+	//Texture[id.xy] = float4(1, 1, 1, 1) * (res.x + 0.2) + float4(0.8, 0.2, 0.2, 0) * res.z;
 }

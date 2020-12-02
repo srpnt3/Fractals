@@ -54,7 +54,7 @@ void CSMain(uint3 id : SV_DispatchThreadID) {
 	// coloring
 	float i = Iterate(ConvertCoords(double2(id.x, id.y))); // number of iterations
 	if (i != Iterations) {
-		float a = (cos((i / 10 - 1) * PI) + 1) / 2; // normalize the itaration with cos
+		float a = (cos(i / 10 + PI) + 1) / 2; // normalize the itaration with cos
 		uint c, s; Colors.GetDimensions(c, s); // get the size of the array
 		int x = a * (c - 1); // calculate the index
 		float3 clr = Colors[x]; // get the corresponding color
