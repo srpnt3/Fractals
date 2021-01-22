@@ -21,15 +21,23 @@ public class Scroll : MonoBehaviour {
 	private void Update() {
 		float x = scrollRect.verticalNormalizedPosition;
 		if (Math.Abs(x - 1) < 0.05f) {
-			if (up.GetComponent<Graphic>().color == upC) StartCoroutine(Fade(up, upC, disabledColor));
+			up.GetComponent<HoverEffect>().enabled = false;
+			if (up.GetComponent<Graphic>().color != disabledColor) StartCoroutine(Fade(up, upC, disabledColor));
 		} else if (Math.Abs(x) < 0.05f) {
-			if (down.GetComponent<Graphic>().color == downC) StartCoroutine(Fade(down, downC, disabledColor));
+			down.GetComponent<HoverEffect>().enabled = false;
+			if (down.GetComponent<Graphic>().color != disabledColor) StartCoroutine(Fade(down, downC, disabledColor));
 		} else {
+			up.GetComponent<HoverEffect>().enabled = true;
+			down.GetComponent<HoverEffect>().enabled = true;
 			if (up.GetComponent<Graphic>().color == disabledColor) StartCoroutine(Fade(up, disabledColor, upC));
 			if (down.GetComponent<Graphic>().color == disabledColor) StartCoroutine(Fade(down, disabledColor, downC));
 		}
 	}
-	
+
+	public void ButtonScroll(bool up) {
+		scrollRect.verticalNormalizedPosition += up ? Time.deltaTime : -Time.deltaTime;
+	}
+
 	IEnumerator Fade(GameObject obj, Color a, Color b) {
 		for (int i = 0; i <= 10; i++) {
 			obj.GetComponent<Graphic>().color = Color.Lerp(a, b, i / 10f);

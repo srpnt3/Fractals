@@ -71,7 +71,7 @@
 	},
 	{
 		"Name": "Audio",
-		"Description": "A Julia set of the Mandelbulb fractal that reacts to audio. The different frequencies control the size and C value of the fractal.",
+		"Description": "A Julia set of the Mandelbulb fractal that reacts to audio. The different frequencies control the size and C value of the fractal.\n\nThe audio source needs to be external (i.e. desktop audio).",
 		"Type": true,
 		"Size": 4290,
 		"Date": "29 JUN"
