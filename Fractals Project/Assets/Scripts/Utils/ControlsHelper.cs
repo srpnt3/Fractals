@@ -75,8 +75,8 @@ public class ControlsHelper {
 					
 					// free view camera controls
 					case App.CameraType.Free:
-						t.Rotate(new Vector3(-cursor.y * Time.smoothDeltaTime, cursor.x * Time.smoothDeltaTime, -tilt * Time.deltaTime * 10) * 5);
-						t.Translate(new Vector3(move.x * Time.deltaTime * sensitivity, 0, move.y * Time.deltaTime * sensitivity));
+						t.Rotate(new Vector3(-cursor.y * app.RequestSmoothDeltaTime(), cursor.x * app.RequestSmoothDeltaTime(), -tilt * app.RequestSmoothDeltaTime() * 10) * 5);
+						t.Translate(new Vector3(move.x * app.RequestSmoothDeltaTime() * sensitivity, 0, move.y * app.RequestSmoothDeltaTime() * sensitivity));
 						app.ReRender();
 						break;
 					
@@ -84,7 +84,7 @@ public class ControlsHelper {
 					case App.CameraType.Orbit:
 						Vector3 pos = app.transform.localPosition;
 						float r = pos.magnitude - deltaZoom * sensitivity / 3000;
-						Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * Time.smoothDeltaTime * sensitivity, -cursor.y * Time.smoothDeltaTime * sensitivity);
+						Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * app.RequestSmoothDeltaTime() * sensitivity, -cursor.y * app.RequestSmoothDeltaTime() * sensitivity);
 						Vector3 vars = ClampOrbitVars(r, angles);
 						t.localPosition = app.SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
 						t.LookAt(t.parent ? t.parent.position : Vector3.zero);

@@ -1,46 +1,88 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
-namespace Utils {
-	public class AnimationController : MonoBehaviour {
+public class AnimationController : MonoBehaviour {
 
-		private Dictionary<int, Vector4> animations;
+	private Dictionary<int, Params> animations;
 
-		private void OnEnable() {
-			animations = new Dictionary<int, Vector4>();
+	private void OnEnable() {
+		animations = new Dictionary<int, Params>();
+	}
+
+	public int Register(float value, float speed, float min, float max, bool osc) {
+		int id = GUID.Generate().GetHashCode();
+		if (osc) speed *= Mathf.PI;
+		Params p = new Params(value, speed, min, max, osc);
+		animations.Add(id, MapB(p));
+		return id;
+	}
+
+	private void Update() {
+		foreach (var v in animations.ToList()) {
+			Params p = v.Value;
+			p.value += p.speed * GetComponent<App>().RequestSmoothDeltaTime();
+			animations[v.Key] = Clamp(p);
+		}
+	}
+
+	public float Request(int id) {
+		return MapA(animations[id]).value;
+	}
+	
+	public void Request(int id, ref float value) {
+		value =  MapA(animations[id]).value;
+	}
+
+	// Map to min;max
+	private Params MapA(Params p) {
+		if (p.osc) {
+			p.value = (Mathf.Cos(p.value) + 1) / 2;
+			p.value *= p.max - p.min;
+			p.value += p.min;
 		}
 
-		public void RegisterAnimation(int id, float value, float speed, float min, float max) {
-			animations.Add(id, new Vector4(UnMapValue(value, min, max), speed, min, max));
+		return p;
+	}
+
+	//Map to -1;1
+	private Params MapB(Params p) {
+		if (p.osc) {
+			p.value -= p.min;
+			p.value /= p.max - p.min;
+			p.value = Mathf.Acos(p.value * 2 - 1);
 		}
 
-		private void Update() {
-			foreach (var v in animations.ToList()) {
-				Vector4 a = v.Value;
-				a[0] += a[1] * Time.smoothDeltaTime;
-				if (a[0] > 2 * Mathf.PI) a[0] -= 2 * Mathf.PI;
-				animations[v.Key] = a;
-			}
+		return p;
+	}
+	
+	private Params Clamp(Params p) {
+		if (p.osc) {
+			if (p.value > 2 * Mathf.PI) p.value -= 2 * Mathf.PI;
+			if (p.value < 0) p.value += 2 * Mathf.PI;
+		} else {
+			float d = p.max - p.min;
+			if (p.value > p.max) p.value -= d;
+			if (p.value < p.min) p.value += d;
 		}
 
-		public float GetAnimation(int id) {
-			Vector4 a = animations[id];
-			return MapValue(a[0], a[2], a[3]);
-		}
+		return p;
+	}
 
-		private float MapValue(float value, float min, float max) {
-			float n = (Mathf.Cos(value) + 1) / 2;
-			n *= max - min;
-			n += min;
-			return n;
-		}
+	private struct Params {
+		public float value;
+		public float speed;
+		public float min;
+		public float max;
+		public bool osc;
 
-		private float UnMapValue(float value, float min, float max) {
-			float n = value - min;
-			n /= max - min;
-			n = Mathf.Acos(n * 2 - 1);
-			return n;
+		public Params(float value, float speed, float min, float max, bool osc) {
+			this.value = value;
+			this.speed = speed;
+			this.min = min;
+			this.max = max;
+			this.osc = osc;
 		}
 	}
 }

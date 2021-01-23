@@ -79,7 +79,7 @@ public class Mandelbrot : App {
 		
 		// controls
 		if (Mathf.Abs(controls.deltaZoom) > 0) {
-			zoom += controls.deltaZoom * Time.deltaTime;
+			zoom += controls.deltaZoom * RequestSmoothDeltaTime();
 			if (zoom < 1) zoom = 1;
 			center = coords;
 			CalculateArea();

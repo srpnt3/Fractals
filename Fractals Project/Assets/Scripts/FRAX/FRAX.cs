@@ -1,26 +1,30 @@
 ﻿
 using UnityEngine;
-using Utils;
 
 public class FRAX : App {
 
 	public Material depth;
 	
-	private AnimationController anim;
 	private float edge = 1.8f;
 	private Vector3 curveSpace = Vector3.zero;
 	private float curve = 1;
+	
+	// animation ids
+	private int edgeID;
+	private int curveSpaceXID;
+	private int curveSpaceYID;
+	private int curveSpaceZID;
 	
 	private void Start() {
 		cam.depthTextureMode = DepthTextureMode.Depth;
 		controls.minRadius = 2;
 		controls.maxRadius = 2;
 		
-		anim = gameObject.AddComponent<AnimationController>();
-		anim.RegisterAnimation(0, edge, 0.4f, 1.8f, 2.45f);
-		anim.RegisterAnimation(1, curveSpace.x, 0.3f, -1, 1);
-		anim.RegisterAnimation(2, curveSpace.y, 0.2f, -1, 1);
-		anim.RegisterAnimation(3, curveSpace.z, 0.1f, -1, 1);
+		// register animations
+		edgeID = ac.Register(edge, 0.127f, 1.8f, 2.45f, true);
+		curveSpaceXID = ac.Register(curveSpace.x, 0.095f, -1, 1, true);
+		curveSpaceYID = ac.Register(curveSpace.y, 0.064f, -1, 1, true);
+		curveSpaceZID = ac.Register(curveSpace.z, 0.032f, -1, 1, true);
 	}
 
 	protected override void Render(RenderTexture s) {
@@ -45,8 +49,8 @@ public class FRAX : App {
 		base.Update();
 
 		// update animations
-		edge = anim.GetAnimation(0);
-		curveSpace = new Vector3(anim.GetAnimation(1), anim.GetAnimation(2), anim.GetAnimation(3));
+		ac.Request(edgeID, ref edge);
+		curveSpace = new Vector3(ac.Request(curveSpaceXID), ac.Request(curveSpaceYID), ac.Request(curveSpaceZID));
 		
 		ReRender();
 	}

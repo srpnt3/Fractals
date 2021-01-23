@@ -16,6 +16,13 @@ public abstract class App : MonoBehaviour {
 	protected Camera cam;
 	protected int w;
 	protected int h;
+	protected AnimationController ac;
+	
+	// custom render engine
+	private bool customRendering;
+	private int targetFPS;
+	private int currentFrame;
+	private string startTime;
 	
 	// controls
 	public readonly ControlsHelper controls;
@@ -42,6 +49,9 @@ public abstract class App : MonoBehaviour {
 		
 		// back button
 		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
+		
+		// add animation component
+		ac = gameObject.AddComponent<AnimationController>();
 	}
 
 	// enable and disable
@@ -52,7 +62,9 @@ public abstract class App : MonoBehaviour {
 	protected void Update () {
 		controls.Update();
 		
-		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / Time.smoothDeltaTime) + " FPS";
+		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / RequestSmoothDeltaTime()) + " FPS";
+		
+		if (customRendering) CustomRendering();
 	}
 
 	// on render image
@@ -152,6 +164,52 @@ public abstract class App : MonoBehaviour {
 			float a = angle / Mathf.PI * 180;
 			return a;
 		}
+	}
+	
+	// custom render engine
+	public float RequestDeltaTime() {
+		if (customRendering)
+			return 1f / targetFPS;
+		return Time.deltaTime;
+	}
+
+	public float RequestSmoothDeltaTime() {
+		if (customRendering)
+			return 1f / targetFPS;
+		return Time.smoothDeltaTime;
+	}
+
+	public void StartCustomRendering(int fps) {
+		if (!customRendering) {
+			targetFPS = fps;
+			startTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+			currentFrame = 0;
+			canvas.SetActive(false);
+			customRendering = true;
+		}
+	}
+
+	public void StopCustomRendering() {
+		if (customRendering) {
+			customRendering = false;
+			canvas.SetActive(true);
+		}
+	}
+
+	public void CustomRendering() {
+		ReRender();
+		StartCoroutine(RecordFrame());
+	}
+	
+	public IEnumerator RecordFrame() {
+		
+		yield return new WaitForEndOfFrame();
+		String path = Application.persistentDataPath + "/recordings/" + shader.name + "/" + startTime + "/";
+		if (!Directory.Exists(path)) Directory.CreateDirectory(path);
+		string n = "frame-" + currentFrame + ".png";
+		ScreenCapture.CaptureScreenshot(path + n);
+		currentFrame++;
+		yield return null;
 	}
 
 	public enum CameraType {

@@ -38,8 +38,8 @@ public class ShipController : MonoBehaviour {
 		
 		
 		// update ship
-		t.position += t.forward * (position.x * Time.deltaTime);
-		t.Rotate(new Vector3(pitch[0], yaw[0], roll[0]) * (Time.deltaTime * Mathf.PI * 20));
+		t.position += t.forward * (position.x * app.RequestDeltaTime());
+		t.Rotate(new Vector3(pitch[0], yaw[0], roll[0]) * (app.RequestDeltaTime() * Mathf.PI * 20));
 		UpdateEngines();
 		
 		// update camera
@@ -49,12 +49,12 @@ public class ShipController : MonoBehaviour {
 	}
 
 	private void UpdateValue(ref Vector3 v, float min, float max) { // min and max velocity
-		v[0] += v[1] * Time.deltaTime; // velocity += acceleration
+		v[0] += v[1] * app.RequestDeltaTime(); // velocity += acceleration
 		if (v[0] < 0) { // |velocity| -= "air resistance"
-			if (v[1] == 0) v[0] += v[2] * Time.deltaTime;
+			if (v[1] == 0) v[0] += v[2] * app.RequestDeltaTime();
 			v[0] = Mathf.Clamp(v[0], min, 0);
 		} else if (v[0] > 0) {
-			if (v[1] == 0) v[0] -= v[2] * Time.deltaTime;
+			if (v[1] == 0) v[0] -= v[2] * app.RequestDeltaTime();
 			v[0] = Mathf.Clamp(v[0], 0, max);
 		}
 	}
