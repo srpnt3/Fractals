@@ -7,7 +7,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public abstract class App : MonoBehaviour {
-	
 	// variables
 	public ComputeShader shader;
 	public GameObject canvas;
@@ -16,56 +15,57 @@ public abstract class App : MonoBehaviour {
 	protected Camera cam;
 	protected int w;
 	protected int h;
-	protected AnimationController ac;
-	
-	// custom render engine
-	private bool customRendering;
-	private int targetFPS;
-	private int currentFrame;
-	private string startTime;
-	
-	// controls
-	public readonly ControlsHelper controls;
 	public CameraType cameraType = CameraType.None;
-
-	// rerender
+	public AnimationController ac { get; private set; }
+	public OfflineRenderer or { get; private set; }
+	public OptionsManager om { get; private set; }
+	public ControlsHelper controls { get; private set; }
 	private bool update;
-	public void ReRender() { update = true; }
+	private TextMeshProUGUI fUGUI;
 
-	// render function
-	protected abstract void Render(RenderTexture s);
-	
-	protected App() { controls = new ControlsHelper(this); }
-	
 	// awake
 	protected void Awake() {
-		
+		// important components
+		controls = gameObject.AddComponent<ControlsHelper>();
+		ac = gameObject.AddComponent<AnimationController>();
+		or = gameObject.AddComponent<OfflineRenderer>();
+		om = gameObject.AddComponent<OptionsManager>();
+
 		// Load the _Loading scene if necessary
 		if (SceneManager.sceneCount == 1)
 			SceneManager.LoadSceneAsync((int) SceneLoader.SceneNames.Loading, LoadSceneMode.Additive);
 
 		// register the controls
 		controls.RegisterControls();
-		
+
 		// back button
-		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
-		
-		// add animation component
-		ac = gameObject.AddComponent<AnimationController>();
+		canvas.transform.GetChild(0).GetChild(2).GetComponent<Button>().onClick
+			.AddListener(() => SceneLoader.LoadByIndex((int) SceneLoader.SceneNames.MainMenu));
 	}
 
-	// enable and disable
-	protected void OnEnable() { controls.Enable(); cam = GetComponent<Camera>(); InitRenderTexture(); }
-	protected void OnDisable() { controls.Disable(); }
+	// enable
+	protected void OnEnable() {
+		cam = GetComponent<Camera>();
+		fUGUI = canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>();
+		InitRenderTexture();
+	}
 
 	// update
-	protected void Update () {
-		controls.Update();
-		
-		canvas.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = Mathf.RoundToInt(1.0f / RequestSmoothDeltaTime()) + " FPS";
-		
-		if (customRendering) CustomRendering();
+	protected void Update() {
+		fUGUI.text = Mathf.RoundToInt(1.0f / RequestSmoothDeltaTime()) + " FPS";
 	}
+
+	/*
+	 * Rendering
+	 */
+
+	// rerender
+	public void ReRender() {
+		update = true;
+	}
+
+	// render function
+	protected abstract void Render(RenderTexture s);
 
 	// on render image
 	[ImageEffectOpaque]
@@ -75,6 +75,7 @@ public abstract class App : MonoBehaviour {
 			Render(s);
 			update = false;
 		}
+
 		Graphics.Blit(tex, d);
 	}
 
@@ -82,7 +83,7 @@ public abstract class App : MonoBehaviour {
 	private void InitRenderTexture() {
 		w = cam.pixelWidth;
 		h = cam.pixelHeight;
-		
+
 		// create the texture if it hasn't been created yet or the window has been rescaled
 		if (tex == null || tex.width != w || tex.height != h) {
 			if (tex != null) {
@@ -93,7 +94,7 @@ public abstract class App : MonoBehaviour {
 			tex = new RenderTexture(w, h, 32);
 			tex.enableRandomWrite = true;
 			tex.Create();
-			
+
 			tex2 = new RenderTexture(w, h, 32);
 			tex2.format = RenderTextureFormat.ARGBFloat;
 			tex2.Create();
@@ -103,12 +104,11 @@ public abstract class App : MonoBehaviour {
 
 	// take a screenshot without the ui
 	public IEnumerator TakeScreenshot(bool ui) {
-		
 		// prepare
 		yield return null;
 		if (!ui) canvas.SetActive(false);
 		ReRender();
- 
+
 		// take
 		yield return new WaitForEndOfFrame();
 		String path = Application.persistentDataPath + "/screenshots/" + shader.name + "/" + w + "x" + h + "/";
@@ -117,23 +117,12 @@ public abstract class App : MonoBehaviour {
 		ScreenCapture.CaptureScreenshot(path + n);
 		Debug.Log("Screenshot saved as " + n);
 		yield return null;
- 
+
 		// reset
 		if (!ui) canvas.SetActive(true);
 		ReRender();
 	}
 
-	// option setter
-	public void SetOption(string n, object value) {
-		GetType().GetProperty(n)?.SetValue(this, value);
-		ReRender();
-	}
-
-	// option getter
-	public object GetOption(string n) {
-		return GetType().GetProperty(n)?.GetValue(this);
-	}
-	
 	/*
 	 * Utils
 	 */
@@ -158,61 +147,26 @@ public abstract class App : MonoBehaviour {
 		float azimuth = 90 - ToDegree(Mathf.Atan(c.x / c.z));
 		if (c.z < 0) azimuth += 180;
 		return new Vector2(azimuth, elevation);
-		
+
 		// convert to degrees
 		float ToDegree(float angle) {
 			float a = angle / Mathf.PI * 180;
 			return a;
 		}
 	}
-	
-	// custom render engine
+
+	// deltaTime
 	public float RequestDeltaTime() {
-		if (customRendering)
-			return 1f / targetFPS;
-		return Time.deltaTime;
+		return or.RequestDeltaTime(false);
 	}
 
 	public float RequestSmoothDeltaTime() {
-		if (customRendering)
-			return 1f / targetFPS;
-		return Time.smoothDeltaTime;
-	}
-
-	public void StartCustomRendering(int fps) {
-		if (!customRendering) {
-			targetFPS = fps;
-			startTime = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-			currentFrame = 0;
-			canvas.SetActive(false);
-			customRendering = true;
-		}
-	}
-
-	public void StopCustomRendering() {
-		if (customRendering) {
-			customRendering = false;
-			canvas.SetActive(true);
-		}
-	}
-
-	public void CustomRendering() {
-		ReRender();
-		StartCoroutine(RecordFrame());
-	}
-	
-	public IEnumerator RecordFrame() {
-		
-		yield return new WaitForEndOfFrame();
-		String path = Application.persistentDataPath + "/recordings/" + shader.name + "/" + startTime + "/";
-		if (!Directory.Exists(path)) Directory.CreateDirectory(path);
-		string n = "frame-" + currentFrame + ".png";
-		ScreenCapture.CaptureScreenshot(path + n);
-		currentFrame++;
-		yield return null;
+		return or.RequestDeltaTime(true);
 	}
 
 	public enum CameraType {
-		None, Orbit, Free
+		None,
+		Orbit,
+		Free
 	}
 }

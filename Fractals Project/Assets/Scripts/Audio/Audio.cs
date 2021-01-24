@@ -16,8 +16,7 @@ public class Audio : App {
 		audioProvider.Start();
 	}
 
-	private new void OnDisable() {
-		base.OnDisable();
+	private void OnDisable() {
 		audioProvider.Stop();
 	}
 

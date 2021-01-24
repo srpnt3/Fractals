@@ -41,7 +41,8 @@ float3 Fold(float3 p, float3 n) {
 
 // distance to scene
 float DE(float3 p) {
-	for (int i = 0; i < Iterations; i++) {
+	int i;
+	for (i = 0; i < Iterations; i++) {
 		p *= SizeDec;
 		p = Fold(p, normalize(float3(0, 1, 1)));
 		p = Fold(p, normalize(float3(0, 1, -1)));

@@ -593,7 +593,7 @@ MonoBehaviour:
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
   m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: 0
+  m_TextStyleHashCode: -1183493901
   m_overrideHtmlColors: 0
   m_faceColor:
     serializedVersion: 2
@@ -605,9 +605,9 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 16
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 516
+  m_HorizontalAlignment: 4
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
   m_characterSpacing: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
@@ -1377,7 +1377,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 540514617}
+  targetGraphic: {fileID: 540514619}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!114 &769334248
@@ -1485,13 +1485,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: optionName
       value: O_SizeDec
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: wholeNumbers
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4412081283409038069, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
@@ -1586,7 +1601,7 @@ PrefabInstance:
     - target: {fileID: 4412081284719302608, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -325.5
+      value: -237.5
       objectReference: {fileID: 0}
     - target: {fileID: 4412081284719302608, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}

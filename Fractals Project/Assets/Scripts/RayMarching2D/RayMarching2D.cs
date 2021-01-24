@@ -96,7 +96,7 @@ public class RayMarching2D : App {
 		return shape.type == 0 ? DECircle(pos, shape.pos, shape.size[0]) : DESquare(pos, shape.pos, shape.size);
 	}
 	
-	private float Length(Vector2 a) {
+	private static float Length(Vector2 a) {
 		return Mathf.Sqrt(a.x * a.x + a.y * a.y);
 	}
 
@@ -111,7 +111,7 @@ public class RayMarching2D : App {
 	}
 
 	// abs of a vector
-	private Vector2 Abs(Vector2 x) {
+	private static Vector2 Abs(Vector2 x) {
 		return new Vector2(Mathf.Abs(x[0]), Mathf.Abs(x[1]));
 	}
 	
@@ -140,7 +140,7 @@ public class RayMarching2D : App {
 	}
 
 	// vector angle
-	private float getAngle(Vector2 p) {
+	private static float getAngle(Vector2 p) {
 		float a = Vector2.SignedAngle(Vector2.left, p);
 		if (a < 0) {
 			a += 360;

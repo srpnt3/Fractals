@@ -1618,7 +1618,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1810324825}
+  targetGraphic: {fileID: 1810324827}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!114 &1402628685
@@ -2486,8 +2486,23 @@ PrefabInstance:
       objectReference: {fileID: 555224176}
     - target: {fileID: 7290771443694212879, guid: 848b275aa4a8a2f49b615d7e8fc4b34f,
         type: 3}
+      propertyPath: max
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290771443694212879, guid: 848b275aa4a8a2f49b615d7e8fc4b34f,
+        type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290771443694212879, guid: 848b275aa4a8a2f49b615d7e8fc4b34f,
+        type: 3}
       propertyPath: optionName
       value: O_Zoom
+      objectReference: {fileID: 0}
+    - target: {fileID: 7290771443694212879, guid: 848b275aa4a8a2f49b615d7e8fc4b34f,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 848b275aa4a8a2f49b615d7e8fc4b34f, type: 3}
@@ -2781,8 +2796,48 @@ PrefabInstance:
       objectReference: {fileID: 555224176}
     - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
         type: 3}
+      propertyPath: max.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: max.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: min.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: min.y
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
       propertyPath: optionName
       value: O_C
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: animationSpeed.x
+      value: 0.004
+      objectReference: {fileID: 0}
+    - target: {fileID: 5386681806966512386, guid: 5cdc511b770abf14dad3c7a0f48b2d62,
+        type: 3}
+      propertyPath: animationSpeed.y
+      value: 0.006
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cdc511b770abf14dad3c7a0f48b2d62, type: 3}

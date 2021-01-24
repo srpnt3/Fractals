@@ -1,5 +1,4 @@
-﻿using System;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
@@ -13,8 +12,9 @@ public class Mandelbrot : App {
 	private Vector2 c;
 	private Vector4 area; // (re, im, width, height)
 	private Vector3[] colorGradient;
+	private TextMeshProUGUI cUGUI;
 
-	private Vector4 RandomColor(float x) {
+	private static Vector4 RandomColor(float x) {
 		return new Vector4(Random.Range(0, 200), Random.Range(0, 200), Random.Range(0, 200), x);
 	}
 
@@ -25,6 +25,7 @@ public class Mandelbrot : App {
 			RandomColor(0.5f),
 			RandomColor(1f)
 		}, 100);
+		cUGUI = canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>();
 	}
 
 	// main render method
@@ -75,7 +76,7 @@ public class Mandelbrot : App {
 		
 		// update coordinates
 		Vector2 coords = ConvertCoords(Input.mousePosition);
-		canvas.transform.GetChild(3).GetComponent<TextMeshProUGUI>().text = "C ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
+		cUGUI.text = "C ( " + coords.x.ToString("0.0000000") + " / " + coords.y.ToString("0.0000000") + "i )";
 		
 		// controls
 		if (Mathf.Abs(controls.deltaZoom) > 0) {

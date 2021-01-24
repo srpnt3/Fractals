@@ -5,34 +5,48 @@ using UnityEngine;
 
 public class AnimationController : MonoBehaviour {
 
+	private App app;
 	private Dictionary<int, Params> animations;
 
 	private void OnEnable() {
+		app = GetComponent<App>();
 		animations = new Dictionary<int, Params>();
 	}
 
 	public int Register(float value, float speed, float min, float max, bool osc) {
+		value = Mathf.Clamp(value, min, max);
 		int id = GUID.Generate().GetHashCode();
 		if (osc) speed *= Mathf.PI;
-		Params p = new Params(value, speed, min, max, osc);
+		Params p = new Params(value, speed, min, max, osc, value);
 		animations.Add(id, MapB(p));
 		return id;
+	}
+
+	public void Unregister(int id) {
+		animations.Remove(id);
 	}
 
 	private void Update() {
 		foreach (var v in animations.ToList()) {
 			Params p = v.Value;
-			p.value += p.speed * GetComponent<App>().RequestSmoothDeltaTime();
+			p.value += p.speed * app.RequestSmoothDeltaTime();
 			animations[v.Key] = Clamp(p);
 		}
 	}
 
-	public float Request(int id) {
+	public float Get(int id) {
 		return MapA(animations[id]).value;
 	}
 	
-	public void Request(int id, ref float value) {
+	public void Get(int id, ref float value) {
 		value =  MapA(animations[id]).value;
+	}
+
+	public float GetDelta(int id) {
+		Params p = MapA(animations[id]);
+		float last = p.lastValue;
+		p.lastValue = p.value;
+		return p.value - last;
 	}
 
 	// Map to min;max
@@ -76,13 +90,15 @@ public class AnimationController : MonoBehaviour {
 		public float min;
 		public float max;
 		public bool osc;
+		public float lastValue;
 
-		public Params(float value, float speed, float min, float max, bool osc) {
+		public Params(float value, float speed, float min, float max, bool osc, float lastValue) {
 			this.value = value;
 			this.speed = speed;
 			this.min = min;
 			this.max = max;
 			this.osc = osc;
+			this.lastValue = lastValue;
 		}
 	}
 }

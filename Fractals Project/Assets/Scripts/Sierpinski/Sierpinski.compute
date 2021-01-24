@@ -7,54 +7,17 @@ Texture2D<float4> Source;
 // variables
 float N;
 int Iterations;
-
-// constants
-static const float pos = 1.5; // hole position
-static const float size = 0.5001; // hole size
-//static const float PI = 3.14159265;
+float Pos;
+float Size;
 
 bool InFractal(float x, float y) {
 	for (int i = 0; i < Iterations; i++) {
 		x *= N; y *= N; // scale to next level
-		if (abs(x % N - pos) < size && abs(y % N - pos) < size) // check
+		if (abs(x % N - Pos) < Size && abs(y % N - Pos) < Size) // check
 			return false;
 	}
 	return true;
 }
-
-/*bool InFractal(float x, float y) {
-	for (int i = 0; i < y*Iterations; i++) {
-		if (abs(x % N - pos) < size) // check
-			return false;
-		x *= N; // scale to next level
-	}
-	return true;
-}*/
-
-/*bool InFractal(float x, float y) {
-	float2 p = float2(x, y) * 2 - 1;
-	p *= sqrt(2);
-	float k = 1.0 / 3;
-	
-	// loop
-	float r;
-	float a;
-	for (int i = 0; i < Iterations; i++) {
-		r = length(p);
-		a = (atan2(p.y, p.x) + PI) / (PI * 2);
-		a = abs(a % k) / k;
-		a = abs(a - 0.5) * (PI * 2) / 3;
-		r *= 2;
-		x = r * cos(a);
-		y = r * sin(a);
-		p = float2(x, y);
-		p.x -= sqrt(2);
-	}
-	
-	// not loop
-	float d = length(p) - 1;
-	return d<0;
-}*/
 
 // main method
 [numthreads(8,8,1)]
@@ -74,10 +37,4 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 			Texture[id.xy] = float4(0.8, 0.2, 0.2, 1);
 		}
 	}
-	/*Texture[id.xy] = float4(1, 1, 1, 1);
-	if (min(x, y) > 0 && max(x, y) < 1) { // check boundaries
-		if (InFractal(y, x)) {
-			Texture[id.xy] = float4(0, 0, 0, 0);
-		}
-	}*/
 }

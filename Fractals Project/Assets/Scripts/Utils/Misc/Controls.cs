@@ -97,6 +97,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Record"",
+                    ""type"": ""Button"",
+                    ""id"": ""d6ab2d2b-a5b8-4f72-87e8-5debbe122e8a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -418,6 +426,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c15709f-9e52-47aa-94c6-6ff2fdde4eb4"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Record"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -696,6 +715,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_Default_Zoom = m_Default.FindAction("Zoom", throwIfNotFound: true);
         m_Default_Screenshot = m_Default.FindAction("Screenshot", throwIfNotFound: true);
         m_Default_Reload = m_Default.FindAction("Reload", throwIfNotFound: true);
+        m_Default_Record = m_Default.FindAction("Record", throwIfNotFound: true);
         // Flight
         m_Flight = asset.FindActionMap("Flight", throwIfNotFound: true);
         m_Flight_Throttle = m_Flight.FindAction("Throttle", throwIfNotFound: true);
@@ -761,6 +781,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_Default_Zoom;
     private readonly InputAction m_Default_Screenshot;
     private readonly InputAction m_Default_Reload;
+    private readonly InputAction m_Default_Record;
     public struct DefaultActions
     {
         private @Controls m_Wrapper;
@@ -775,6 +796,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Zoom => m_Wrapper.m_Default_Zoom;
         public InputAction @Screenshot => m_Wrapper.m_Default_Screenshot;
         public InputAction @Reload => m_Wrapper.m_Default_Reload;
+        public InputAction @Record => m_Wrapper.m_Default_Record;
         public InputActionMap Get() { return m_Wrapper.m_Default; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -814,6 +836,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Reload.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnReload;
                 @Reload.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnReload;
                 @Reload.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnReload;
+                @Record.started -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRecord;
+                @Record.performed -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRecord;
+                @Record.canceled -= m_Wrapper.m_DefaultActionsCallbackInterface.OnRecord;
             }
             m_Wrapper.m_DefaultActionsCallbackInterface = instance;
             if (instance != null)
@@ -848,6 +873,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Reload.started += instance.OnReload;
                 @Reload.performed += instance.OnReload;
                 @Reload.canceled += instance.OnReload;
+                @Record.started += instance.OnRecord;
+                @Record.performed += instance.OnRecord;
+                @Record.canceled += instance.OnRecord;
             }
         }
     }
@@ -921,6 +949,7 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnZoom(InputAction.CallbackContext context);
         void OnScreenshot(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnRecord(InputAction.CallbackContext context);
     }
     public interface IFlightActions
     {

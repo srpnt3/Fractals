@@ -47,8 +47,9 @@ Ray CreateCameraRay(float2 uv) {
 float2 DE(float3 p) {
     float3 z = p;
     float r, dr = 1;
+	int i;
 
-	for(int i = 0; i < Iterations; i++) {
+	for(i = 0; i < Iterations; i++) {
 		r = length(z);
 
 		if (r > 3) break;

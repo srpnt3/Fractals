@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class ControlsHelper {
+public class ControlsHelper : MonoBehaviour {
 
-	private readonly App app;
+	private App app;
 	private Controls controls;
 	
 	// options
@@ -26,10 +26,18 @@ public class ControlsHelper {
 	public float yaw;
 	public float pitch;
 
-	public ControlsHelper(App app) {
-		this.app = app;
+	private void OnEnable() {
+		app = GetComponent<App>();
 	}
-	
+
+	private void Start() {
+		controls.Enable();
+	}
+
+	private void OnDisable() {
+		controls.Disable();
+	}
+
 	public void RegisterControls() {
 		
 		// some variables
@@ -53,6 +61,7 @@ public class ControlsHelper {
 		controls.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 		controls.Default.Screenshot.canceled += ctx => { app.StartCoroutine(app.TakeScreenshot(Input.GetKey(KeyCode.LeftShift))); };
 		controls.Default.Reload.canceled += ctx => { SceneLoader.Reload(); };
+		controls.Default.Record.canceled += ctx => { app.or.ToggleRendering(30, Input.GetKey(KeyCode.LeftShift)); };
 		
 		// register flight controls
 		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();
@@ -66,32 +75,30 @@ public class ControlsHelper {
 	}
 
 	// update
-	public void Update() {
+	private void Update() {
 		Transform t = app.transform;
-		
-		if (app.cameraType != App.CameraType.None) {
-			if (Cursor.lockState == CursorLockMode.Locked) {
-				switch (app.cameraType) {
-					
-					// free view camera controls
-					case App.CameraType.Free:
-						t.Rotate(new Vector3(-cursor.y * app.RequestSmoothDeltaTime(), cursor.x * app.RequestSmoothDeltaTime(), -tilt * app.RequestSmoothDeltaTime() * 10) * 5);
-						t.Translate(new Vector3(move.x * app.RequestSmoothDeltaTime() * sensitivity, 0, move.y * app.RequestSmoothDeltaTime() * sensitivity));
-						app.ReRender();
-						break;
-					
-					// orbit camera controls
-					case App.CameraType.Orbit:
-						Vector3 pos = app.transform.localPosition;
-						float r = pos.magnitude - deltaZoom * sensitivity / 3000;
-						Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * app.RequestSmoothDeltaTime() * sensitivity, -cursor.y * app.RequestSmoothDeltaTime() * sensitivity);
-						Vector3 vars = ClampOrbitVars(r, angles);
-						t.localPosition = app.SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
-						t.LookAt(t.parent ? t.parent.position : Vector3.zero);
-						app.ReRender();
-						break;
-					
-				}
+	
+		if (Cursor.lockState == CursorLockMode.Locked && !app.or.isRendering) {
+			switch (app.cameraType) {
+				
+				// free view camera controls
+				case App.CameraType.Free:
+					t.Rotate(new Vector3(-cursor.y * app.RequestSmoothDeltaTime(), cursor.x * app.RequestSmoothDeltaTime(), -tilt * app.RequestSmoothDeltaTime() * 10) * 5);
+					t.Translate(new Vector3(move.x * app.RequestSmoothDeltaTime() * sensitivity, 0, move.y * app.RequestSmoothDeltaTime() * sensitivity));
+					app.ReRender();
+					break;
+				
+				// orbit camera controls
+				case App.CameraType.Orbit:
+					Vector3 pos = app.transform.localPosition;
+					float r = pos.magnitude - deltaZoom * sensitivity / 3000;
+					Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized) + new Vector2(-cursor.x * app.RequestSmoothDeltaTime() * sensitivity, -cursor.y * app.RequestSmoothDeltaTime() * sensitivity);
+					Vector3 vars = ClampOrbitVars(r, angles);
+					t.localPosition = app.SphericalCoordsToCartesianCoords(vars.x, vars.y) * vars.z;
+					Transform p = t.parent;
+					t.LookAt(p ? p.position : Vector3.zero);
+					app.ReRender();
+					break;
 			}
 		}
 
@@ -104,12 +111,6 @@ public class ControlsHelper {
 			return new Vector3(angles.x, angles.y, r);
 		}
 	}
-	
-	// enable controls
-	public void Enable() { controls.Enable(); }
-	
-	// disable controls
-	public void Disable() { controls.Disable(); }
 	
 	// toggle cursor visibility
 	private void SwitchCursor() {

@@ -2007,7 +2007,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1077999664}
+  targetGraphic: {fileID: 1077999667}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 0.7490196}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 0.7490196}
 --- !u!1 &1218290103
@@ -2641,7 +2641,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
-    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2695,7 +2694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1362418362}
+  targetGraphic: {fileID: 1362418364}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!1 &1478957372
@@ -2966,7 +2965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1572226036}
+  targetGraphic: {fileID: 1572226039}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 0.7490196}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 0.7490196}
 --- !u!1 &1584654909
@@ -3084,7 +3083,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1513604885}
+  targetGraphic: {fileID: 1513604888}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!114 &1585435440
@@ -3101,7 +3100,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
-    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -3244,7 +3242,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 3
-    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -3298,7 +3295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1218290103}
+  targetGraphic: {fileID: 1218290105}
   normal: {r: 1, g: 1, b: 1, a: 0.011764706}
   hover: {r: 1, g: 1, b: 1, a: 0.03137255}
 --- !u!1 &1669357319
@@ -4174,7 +4171,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
 --- !u!223 &2044082149
 Canvas:
   m_ObjectHideFlags: 0

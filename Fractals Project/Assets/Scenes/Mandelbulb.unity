@@ -147,8 +147,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: optionName
       value: O_Power
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 4412081283409038069, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
@@ -1405,8 +1420,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: optionName
       value: O_Julia
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 3020254205512028578, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
@@ -1976,7 +2006,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 990995491}
+  targetGraphic: {fileID: 990995493}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!114 &1806877052
@@ -2349,8 +2379,63 @@ PrefabInstance:
       objectReference: {fileID: 205510139}
     - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
         type: 3}
+      propertyPath: max.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: max.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: max.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: min.x
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: min.y
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: min.z
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
       propertyPath: optionName
       value: O_C
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: animationSpeed.x
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: animationSpeed.y
+      value: 0.02
+      objectReference: {fileID: 0}
+    - target: {fileID: 5125280062814694893, guid: 16cccd673ab22324ea5caab99a233270,
+        type: 3}
+      propertyPath: animationSpeed.z
+      value: 0.03
       objectReference: {fileID: 0}
     - target: {fileID: 5125280062814694898, guid: 16cccd673ab22324ea5caab99a233270,
         type: 3}

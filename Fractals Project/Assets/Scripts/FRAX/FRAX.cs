@@ -49,8 +49,8 @@ public class FRAX : App {
 		base.Update();
 
 		// update animations
-		ac.Request(edgeID, ref edge);
-		curveSpace = new Vector3(ac.Request(curveSpaceXID), ac.Request(curveSpaceYID), ac.Request(curveSpaceZID));
+		ac.Get(edgeID, ref edge);
+		curveSpace = new Vector3(ac.Get(curveSpaceXID), ac.Get(curveSpaceYID), ac.Get(curveSpaceZID));
 		
 		ReRender();
 	}

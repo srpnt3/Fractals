@@ -2055,7 +2055,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63a65f52f6b18e042ad97498334b9bfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  obj: {fileID: 1173381636}
+  targetGraphic: {fileID: 1173381638}
   normal: {r: 0.8392157, g: 0.8509804, b: 0.87058824, a: 1}
   hover: {r: 0.9098039, g: 0.31764707, b: 0.41960785, a: 1}
 --- !u!114 &1721389004
@@ -2168,8 +2168,23 @@ PrefabInstance:
       objectReference: {fileID: 650338641}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: optionName
       value: O_Cut
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 3020254205512028578, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
@@ -2343,13 +2358,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: animate
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: optionName
       value: O_Edge
       objectReference: {fileID: 0}
     - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
+      propertyPath: oscillating
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
       propertyPath: wholeNumbers
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2886464298844970360, guid: 1f834fe602c595649a57bd478ffa5942,
+        type: 3}
+      propertyPath: animationSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 4412081283409038069, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
