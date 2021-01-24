@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 
 public class AnimationController : MonoBehaviour {
@@ -15,7 +15,7 @@ public class AnimationController : MonoBehaviour {
 
 	public int Register(float value, float speed, float min, float max, bool osc) {
 		value = Mathf.Clamp(value, min, max);
-		int id = GUID.Generate().GetHashCode();
+		int id = Guid.NewGuid().GetHashCode();
 		if (osc) speed *= Mathf.PI;
 		Params p = new Params(value, speed, min, max, osc, value);
 		animations.Add(id, MapB(p));
