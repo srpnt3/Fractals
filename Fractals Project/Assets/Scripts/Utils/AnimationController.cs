@@ -22,6 +22,17 @@ public class AnimationController : MonoBehaviour {
 		return id;
 	}
 
+	/*public void DecreaseSpeed(int id, float amount) {
+		try {
+			Params p = animations[id];
+			float z = Mathf.Clamp(Mathf.Abs(p.speed) - (app.RequestSmoothDeltaTime() * amount), 0, 100);
+			p.speed = z * Mathf.Sign(p.speed);
+			animations[id] = p;
+		} catch (Exception e) {
+			
+		}
+	}*/
+
 	public void Unregister(int id) {
 		animations.Remove(id);
 	}
@@ -42,12 +53,12 @@ public class AnimationController : MonoBehaviour {
 		value =  MapA(animations[id]).value;
 	}
 
-	public float GetDelta(int id) {
+	/*public float GetDelta(int id) {
 		Params p = MapA(animations[id]);
 		float last = p.lastValue;
 		p.lastValue = p.value;
 		return p.value - last;
-	}
+	}*/
 
 	// Map to min;max
 	private Params MapA(Params p) {
