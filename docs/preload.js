@@ -13,7 +13,7 @@ req.onload = function() {
 		vid.src = window.URL.createObjectURL(this.response)
 		vid.load()
 		vid.pause()
-		hideLoading();
+		hideLoading()
 		scrollStart()
 		start()
 	}

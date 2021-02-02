@@ -36,7 +36,7 @@ function scrollStart() {
 
 	document.body.addEventListener('wheel', e => {
 		e.preventDefault();
-		if (Math.abs(e.deltaY) > 10) {
+		if (Math.abs(e.deltaY * (e.deltaMode === 1 ? 17 : 1)) > 10) {
 			scroll(Math.sign(e.deltaY))
 		}
 	}, {passive: false})
