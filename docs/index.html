@@ -3,8 +3,45 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Fractals</title>
+	<link rel="stylesheet" href="main.css">
+	<link rel="icon" href="files/icon1.png" id="icon1">
+	<link rel="icon" href="files/icon2.png" id="icon2">
 </head>
 <body>
+	<div id="loading">
+		<line></line>
+		<line></line>
+		<img src="files/icon3.png">
+	</div>
+	<video id="video">
+		<source src="files/video.mp4" type="video/mp4">
+	</video>
 
+	<div class="wrapper">
+		<nav class="sidebar">
+			<p>Fractals by srpnt3</p>
+			<p>2021</p>
+		</nav>
+		<div id="scroll-bar">
+			<line></line>
+			<line></line>
+		</div>
+		<button id="scroll-down">
+			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.92 11.67">
+				<g><polyline style="fill: none; stroke: #fff" points="0.35 0.35 10.96 10.96 21.57 0.35"/></g>
+			</svg>
+		</button>
+	</div>
+
+	<script type="text/javascript" src="scrolling.js"></script>
+	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="preload.js"></script>
 </body>
+
+<script type="text/javascript">
+	if (window.document.documentMode) {
+		alert('Internet Explorer is not supported')
+	}
+</script>
+
 </html>
