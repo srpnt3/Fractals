@@ -1,14 +1,13 @@
-let scrollbar = document.getElementById('scroll-bar')
-let scrollbarA = scrollbar.children[0]
-let scrollbarB = scrollbar.children[1]
+let scrollBar = document.getElementById('scroll-bar')
+let scrollValue = document.getElementById('scroll-value')
 let scrollDown = document.getElementById('scroll-down');
 let vid = document.getElementById('video');
 let l = 0
 
 function start() {
-	scrollbarA.style.opacity = '1'
-	scrollbarB.style.opacity = '0.5'
-	scrollbarA.style.height = 100 / (S.pages - 1) + '%'
+	for (let i = 0; i < S.pages; i++) {
+		scrollBar.appendChild(document.createElement('line'))
+	}
 
 	vid.addEventListener('loadedmetadata', () => {
 		l = vid.duration
@@ -17,20 +16,21 @@ function start() {
 }
 
 function update() {
+	scrollBar.children[Math.max(S.finalScroll - 1, 0)].className = ''
+	scrollBar.children[Math.min(S.finalScroll + 1, S.pages - 1)].className = ''
+	scrollBar.children[S.finalScroll].className = 'active'
+	scrollValue.innerText = S.globalScroll.toFixed(1)
 	if (S.finalScroll === 0) {
-		scrollbar.style.opacity = '0'
 		scrollDown.style.opacity = '1'
 		vid.style.filter = 'brightness(100%)'
 		scrollDown.style.pointerEvents = 'all'
 	} else {
-		scrollbar.style.opacity = '1'
 		scrollDown.style.opacity = '0'
-		vid.style.filter = 'brightness(50%)'
+		vid.style.filter = 'brightness(80%)'
 		scrollDown.style.pointerEvents = 'none'
 	}
 	document.body.scrollTop = S.globalScroll * window.innerHeight
 	vid.currentTime = S.globalScroll / (S.pages - 1) * l
-	scrollbarA.style.top = Math.clamp(((S.globalScroll - 1) / (S.pages - 1)) * 100, 0 , 100) + '%';
 	requestAnimationFrame(update)
 }
 

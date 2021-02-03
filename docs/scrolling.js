@@ -19,8 +19,6 @@ let S = {
 }
 
 function scrollStart() {
-	document.getElementById('scroll-down').addEventListener('click', () => scroll(1))
-
 	document.addEventListener('touchstart', e => {
 		S.t.deltaY = e.changedTouches[0].clientY;
 	}, {passive: false})
@@ -29,7 +27,7 @@ function scrollStart() {
 		e.preventDefault()
 		let d = S.t.deltaY - e.changedTouches[0].clientY;
 		if (Math.abs(d) > 20) {
-			scroll(Math.sign(d))
+			doScroll(Math.sign(d))
 			S.t.deltaY = e.changedTouches[0].clientY;
 		}
 	}, {passive: false})
@@ -37,12 +35,12 @@ function scrollStart() {
 	document.body.addEventListener('wheel', e => {
 		e.preventDefault();
 		if (Math.abs(e.deltaY * (e.deltaMode === 1 ? 17 : 1)) > 10) {
-			scroll(Math.sign(e.deltaY))
+			doScroll(Math.sign(e.deltaY))
 		}
 	}, {passive: false})
 }
 
-function scroll(deltaY) {
+function doScroll(deltaY) {
 	if (!S.scrolling && isScrollValid(deltaY)) {
 		S.scrolling = true
 		S.finalScroll = S.globalScroll + deltaY

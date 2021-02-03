@@ -14,19 +14,24 @@
 		<img src="files/icon3.png">
 	</div>
 	<video id="video" muted autoplay>
-		<source src="files/video.mp4" type="video/mp4">
+		<source src="files/video2.mp4" type="video/mp4">
 	</video>
 
 	<div class="wrapper">
-		<nav class="sidebar">
-			<p>Fractals by srpnt3</p>
-			<p>2021</p>
+		<nav class="sidebar-left">
+			<span>Fractals by Serpentine</span>
+			<span>2021</span>
 		</nav>
-		<div id="scroll-bar">
-			<line></line>
-			<line></line>
-		</div>
-		<button id="scroll-down">
+		<nav class="sidebar-right">
+			<span id="scroll-value"></span>
+			<div id="scroll-bar"></div>
+			<!--<div id="socials">
+				<a href="">Y<g>ou</g>t<g>ube</g></a>
+				<a href="">I<g>nsta</g>g<g>ram</g></a>
+				<a href="">G<g>it</g>h<g>ub</g></a>
+			</div>-->
+		</nav>
+		<button id="scroll-down" onclick="doScroll(1)">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21.92 11.67">
 				<g><polyline style="fill: none; stroke: #fff" points="0.35 0.35 10.96 10.96 21.57 0.35"/></g>
 			</svg>

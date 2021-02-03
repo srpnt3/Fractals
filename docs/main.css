@@ -8,7 +8,8 @@
 	margin: 0;
 	padding: 0;
 	overflow: visible;
-	font-size: 1.1vh;
+	font-size: calc(var(--vh, 1vh) * 1.1);
+	color: whitesmoke;
 }
 
 html, body {
@@ -22,10 +23,11 @@ html, body {
 
 
 body {
-	overflow-y: scroll;
+	overflow: hidden;
 	position: absolute;
 	top: 0;
 	background-color: rgb(21, 21, 21);
+	scrollbar-width: none;
 }
 
 body::-webkit-scrollbar {
@@ -57,9 +59,6 @@ body::-webkit-scrollbar {
 	z-index: 1;
 	background-color: rgb(21, 21, 21);
 	transition: 1s;
-	display: flex;
-	justify-content: center;
-	align-items: center;
 	overflow: hidden;
 }
 
@@ -71,13 +70,19 @@ body::-webkit-scrollbar {
 	left: 25%;
 	border-top: 1px solid white;
 	transition: opacity 1s;
+	pointer-events: none;
 }
 
-#loading img {
+#loading > img {
 	opacity: 0;
-	height: 66vh;
-	width: 66vh;
+	height: calc(var(--vh, 1vh) * 66);
+	width: calc(var(--vh, 1vh) * 66);
 	transition: opacity 1s;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	pointer-events: none;
 }
 
 /*
@@ -85,24 +90,14 @@ body::-webkit-scrollbar {
  */
 
 .wrapper {
-	width: calc(100vw - 8vw);
-	height: 84vh;
+	width: auto;
+	height: calc(var(--vh, 1vh) * 84);
 	position: relative;
-	margin: 8vh 4vw;
+	margin: calc(var(--vh, 1vh) * 8) 4vw;
 	overflow: visible;
 }
 
-.sidebar {
-	transform-origin: top left;
-	transform: rotateZ(-90deg) translateX(-100%);
-	display: flex;
-	justify-content: space-between;
-	flex-direction: row;
-	align-items: flex-start;
-	width: 84vh;
-}
-
-.sidebar p {
+span, #socials a {
 	font-family: Roboto, sans-serif;
 	font-weight: 400; /* regular */
 	text-transform: uppercase;
@@ -110,18 +105,107 @@ body::-webkit-scrollbar {
 	letter-spacing: 0.1vh;
 }
 
+.blur {
+	backdrop-filter: blur(3em) brightness(110%);
+	-webkit-backdrop-filter: blur(3em) brightness(110%);
+	background-color: rgba(61, 61, 66, 0.1);
+}
+
+/* sidebars */
+
+.sidebar-left {
+	transform-origin: top left;
+	transform: rotateZ(-90deg) translateX(-100%);
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	align-items: flex-start;
+	width: calc(var(--vh, 1vh) * 84);
+}
+
+.sidebar-right {
+	position: absolute;
+	height: 100%;
+	right: 0;
+	top: 0;
+	width: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	align-items: flex-end;
+}
+
+.sidebar-right > *:first-child {
+	margin-bottom: 33em;
+}
+
+/* socials */
+
+/*#socials {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-end;
+	height: 0;
+	overflow: hidden;
+}
+
+#socials a {
+	text-transform: none;
+	margin: 1em 0;
+	text-decoration: none;
+	transition: .5s;
+}
+
+#socials g {
+	display: none;
+	opacity: 0;
+	transition: .5s;
+}
+
+#socials a:hover g {
+	display: inline;
+	opacity: 1;
+}*/
+
+/* scroll bar */
+
+#scroll-bar {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: space-between;
+	width: 3em;
+}
+
+#scroll-bar > line {
+	margin: 1em 0;
+	background-color: whitesmoke;
+	opacity: .5;
+	height: 0.2em;
+	width: 0.4em;
+	transition: width 1s, opacity 1s;
+}
+
+#scroll-bar > line.active {
+	width: 2em;
+	opacity: 1;
+}
+
+/* scroll down button */
+
 #scroll-down {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
-	transform: translateX(-50%);
+	transform: translate(-50%, 0);
 	border: none;
 	outline: none;
 	height: 1vh;
 	width: 2vh;
 	background-color: transparent;
 	cursor: pointer;
-	transition: transform 1s;
+	transition: transform 1s, opacity 1s;
 }
 
 #scroll-down svg {
@@ -130,19 +214,4 @@ body::-webkit-scrollbar {
 
 #scroll-down:hover svg {
 	transform: translateY(50%);
-}
-
-#scroll-bar {
-	position: absolute;
-	right: 0;
-	top: 50%;
-	transform: translateY(-50%);
-	height: 23.6vh;
-	transition: 1s;
-}
-
-#scroll-bar > line {
-	position: absolute;
-	height: 100%;
-	border-right: 1px solid white;
 }

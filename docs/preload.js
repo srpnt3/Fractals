@@ -5,7 +5,9 @@ let loadingB = loading.children[1];
 let loadingC = loading.children[2];
 const req = new XMLHttpRequest()
 
-req.open('GET', 'files/video.mp4', true)
+window.addEventListener('resize', updateVH)
+
+req.open('GET', 'files/video2.mp4', true)
 req.responseType = 'blob'
 
 req.onload = function() {
@@ -13,9 +15,9 @@ req.onload = function() {
 		vid.src = window.URL.createObjectURL(this.response)
 		vid.load()
 		vid.pause()
-		hideLoading()
 		scrollStart()
 		start()
+		hideLoading()
 	}
 }
 
@@ -26,6 +28,7 @@ req.onprogress = function(e) {
 	loadingA.style.width = (e.loaded / e.total) * 50 + '%'
 }
 
+updateVH()
 req.send()
 
 function hideLoading() {
@@ -36,4 +39,9 @@ function hideLoading() {
 		loading.style.opacity = '0'
 		loading.style.pointerEvents = 'none'
 	}, 800)
+}
+
+function updateVH() {
+	let vh = window.innerHeight * 0.01
+	document.documentElement.style.setProperty('--vh', vh + 'px')
 }
