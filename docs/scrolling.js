@@ -1,3 +1,4 @@
+let content = document.getElementById('content')
 let S = {
 	pages: 5,
 	globalScroll: 0,
@@ -19,6 +20,8 @@ let S = {
 }
 
 function scrollStart() {
+	S.pages = content.children.length;
+
 	document.addEventListener('touchstart', e => {
 		S.t.deltaY = e.changedTouches[0].clientY;
 	}, {passive: false})

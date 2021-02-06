@@ -233,3 +233,16 @@ span, #socials a {
 #scroll-down:hover svg {
 	transform: translateY(50%);
 }
+
+/*
+	Content
+ */
+
+#content {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: -1;
+}

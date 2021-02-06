@@ -1,7 +1,7 @@
 let scrollBar = document.getElementById('scroll-bar')
 let scrollValue = document.getElementById('scroll-value')
-let scrollDown = document.getElementById('scroll-down');
-let vid = document.getElementById('video');
+let scrollDown = document.getElementById('scroll-down')
+let vid = document.getElementById('video')
 let l = 0
 
 function start() {
@@ -16,10 +16,14 @@ function start() {
 }
 
 function update() {
+
+	// scroll bar & scroll value
 	scrollBar.children[Math.max(S.finalScroll - 1, 0)].className = ''
 	scrollBar.children[Math.min(S.finalScroll + 1, S.pages - 1)].className = ''
 	scrollBar.children[S.finalScroll].className = 'active'
 	scrollValue.innerText = S.globalScroll.toFixed(1)
+
+	// landing page / other pages
 	if (S.finalScroll === 0) {
 		scrollDown.style.opacity = '1'
 		vid.style.filter = 'brightness(100%)'
@@ -29,7 +33,11 @@ function update() {
 		vid.style.filter = 'brightness(80%)'
 		scrollDown.style.pointerEvents = 'none'
 	}
-	document.body.scrollTop = S.globalScroll * window.innerHeight
+
+	// if I decide to enable the scroll bar
+	//document.body.scrollTop = S.globalScroll * window.innerHeight
+
+	// video & update
 	vid.currentTime = S.globalScroll / (S.pages - 1) * l
 	requestAnimationFrame(update)
 }

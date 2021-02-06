@@ -4,8 +4,7 @@ let loadingA = loading.children[0];
 let loadingB = loading.children[1];
 let loadingC = loading.children[2];
 const req = new XMLHttpRequest()
-
-window.addEventListener('resize', updateVH)
+let vh
 
 req.open('GET', 'files/video1.mp4', true)
 req.responseType = 'blob'
@@ -28,7 +27,11 @@ req.onprogress = function(e) {
 	loadingA.style.width = (e.loaded / e.total) * 50 + '%'
 }
 
+// fix mobile problems
 updateVH()
+window.addEventListener('resize', updateVH)
+setTimeout(updateVH, 100)
+
 req.send()
 
 function hideLoading() {
@@ -42,6 +45,10 @@ function hideLoading() {
 }
 
 function updateVH() {
-	let vh = window.innerHeight * 0.01
+	vh = window.innerHeight * 0.01
 	document.documentElement.style.setProperty('--vh', vh + 'px')
+	/*console.log('-----')
+	console.log(document.documentElement.clientHeight)
+	console.log(window.innerHeight)
+	console.log(screen.height)*/
 }
