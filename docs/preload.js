@@ -7,7 +7,7 @@ const req = new XMLHttpRequest()
 
 window.addEventListener('resize', updateVH)
 
-req.open('GET', 'files/video2.mp4', true)
+req.open('GET', 'files/video1.mp4', true)
 req.responseType = 'blob'
 
 req.onload = function() {
