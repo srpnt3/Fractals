@@ -1,5 +1,6 @@
 let scrollBar = document.getElementById('scroll-bar')
 let scrollValue = document.getElementById('scroll-value')
+let scrollName = document.getElementById('scroll-name')
 let scrollDown = document.getElementById('scroll-down')
 let vid = document.getElementById('video')
 let l = 0
@@ -18,19 +19,21 @@ function start() {
 function update() {
 
 	// scroll bar & scroll value
-	scrollBar.children[Math.max(S.finalScroll - 1, 0)].className = ''
-	scrollBar.children[Math.min(S.finalScroll + 1, S.pages - 1)].className = ''
+	scrollBar.children[S.prev].className = ''
+	scrollBar.children[S.next].className = ''
 	scrollBar.children[S.finalScroll].className = 'active'
 	scrollValue.innerText = S.globalScroll.toFixed(1)
+	scrollName.innerText = content.children[S.finalScroll].dataset.name
+	//content.style.top = '-' + S.globalScroll * window.innerHeight * 0.84 + 'px'
 
 	// landing page / other pages
 	if (S.finalScroll === 0) {
 		scrollDown.style.opacity = '1'
-		vid.style.filter = 'brightness(100%)'
+		vid.style.filter = 'brightness(50%)'
 		scrollDown.style.pointerEvents = 'all'
 	} else {
 		scrollDown.style.opacity = '0'
-		vid.style.filter = 'brightness(80%)'
+		vid.style.filter = 'brightness(50%)'
 		scrollDown.style.pointerEvents = 'none'
 	}
 

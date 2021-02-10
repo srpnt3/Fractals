@@ -3,6 +3,8 @@ let S = {
 	pages: 5,
 	globalScroll: 0,
 	finalScroll: 0,
+	prev: 0,
+	next: 1,
 	scrolling: false,
 	t: {
 		deltaY: 0
@@ -20,7 +22,7 @@ let S = {
 }
 
 function scrollStart() {
-	S.pages = content.children.length;
+	S.pages = content.children.length
 
 	document.addEventListener('touchstart', e => {
 		S.t.deltaY = e.changedTouches[0].clientY;
@@ -47,13 +49,24 @@ function doScroll(deltaY) {
 	if (!S.scrolling && isScrollValid(deltaY)) {
 		S.scrolling = true
 		S.finalScroll = S.globalScroll + deltaY
+		S.prev = Math.max(S.finalScroll - 1, 0)
+		S.next = Math.min(S.finalScroll + 1, S.pages - 1)
 		S.a.currentTime = 0
 		S.a.startValue = S.globalScroll
+		onScroll()
 		let scrollID = setInterval(scrollUpdate, S.a.deltaTime(), deltaY, () => {
 			clearInterval(scrollID)
 			S.scrolling = false
 		})
 	}
+}
+
+function onScroll() {
+	content.children[S.prev].className = 'prev'
+	content.children[S.next].className = 'next'
+	setTimeout(() => {
+		content.children[S.finalScroll].className = 'curr'
+	}, 500)
 }
 
 function scrollUpdate(dir, callback) {
