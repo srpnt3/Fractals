@@ -4,17 +4,18 @@
 	<meta charset='UTF-8'>
 	<title>Fractals</title>
 	<link rel='stylesheet' href='main.css'>
-	<link rel='icon' href='files/icon1.png' id='icon1'>
-	<link rel='icon' href='files/icon2.png' id='icon2'>
+	<link rel='icon' href='media/icon1.png' id='icon1'>
+	<link rel='icon' href='media/icon2.png' id='icon2'>
 </head>
 <body>
 	<div id='loading'>
 		<line></line>
 		<line></line>
-		<img src='files/logo.png'>
+		<!--<canvas></canvas>
+		<img src='media/logo.png'>-->
 	</div>
-	<video id='video' muted autoplay>
-		<source src='files/video2.mp4' type='video/mp4'>
+	<video id='video' muted autoplay data-tilt data-tilt-full-page-listening data-tilt-max='3'>
+		<source src='media/video.mp4' type='video/mp4'>
 	</video>
 	<div class='background'>
 		<line></line>
@@ -30,47 +31,50 @@
 		<nav class='sidebar-right'>
 			<div><span id='scroll-name'></span><span id='scroll-value'></span></div>
 			<div id='scroll-bar'></div>
-			<div id="socials">
-				<a target="_blank" href="https://github.com/srpnt3"><span>Gh</span><span>GitHub</span></a>
-				<a target="_blank" href="https://twitter.com/_srpnt3"><span>Tw</span><span>Twitter</span></a>
+			<div id='socials'>
+				<a target='_blank' href='https://github.com/srpnt3'><span>Gh</span><span>GitHub</span></a>
+				<a target='_blank' href='https://twitter.com/_srpnt3'><span>Tw</span><span>Twitter</span></a>
+				<a target='_blank' href='https://www.instagram.com/srpnt3/'><span>In</span><span>Instagram</span></a>
 			</div>
 		</nav>
-		<button id='scroll-down' onclick='doScroll(1)'>
+		<button id='scroll-down'>
 			<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21.92 11.67'>
 				<g><polyline style='fill: none; stroke: #fff' points='0.35 0.35 10.96 10.96 21.57 0.35'/></g>
 			</svg>
 		</button>
 		<div id='content'>
-			<section data-name='home' class="curr">
-				<div class="container">
+			<section data-name='home' class='curr'>
+				<div class='container'>
 					<h1>Fractals</h1>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
 				</div>
 			</section>
-			<section data-name='about' class="next">
-				<div class="container">
+			<section data-name='about' class='next'>
+				<div class='container'>
 					<h2>About</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ad asperiores delectus ea fugit iusto mollitia officiis sit! Assumenda atque blanditiis debitis deleniti dignissimos dolores fuga fugit illum itaque laborum laudantium maxime molestiae nemo possimus, quae quia quisquam, quod recusandae ullam veritatis. Aliquid asperiores blanditiis minima provident sit veniam vero voluptas voluptatum. Explicabo illo officia perspiciatis quaerat quidem tenetur vel voluptas! Assumenda debitis dolore dolorem est eum explicabo incidunt minima nobis numquam odit porro quam tempora temporibus, unde vel vero voluptates.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
 				</div>
 			</section>
 			<section data-name='gallery'>
-				<div class="container">
+				<div class='container'>
 					<h2>Gallery</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium beatae commodi consectetur cum deserunt dolor eius eum harum impedit laboriosam molestias nesciunt nihil officiis ratione rem repudiandae rerum, suscipit tempora tempore tenetur vel vero voluptatem. Architecto blanditiis eligendi enim ex facere illum iusto, labore natus nesciunt nostrum praesentium quae qui quia, ratione rem suscipit vel. Animi doloribus et magni quo.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
 				</div>
 			</section>
 			<section data-name='downloads'>
-				<div class="container">
+				<div class='container'>
 					<h2>Downloads</h2>
-					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Id, necessitatibus.</p>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
 				</div>
 			</section>
 		</div>
 	</div>
 
-	<script type='text/javascript' src='scrolling.js'></script>
-	<script type='text/javascript' src='main.js'></script>
-	<script type='text/javascript' src='preload.js'></script>
+	<script type='text/javascript' src='./scripts/tilt.min.js'></script>
+	<script type='module' src='./scripts/scroll.js'></script>
+	<script type='module' src='./scripts/main.js'></script>
+	<script type='module' src='./scripts/loading.js'></script>
+	<script type='module' src='./scripts/preload.js'></script>
 </body>
 
 <script type='text/javascript'>

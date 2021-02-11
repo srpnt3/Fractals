@@ -4,7 +4,7 @@
 
 > Fractals and their application in game design
 
-This is the repository for the [paper](https://srpnt3.github.io/Fractals/files/Fraktale%20und%20ihre%20Anwendung%20im%20Game-Design.pdf) "Fractals and their application in game design".<br>
+This is the repository for the [paper](https://srpnt3.github.io/Fractals/media/Fraktale%20und%20ihre%20Anwendung%20im%20Game-Design.pdf) "Fractals and their application in game design".<br>
 In the paper different 2-, 3- and n-dimensional fractals are mathematically described.
 In addition, it analyses different technologies, that are used to render fractals, and precisely documents the programming.
 Finally, different applications of fractals in different areas are discussed, with focus on game design.
