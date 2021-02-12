@@ -1,7 +1,7 @@
 let Loading = {
 	init: init,
 	progress: progress,
-	stop: stop,
+	stop: stop
 };
 
 let loading = document.getElementById('loading');

@@ -1,5 +1,6 @@
 let Scroll = {
 	pages: 0,
+	time: 800,
 	currentScroll: 0,
 	targetScroll: 0,
 	prevScroll: 0,
@@ -16,12 +17,12 @@ let content = document.getElementById('content');
 let tDeltaY; // touch delta Y
 let frame; // current frame
 let frames = 30;
-let time = 1000; // in ms
-let deltaTime = time / frames;
+let deltaTime = Scroll.time / frames;
 let onScroll;
 
 function init() {
 	Scroll.pages = content.children.length;
+	document.documentElement.style.setProperty('--scroll', Scroll.time + 'ms');
 
 	// register events
 	document.addEventListener('touchstart', e => {
@@ -39,7 +40,7 @@ function init() {
 
 	document.body.addEventListener('wheel', e => {
 		e.preventDefault();
-		if (Math.abs(e.deltaY * (e.deltaMode === 1 ? 17 : 1)) > 10) {
+		if (Math.abs(e.deltaY * (e.deltaMode === 1 ? 17 : 1)) > 5) {
 			doScroll(e.deltaY);
 		}
 	}, {passive: false});

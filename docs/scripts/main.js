@@ -1,4 +1,5 @@
 import {Scroll} from './scroll.js';
+import {Cursor} from './cursor.js';
 
 let Main = {
 	init: init
@@ -22,6 +23,9 @@ window.addEventListener('resize', updateVH);
 setInterval(updateVH, 100);
 updateVH();
 
+// init cursor
+Cursor.init();
+
 // icon
 matcher.onchange = iconUpdate;
 iconUpdate();
@@ -36,7 +40,7 @@ function iconUpdate() {
 	}
 }
 
-// tilt
+// tilt & cursor
 if (!('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0))
 	VanillaTilt.init(vid, {max: 1});
 
@@ -78,11 +82,11 @@ function onScroll() {
 	content.children[Scroll.nextScroll].className = 'next';
 	setTimeout(() => {
 		content.children[Scroll.targetScroll].className = 'curr';
-	}, 500);
+	}, Scroll.time / 2);
 
 	// landing page / other pages
 	if (Scroll.targetScroll === 0) {
-		setTimeout(() => scrollDown.style.opacity = '1', 500);
+		setTimeout(() => scrollDown.style.opacity = '1', Scroll.time / 2);
 		vid.style.filter = 'brightness(70%)';
 		scrollDown.style.pointerEvents = 'all';
 	} else {
