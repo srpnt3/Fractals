@@ -14,7 +14,7 @@
 
 # JetBrains IDE
 /Fractals Project/.idea
-/docs/.idea
+/Fractals Site/.idea
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -68,3 +68,7 @@ crashlytics-build.properties
 /Fractals Project/[Aa]ssets/TextMesh Pro/
 /Fractals Project/[Aa]ssets/TextMesh Pro.meta
 Fractals Project/Assets/Scripts/FRAX/Lighting/HDRI.hdr
+
+# Node
+/Fractals Site/node_modules/
+/Fractals Site/package-lock.json

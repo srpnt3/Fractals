@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='UTF-8'>
+	<title>Fractals</title>
+	<link rel='stylesheet' href='./css/main.css'>
+	<link rel='icon' href='./media/icon1.png' id='icon1'>
+	<link rel='icon' href='./media/icon2.png' id='icon2'>
+</head>
+<body class="no-cursor">
+	<div id='loading'>
+		<line></line>
+		<line></line>
+	</div>
+	<video id='video' muted autoplay data-tilt-full-page-listening>
+		<source src='./media/video.mp4' type='video/mp4'>
+	</video>
+	<div class='background'>
+		<line></line>
+		<line></line>
+		<line></line>
+	</div>
+
+	<div class='wrapper'>
+		<nav class='sidebar-left'>
+			<span>Fractals by Serpentine</span>
+			<span>2021</span>
+		</nav>
+		<nav class='sidebar-right'>
+			<div><span id='scroll-name'></span><span id='scroll-value'></span></div>
+			<div id='scroll-bar'></div>
+			<div id='socials'>
+				<a target='_blank' href='https://github.com/srpnt3'>
+                    <span>Gh</span><span>GitHub</span>
+                </a>
+				<a target='_blank' href='https://twitter.com/_srpnt3'>
+                    <span>Tw</span><span>Twitter</span>
+                </a>
+				<a target='_blank' href='https://www.instagram.com/srpnt3/'>
+                    <span>In</span><span>Instagram</span>
+                </a>
+			</div>
+		</nav>
+		<button id='scroll-down'>
+			<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21.92 11.67'>
+				<g>
+					<polyline style='fill: none; stroke: #fff' points='0.35 0.35 10.96 10.96 21.57 0.35'/>
+				</g>
+			</svg>
+		</button>
+		<div id='content'>
+			<section data-name='home' class='curr'>
+				<div class='container'>
+					<h1>Fractals</h1>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi
+						doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium
+						provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum
+						minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
+				</div>
+			</section>
+			<section data-name='about' class='next'>
+				<div class='container'>
+					<h2>About</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi
+						doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium
+						provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum
+						minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
+					<div class="actions blur">
+						<a target='_blank' href='./media/Fraktale%20und%20ihre%20Anwendung%20im%20Game-Design.pdf'><h3>Read Paper</h3></a>
+					</div>
+				</div>
+			</section>
+			<section data-name='gallery'>
+				<div class='container'>
+					<h2>Gallery</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi
+						doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium
+						provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum
+						minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
+					<div class="actions blur">
+						<a><h3>Images</h3></a>
+						<a><h3>Videos</h3></a>
+					</div>
+				</div>
+			</section>
+			<section data-name='downloads'>
+				<div class='container'>
+					<h2>Downloads</h2>
+					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. A aliquam at blanditiis commodi
+						doloremque eaque et fugit illum impedit in laborum nam necessitatibus nemo officia praesentium
+						provident quae qui sapiente, vel vero? Deleniti dolorum eligendi expedita facilis fuga, harum
+						minus natus officia omnis qui recusandae similique sint tempora ut vitae?</p>
+					<div class="actions blur">
+						<a target='_blank' href='https://github.com/srpnt3/Fractals/releases'><h3>Application</h3></a>
+					</div>
+				</div>
+			</section>
+		</div>
+	</div>
+
+	<script type='text/javascript' src='./scripts/tilt.min.js'></script>
+	<script type='module' src='./scripts/scroll.js'></script>
+	<script type='module' src='./scripts/main.js'></script>
+	<script type='module' src='./scripts/loading.js'></script>
+	<script type='module' src='./scripts/preload.js'></script>
+</body>
+
+<script type='text/javascript'>
+	if (window.document.documentMode) {
+		alert('Internet Explorer is not supported');
+	}
+</script>
+
+</html>
