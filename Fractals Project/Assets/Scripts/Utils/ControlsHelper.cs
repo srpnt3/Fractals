@@ -62,15 +62,6 @@ public class ControlsHelper : MonoBehaviour {
 		controls.Default.Screenshot.canceled += ctx => app.StartCoroutine(app.TakeScreenshot(Input.GetKey(KeyCode.LeftShift)));
 		controls.Default.Reload.canceled += ctx => SceneLoader.Reload();
 		controls.Default.Record.canceled += ctx => app.or.ToggleRendering(30, Input.GetKey(KeyCode.LeftShift));
-		/*controls.Default.Record.canceled += ctx => {
-			if (Input.GetKey(KeyCode.LeftAlt)) {
-				animateCameraAzimuth = true;
-				animateCameraRadius = true;
-				app.or.ToggleRendering(30, Input.GetKey(KeyCode.LeftShift));
-			} else {
-				asdf = true;
-			}
-		};*/
 
 		// register flight controls
 		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();
@@ -115,12 +106,6 @@ public class ControlsHelper : MonoBehaviour {
 		float r = pos.magnitude;
 		Vector2 angles = app.CartesianCoordsToSphericalCoords(pos.normalized);
 
-		/*if (asdf) {
-			app.ac.DecreaseSpeed(animAzimuthID, 10);
-			app.ac.DecreaseSpeed(animElevationID, 1);
-			app.ac.DecreaseSpeed(animRadiusID, 0.11f);
-		}*/
-		
 		// register
 		if (!animateCameraAzimuth) animAzimuthID = 0;
 		else if (animAzimuthID == 0) animAzimuthID = app.ac.Register(angles.x, 15, 0, 360, false);

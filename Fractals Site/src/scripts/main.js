@@ -40,9 +40,9 @@ function iconUpdate() {
 	}
 }
 
-// tilt & cursor
+// tilt
 if (!('ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0))
-	VanillaTilt.init(vid, {max: 1});
+	VanillaTilt.init(vid, {max: 1, scale: 1.05, speed: 1000});
 
 // init
 function init() {
@@ -85,14 +85,17 @@ function onScroll() {
 	}, Scroll.time / 2);
 
 	// landing page / other pages
-	if (Scroll.targetScroll === 0) {
-		setTimeout(() => scrollDown.style.opacity = '1', Scroll.time / 2);
+	if (Scroll.targetScroll === 0)
 		vid.style.filter = 'brightness(70%)';
-		scrollDown.style.pointerEvents = 'all';
-	} else {
-		scrollDown.style.opacity = '0';
+	else
 		vid.style.filter = 'brightness(50%)';
+
+	if (Scroll.targetScroll === Scroll.pages - 1) {
+		scrollDown.style.opacity = '0';
 		scrollDown.style.pointerEvents = 'none';
+	} else {
+		setTimeout(() => scrollDown.style.opacity = '1', Scroll.time / 2);
+		scrollDown.style.pointerEvents = 'all';
 	}
 }
 

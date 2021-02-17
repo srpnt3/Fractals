@@ -6,6 +6,7 @@ let Scroll = {
 	prevScroll: 0,
 	nextScroll: 1,
 	scrolling: false,
+	touchMode: 'y',
 	init: init,
 	doScroll: doScroll,
 	setOnScroll: function(callback) {
@@ -13,28 +14,28 @@ let Scroll = {
 	}
 };
 
-let content = document.getElementById('content');
-let tDeltaY; // touch delta Y
+let tDelta; // touch delta
 let frame; // current frame
 let frames = 30;
 let deltaTime = Scroll.time / frames;
 let onScroll;
 
 function init() {
-	Scroll.pages = content.children.length;
 	document.documentElement.style.setProperty('--scroll', Scroll.time + 'ms');
+	if (Scroll.touchMode !== 'x' && Scroll.touchMode !== 'y')
+		Scroll.touchMode = 'y';
 
 	// register events
 	document.addEventListener('touchstart', e => {
-		tDeltaY = e.changedTouches[0].clientY;
+		tDelta = Scroll.touchMode === 'y' ? e.changedTouches[0].clientY : e.changedTouches[0].clientX;
 	}, {passive: false});
 
 	document.addEventListener('touchmove', e => {
 		e.preventDefault();
-		let d = tDeltaY - e.changedTouches[0].clientY;
+		let d = tDelta - (Scroll.touchMode === 'y' ? e.changedTouches[0].clientY : e.changedTouches[0].clientX);
 		if (Math.abs(d) > 20) {
 			doScroll(d);
-			tDeltaY = e.changedTouches[0].clientY;
+			tDelta = (Scroll.touchMode === 'y' ? e.changedTouches[0].clientY : e.changedTouches[0].clientX);
 		}
 	}, {passive: false});
 

@@ -72,3 +72,6 @@ Fractals Project/Assets/Scripts/FRAX/Lighting/HDRI.hdr
 # Node
 /Fractals Site/node_modules/
 /Fractals Site/package-lock.json
+
+# Gallery
+/Fractals Site/src/media/gallery/

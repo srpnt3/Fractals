@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<meta charset='UTF-8'>
+	<title>Fractals - Gallery</title>
+	<link rel='stylesheet' href='./css/main.css'>
+	<link rel='stylesheet' href='./css/gallery.css'>
+	<link rel='icon' href='./media/icon1.png' id='icon1'>
+	<link rel='icon' href='./media/icon2.png' id='icon2'>
+</head>
+<body class='no-cursor'>
+	<div class='background'>
+		<line></line>
+		<div></div>
+		<line></line>
+	</div>
+
+	<div id='gallery' data-tilt-full-page-listening data-tilt-scale='1.03'>
+		<div>
+		</div>
+	</div>
+
+	<div class='wrapper'>
+		<nav class='sidebar-left'>
+			<span>Fractals by Serpentine</span>
+			<span>2021</span>
+		</nav>
+		<nav class='sidebar-right'>
+			<div><span id='scroll-name'></span><span id='scroll-value'></span></div>
+			<div id='socials'>
+				<a target='_blank' href='https://github.com/srpnt3'>
+					<span>Gh</span><span>GitHub</span>
+				</a>
+				<a target='_blank' href='https://twitter.com/_srpnt3'>
+					<span>Tw</span><span>Twitter</span>
+				</a>
+				<a target='_blank' href='https://www.instagram.com/srpnt3/'>
+					<span>In</span><span>Instagram</span>
+				</a>
+				<a target='_blank' href='./media/Legal%20Notice.pdf'>
+					<span>Ln</span><span>Legal Notice</span>
+				</a>
+			</div>
+		</nav>
+		<button id='scroll-left'></button>
+		<button id='scroll-right'></button>
+		<div id='info'>
+			<button onclick='window.location.href = "index.html"'></button>
+			<span></span>
+		</div>
+	</div>
+
+	<script type='text/javascript' src='./scripts/tilt.min.js'></script>
+	<script type='module' src='./scripts/cursor.js'></script>
+	<script type='module' src='./scripts/scroll.js'></script>
+	<script type='module' src='./scripts/gallery.js'></script>
+</body>
+
+<script type='text/javascript'>
+	if (window.document.documentMode) {
+		alert('Internet Explorer is not supported');
+	}
+</script>
+
+</html>

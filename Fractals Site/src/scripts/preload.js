@@ -4,6 +4,7 @@ import {Loading} from './loading.js';
 
 const req = new XMLHttpRequest();
 let vid = document.getElementById('video');
+let content = document.getElementById('content');
 
 // init loading screen
 Loading.init();
@@ -20,6 +21,7 @@ req.onload = function() {
 		vid.src = window.URL.createObjectURL(this.response);
 		vid.load();
 		vid.pause();
+		Scroll.pages = content.children.length;
 		Scroll.init();
 		Main.init();
 		Loading.stop();
