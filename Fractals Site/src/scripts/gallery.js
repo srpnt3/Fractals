@@ -7,10 +7,10 @@ let scrollName = document.getElementById('scroll-name');
 let scrollLeft = document.getElementById('scroll-left');
 let scrollRight = document.getElementById('scroll-right');
 let gallery = document.getElementById('gallery');
-let type;// = document.getElementById('type');
 let icon1 = document.getElementById('icon1');
 let icon2 = document.getElementById('icon2');
 let matcher = window.matchMedia('(prefers-color-scheme: dark)');
+let type;
 
 let types = [
 	{
@@ -56,10 +56,6 @@ function iconUpdate() {
 function init() {
 	evalHash();
 	loadMedia();
-	/*type.onchange = function() {
-		window.location = '#' + types[type.selectedIndex].name;
-		window.location.reload();
-	};*/
 
 	document.getElementById('info').children[1].innerHTML = types[type].name;
 	Scroll.pages = gallery.children[0].children.length;
@@ -120,7 +116,6 @@ function evalHash() {
 }
 
 function loadMedia() {
-	//let x = type.selectedIndex;
 	let path = './media/gallery/' + types[type].name + '/';
 	for (let i = 0; i < types[type].amount; i++) {
 		let div = document.createElement('div');
@@ -131,6 +126,9 @@ function loadMedia() {
 		if (type === 1) {
 			element.muted = true;
 			element.defaultMuted = true;
+			element.loop = true;
+			element.playsInline = true;
+			element.controls = false;
 		}
 	}
 }

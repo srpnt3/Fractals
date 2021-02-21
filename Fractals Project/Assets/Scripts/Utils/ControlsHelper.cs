@@ -9,7 +9,7 @@ public class ControlsHelper : MonoBehaviour {
 	private Controls controls;
 
 	// options
-	[HideInInspector] public float sensitivity = 10, minRadius = 1, maxRadius = 5;
+	public float sensitivity = 10, minRadius = 1, maxRadius = 5;
 
 	// default
 	[HideInInspector] public Vector2 move, cursor, dragPosition;

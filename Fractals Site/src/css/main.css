@@ -12,6 +12,7 @@
 	overflow: visible;
 	font-size: calc(var(--vh) * 1.1);
 	color: whitesmoke;
+	-webkit-font-smoothing: antialiased;
 	--c: inherit;
 }
 
@@ -99,12 +100,18 @@ body.no-cursor, body.no-cursor * {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
+	pointer-events: none;
+	filter: brightness(100%);
+	transition: filter var(--scroll);
+}
+
+.background-wrapper {
 	position: absolute;
+	width: 100%;
+	height: 100%;
 	top: 0;
 	z-index: -100;
-	pointer-events: none;
-	filter: brightness(70%);
-	transition: filter var(--scroll);
+	transform: translateZ(-1000px);
 }
 
 .background {
@@ -396,6 +403,7 @@ h2 {
 	margin-top: 18rem;
 	width: min-content;
 	letter-spacing: 0.3vw;
+	white-space: nowrap;
 	transition: 10ms;
 	--c: text;
 }
@@ -403,7 +411,7 @@ h2 {
 p {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400; /* regular */
-	font-size: 1.2em;
+	font-size: 1.3em;
 	line-height: 1.8em;
 	margin-right: calc(100vw / 6);
 	margin-top: 1em;
@@ -457,7 +465,7 @@ p::selection, h1::selection, h2::selection, h3::selection {
 	letter-spacing: 0.2rem;
 	position: relative;
 	transition: margin .5s;
-	margin: 3.5rem 0 3.5rem 2.25vw;
+	margin: 3.5rem 0 3.5rem max(2.25vw, 2rem);
 }
 
 .actions h3::after {
@@ -476,11 +484,11 @@ p::selection, h1::selection, h2::selection, h3::selection {
 }
 
 .actions a:hover h3 {
-	margin: 3.5rem 0 3.5rem 3.5vw;
+	margin: 3.5rem 0 3.5rem max(3.5vw, 4rem);
 }
 
 .actions a:hover h3::after {
-	left: 1vw;
+	left: max(1vw, 1.75rem);
 	opacity: 1;
 }
 
