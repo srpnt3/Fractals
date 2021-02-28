@@ -86,7 +86,7 @@ function onScroll() {
 
 	// landing page / other pages
 	if (Scroll.targetScroll === 0)
-		vid.style.filter = 'brightness(100%)';
+		vid.style.filter = 'brightness(90%)';
 	else
 		vid.style.filter = 'brightness(75%)';
 

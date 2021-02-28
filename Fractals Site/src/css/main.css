@@ -101,7 +101,7 @@ body.no-cursor, body.no-cursor * {
 	height: 100%;
 	object-fit: cover;
 	pointer-events: none;
-	filter: brightness(100%);
+	filter: brightness(90%);
 	transition: filter var(--scroll);
 }
 
@@ -186,7 +186,7 @@ span::selection {
 }
 
 .blur {
-	backdrop-filter: blur(2rem) brightness(110%);
+	backdrop-filter: blur(2rem) brightness(120%);
 	background-color: rgba(61, 61, 90, 0.1);
 }
 

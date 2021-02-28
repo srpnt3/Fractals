@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using UnityEditor;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class ControlsHelper : MonoBehaviour {

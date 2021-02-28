@@ -1970,7 +1970,7 @@ PrefabInstance:
     - target: {fileID: 4412081284719302609, guid: 1f834fe602c595649a57bd478ffa5942,
         type: 3}
       propertyPath: m_Name
-      value: Mix
+      value: Color Mix
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f834fe602c595649a57bd478ffa5942, type: 3}

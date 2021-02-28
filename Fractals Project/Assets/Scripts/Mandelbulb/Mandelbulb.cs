@@ -6,7 +6,7 @@ public class Mandelbulb : App {
 	private int iterations = 30;
 	private float julia;
 	private Vector3 c = Vector3.zero;
-	private float mix = 0.5f;
+	private float mix;
 	private bool alt;
 	
 	private void Start() { cameraType = CameraType.Orbit; }

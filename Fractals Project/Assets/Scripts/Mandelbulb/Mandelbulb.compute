@@ -26,6 +26,15 @@ static const float epsilon = 0.00004;
 
 // structs
 struct Ray { float3 origin; float3 direction; };
+struct Data { float2 a; float3 b; };
+
+// data contructor
+Data DataConstr(float2 a, float3 b) {
+	Data data;
+	data.a = a;
+	data.b = b;
+	return data;
+}
 
 Ray CreateRay(float3 origin, float3 direction) {
     Ray ray;
@@ -42,10 +51,16 @@ Ray CreateCameraRay(float2 uv) {
     return CreateRay(origin, direction);
 }
 
+// orbit trap
+void Trap(float3 z, inout float3 trap) {
+	//z = abs(z);
+	if (length(z) < length(trap))
+		trap = z;
+}
 
 // mandelbulb distance estimator from http://blog.hvidtfeldts.net/index.php/2011/09/distance-estimated-3d-fractals-v-the-mandelbulb-different-de-approximations/
-float2 DE(float3 p) {
-    float3 z = p;
+Data DE(float3 p) {
+	float3 z = p, trap = p;
     float r, dr = 1;
 	int i;
 
@@ -68,27 +83,32 @@ float2 DE(float3 p) {
 		if (Alt) z = zr * float3(cos(theta) * cos(phi), cos(theta) * sin(phi), sin(theta));
 		else z = zr * float3(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 		z += Julia * C + (1 - Julia) * p;
+
+
+		Trap(z, trap); // trap
 	}
-	
+
+	trap = abs(trap);
     float dst = 0.1 * log(r) * r / dr;
-	return float2(dst, sin(i));
+	return DataConstr(float2(dst, sin(i)), trap);
 }
 
 // cast a ray and return the result
-float3 March(Ray ray) {
-	float2 d = 0;
+Data March(Ray ray) {
+	Data d;
 	float3 eye = ray.origin;
 	
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
 		if (length(eye - ray.origin) > 100) s = steps; // to far away
-		if (d.x < epsilon) break; // hit
-		ray.origin += ray.direction * d.x; // march
+		if (d.a.x < epsilon) break; // hit
+		ray.origin += ray.direction * d.a.x; // march
 		s++; // next iteration
 	}
-	
-	return float3(1 - s / float(steps), length(eye - ray.origin), d.y);
+
+	return DataConstr(float2(1 - s / float(steps), d.a.y), d.b);
+	//return float3(1 - s / float(steps), length(eye - ray.origin), d.y);
 }
 
 // main method
@@ -103,8 +123,10 @@ void CSMain (uint3 id : SV_DispatchThreadID) {
 	Ray ray = CreateCameraRay(uv);
 	
 	// render
-	float3 res = March(ray);
-	float a = res.x * (2 - Mix * 2) + res.z * (Mix * 2);
+	Data res = March(ray);
+	//float a = res.a.x * (2 - Mix * 2) + res.a.y * (Mix * 2);
 	//Texture[id.xy] = Source[id.xy] + (float4(a, a, a, 0) * float4(0.8, 0.2, 0.2, 0));
-	Texture[id.xy] = float4(1, 1, 1, 1) * (res.x + 0.1) + float4(0.8, 0.2, 0.2, 0) * res.z;
+	//float4 a = TrapColoring ? float4(res.b, 0) : float4(0.8, 0.2, 0.2, 0);
+	float4 a = float4(res.b, 0) * Mix + float4(0.8, 0.2, 0.2, 0) * (1 - Mix);
+	Texture[id.xy] = float4(1, 1, 1, 1) * (res.a.x + 0.1) + a * res.a.y;
 }
