@@ -15,8 +15,8 @@ let type;
 let types = [
 	{
 		name: 'images',
-		amount: 19, // change this!!
-		file: '.png',
+		amount: 15, // change this!!
+		file: '.jpeg',
 		tag: 'img'
 	}, {
 		name: 'videos',

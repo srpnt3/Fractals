@@ -10,7 +10,7 @@
 	margin: 0;
 	padding: 0;
 	overflow: visible;
-	font-size: calc(var(--vh) * 1.1);
+	font-size: calc(var(--vh) * 1); /* 1rem = 1vh*/
 	color: whitesmoke;
 	-webkit-font-smoothing: antialiased;
 	--c: inherit;
@@ -44,8 +44,8 @@ body.no-cursor, body.no-cursor * {
 
 #cursor {
 	position: absolute;
-	width: 2rem;
-	height: 2rem;
+	width: 2.2rem;
+	height: 2.2rem;
 	transform: translate(-50%, -50%);
 	border: 1px solid whitesmoke;
 	border-radius: 100%;
@@ -62,30 +62,30 @@ body.no-cursor, body.no-cursor * {
 	top: 50%;
 	transform: translate(-75%, -50%) rotate(-45deg);
 	opacity: 0;
-	width: 0.6rem;
-	height: 0.6rem;
+	width: 0.66rem;
+	height: 0.66rem;
 	border: solid whitesmoke;
 	border-width: 0 1px 1px 0;
 	transition: opacity .5s;
 }
 
 #cursor.cursor-hover {
-	width: 3rem;
-	height: 3rem;
+	width: 3.3rem;
+	height: 3.3rem;
 	opacity: 0.5;
 }
 
 #cursor.cursor-text {
-	width: 5rem;
-	height: 5rem;
+	width: 5.5rem;
+	height: 5.5rem;
 	opacity: 0.3;
 	border: 1px solid transparent;
 	background-color: whitesmoke;
 }
 
 #cursor.cursor-click {
-	width: 3rem;
-	height: 3rem;
+	width: 3.3rem;
+	height: 3.3rem;
 }
 
 #cursor.cursor-click::after {
@@ -101,7 +101,7 @@ body.no-cursor, body.no-cursor * {
 	height: 100%;
 	object-fit: cover;
 	pointer-events: none;
-	filter: brightness(90%);
+	filter: brightness(75%);
 	transition: filter var(--scroll);
 }
 
@@ -140,7 +140,7 @@ body.no-cursor, body.no-cursor * {
 #loading {
 	opacity: 1;
 	width: 100%;
-	height: calc(var(--vh) * 100);
+	height: 100%;
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -167,17 +167,18 @@ body.no-cursor, body.no-cursor * {
 
 .wrapper {
 	width: auto;
-	height: calc(var(--vh) * 84);
+	height: 84rem;
 	position: relative;
-	margin: calc(var(--vh) * 8) 4vw;
+	margin: 8rem 4vw;
 	overflow: visible;
 }
 
 span {
 	font-family: Roboto, sans-serif;
+	font-size: 1.2rem;
 	font-weight: 400; /* regular */
 	text-transform: uppercase;
-	letter-spacing: 0.1vh;
+	letter-spacing: 0.1rem;
 }
 
 span::selection {
@@ -186,8 +187,8 @@ span::selection {
 }
 
 .blur {
-	backdrop-filter: blur(2rem) brightness(120%);
-	background-color: rgba(61, 61, 90, 0.1);
+	backdrop-filter: blur(2.2rem) brightness(120%);
+	background-color: rgba(200, 200, 230, 0.05);
 }
 
 /*
@@ -230,7 +231,7 @@ span::selection {
 }
 
 #socials a {
-	margin: 1em 0;
+	margin: 1rem 0;
 	position: relative;
 	text-decoration: none;
 }
@@ -272,25 +273,25 @@ span::selection {
 	flex-direction: column;
 	align-items: flex-end;
 	justify-content: space-between;
-	width: 3em;
+	width: 3.3rem;
 }
 
 #scroll-bar > line {
-	margin: 1em 0;
+	margin: 1.2rem 0;
 	background-color: whitesmoke;
 	opacity: 0.5;
 	height: 2px;
-	width: 0.4em;
+	width: 0.44rem;
 	transition: width var(--scroll), opacity var(--scroll);
 }
 
 #scroll-bar > line.active {
-	width: 2em;
+	width: 2.2rem;
 	opacity: 1;
 }
 
 #scroll-name {
-	margin-right: 1em;
+	margin-right: 1.1rem;
 	opacity: 0.5;
 	font-weight: 300;
 }
@@ -360,25 +361,26 @@ section .container {
 	margin: 0 calc(100vw / 6 - 4vw);
 	position: absolute;
 	top: 0;
+	overflow: hidden;
 }
 
-section .container > * {
-	transition: transform calc(var(--scroll) / 2), opacity calc(var(--scroll) / 2);
+section .container > *, section .blur {
+	transition: transform calc(var(--scroll) / 2), opacity calc(var(--scroll) / 2), background-color .5s;
 	pointer-events: none;
 	opacity: 0;
 }
 
-section.curr .container > * {
+section.curr .container > *, section.curr .blur {
 	pointer-events: all;
 	opacity: 1;
 }
 
-section.prev .container > * {
-	transform: translateY(calc(var(--vh) * -5));
+section.prev .container > *, section.prev .blur {
+	transform: translateY(-5rem);
 }
 
-section.next .container > * {
-	transform: translateY(calc(var(--vh) * 5));
+section.next .container > *, section.next .blur {
+	transform: translateY(5rem);
 }
 
 /* text */
@@ -386,10 +388,10 @@ section.next .container > * {
 h1 {
 	font-family: Roboto, sans-serif;
 	font-weight: 400; /* regular */
-	font-size: 7vw;
+	font-size: min(15rem, 12vw);
 	text-transform: uppercase;
 	margin-left: -0.5vw;
-	margin-top: 18rem;
+	margin-top: 20rem;
 	width: min-content;
 	letter-spacing: 1vw;
 	transition: 10ms;
@@ -399,8 +401,8 @@ h1 {
 h2 {
 	font-family: Roboto, sans-serif;
 	font-weight: 500; /* medium */
-	font-size: 5vw;
-	margin-top: 18rem;
+	font-size: min(10rem, 10vw);
+	margin-top: 20rem;
 	width: min-content;
 	letter-spacing: 0.3vw;
 	white-space: nowrap;
@@ -411,12 +413,12 @@ h2 {
 p {
 	font-family: 'Open Sans', sans-serif;
 	font-weight: 400; /* regular */
-	font-size: 1.3em;
+	font-size: 1.5em;
 	line-height: 1.8em;
-	margin-right: calc(100vw / 6);
+	width: min(80rem, 100%);
 	margin-top: 1em;
 	transition: 10ms;
-	color: lightgray;
+	color: whitesmoke;
 	--c: text;
 }
 
@@ -432,85 +434,58 @@ p::selection, h1::selection, h2::selection, h3::selection {
 /* action */
 
 .actions {
-	width: min-content;
-	height: calc(var(--vh) * 12);
-	margin-top: calc(var(--vh) * 5);
+	width: 100%;
+	margin-top: 4.4rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: flex-start;
 	align-items: stretch;
 	transition: 10ms;
+	transform: none !important;
+	opacity: 1 !important;
 }
 
 .actions a {
-	height: 100%;
-	width: calc(100vw / 6);
-	background-color: transparent;
+	width: fit-content;
+	white-space: nowrap;
 	border: none;
 	border-radius: 0;
 	outline: none;
 	display: flex;
 	flex-direction: column;
-	transition: background-color .5s;
 	text-decoration: none;
+	padding: 2.2rem 4.4rem;
+	margin-right: 2.2rem;
 	--c: click;
 }
 
 .actions h3 {
 	font-family: Roboto, sans-serif;
 	font-weight: 400; /* regular */
-	text-align: left;
-	font-size: 1.4rem;
+	font-size: 1.5rem;
 	text-transform: uppercase;
-	letter-spacing: 0.2rem;
-	position: relative;
-	transition: margin .5s;
-	margin: 3.5rem 0 3.5rem max(2.25vw, 2rem);
+	letter-spacing: 0.22rem;
+	text-align: center;
 }
 
 .actions h3::after {
 	content: '';
-	width: 3rem;
+	width: 0;
 	border-top: 1px solid whitesmoke;
 	position: absolute;
 	left: 0;
-	top: 2.5rem;
+	bottom: 1px;
 	opacity: 0.5;
-	transition: opacity .5s, left .5s;
+	transition: opacity .5s, left .5s, transform .5s, width .5s;
 }
 
 .actions a:hover {
-	background-color: rgba(255, 255, 255, 0.05);
-}
-
-.actions a:hover h3 {
-	margin: 3.5rem 0 3.5rem max(3.5vw, 4rem);
+	background-color: rgba(200, 200, 230, 0.1);
 }
 
 .actions a:hover h3::after {
-	left: max(1vw, 1.75rem);
+	width: 3.82rem;
+	left: calc(100% - 4.4rem);
+	transform: translateX(-100%);
 	opacity: 1;
-}
-
-/* mobile */
-
-@media (max-aspect-ratio: 1 / 1) {
-	h1 {
-		font-size: 12vw;
-	}
-
-	h2 {
-		font-size: 10vw;
-		margin-top: 13rem;
-	}
-
-	p {
-		font-size: 1.5em;
-		line-height: 1.8em;
-		margin-right: 0;
-	}
-
-	.actions a {
-		width: calc(100vw / 3);
-	}
 }

@@ -85,10 +85,10 @@ function onScroll() {
 	}, Scroll.time / 2);
 
 	// landing page / other pages
-	if (Scroll.targetScroll === 0)
+	/*if (Scroll.targetScroll === 0)
 		vid.style.filter = 'brightness(90%)';
 	else
-		vid.style.filter = 'brightness(75%)';
+		vid.style.filter = 'brightness(75%)';*/
 
 	if (Scroll.targetScroll === Scroll.pages - 1) {
 		scrollDown.style.opacity = '0';

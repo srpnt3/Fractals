@@ -20,6 +20,11 @@ req.onload = function() {
 	if (this.status === 200) {
 		vid.src = window.URL.createObjectURL(this.response);
 		vid.load();
+		vid.muted = true;
+		vid.defaultMuted = true;
+		vid.playsInline = true;
+		vid.controls = false;
+		vid.play();
 		vid.pause();
 		Scroll.pages = content.children.length;
 		Scroll.init();

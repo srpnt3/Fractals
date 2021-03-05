@@ -39,7 +39,7 @@ gulp.task('html', () => {
 gulp.task('gallery-images', () => {
 	let i = 0;
 	return gulp.src('src/media/gallery/images/*')
-		.pipe(responsive({'*': {width: 1920}}))
+		.pipe(responsive({'*': {width: 1920, format: 'jpeg', quality: 100}}))
 		.pipe(rename(path => path.basename = '' + i++))
 		.pipe(gulp.dest('src/media/gallery/images/'));
 });
