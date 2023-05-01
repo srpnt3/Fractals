@@ -58,7 +58,7 @@ public class ControlsHelper : MonoBehaviour {
 		controls.Default.Zoom.canceled += ctx => deltaZoom = 0f;
 		controls.Default.Screenshot.canceled += ctx => app.StartCoroutine(app.TakeScreenshot(Input.GetKey(KeyCode.LeftShift)));
 		controls.Default.Reload.canceled += ctx => SceneLoader.Reload();
-		controls.Default.Record.canceled += ctx => app.or.ToggleRendering(30, Input.GetKey(KeyCode.LeftShift));
+		controls.Default.Record.canceled += ctx => app.or.ToggleRendering(25, Input.GetKey(KeyCode.LeftShift));
 
 		// register flight controls
 		controls.Flight.Throttle.performed += ctx => throttle = ctx.ReadValue<float>();

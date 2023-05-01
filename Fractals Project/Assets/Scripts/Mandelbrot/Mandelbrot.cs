@@ -21,7 +21,8 @@ public class Mandelbrot : App {
 // create the Gradient
 	private void Start() {
 		colorGradient = Gradients.CreateGradient(new[] {
-			new Vector4(29, 31, 42, 0f),
+			//new Vector4(29, 31, 42, 0f),
+			new Vector4(255, 255, 255, 0f),
 			RandomColor(0.5f),
 			RandomColor(1f)
 		}, 100);

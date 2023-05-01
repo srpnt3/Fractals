@@ -101,7 +101,7 @@ Data March(Ray ray) {
 	int s = 0;
 	while (s < steps) {
 		d = DE(ray.origin); // calculate distance
-		if (length(eye - ray.origin) > 100) s = steps; // to far away
+		if (length(eye - ray.origin) > 100) break; // to far away
 		if (d.a.x < epsilon) break; // hit
 		ray.origin += ray.direction * d.a.x; // march
 		s++; // next iteration

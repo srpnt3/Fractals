@@ -5,6 +5,30 @@ EditorUserSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 4
   m_ConfigSettings:
+    RecentlyUsedSceneGuid-0:
+      value: 0252575055065e0f0b5f087612250b4446161a782f7e7533752a1e63e1e5616d
+      flags: 0
+    RecentlyUsedSceneGuid-1:
+      value: 0005555507505d095a5f547049260e441016487d792e7364297e4566e1b16c6d
+      flags: 0
+    RecentlyUsedSceneGuid-2:
+      value: 0604040304560a5d545b0876457b5a444715417f792c2468747b1b61b3b4356a
+      flags: 0
+    RecentlyUsedSceneGuid-3:
+      value: 5b57055655565c0e555b0d26122609441215417a287a7268297a1f65b1b2363a
+      flags: 0
+    RecentlyUsedSceneGuid-4:
+      value: 5200550753565959595f5a2313260b44144e4b287f7a27347d701967b3b66739
+      flags: 0
+    RecentlyUsedScenePath-0:
+      value: 22424703114646680e0b0227036c603d171e16072926337e38271427fb
+      flags: 0
+    RecentlyUsedScenePath-1:
+      value: 22424703114646680e0b0227036c721118131d262e3d2a32633c133af6f9
+      flags: 0
+    RecentlyUsedScenePath-2:
+      value: 22424703114646680e0b0227036c721118131d262e3a2924633c133af6f9
+      flags: 0
     UnityRemoteCompression:
       value: 337f73
       flags: 0
@@ -22,7 +46,13 @@ EditorUserSettings:
   m_VCDebugCmd: 0
   m_VCDebugOut: 0
   m_SemanticMergeMode: 2
+  m_DesiredImportWorkerCount: 4
+  m_StandbyImportWorkerCount: 2
+  m_IdleImportWorkerShutdownDelay: 60000
   m_VCShowFailedCheckout: 1
   m_VCOverwriteFailedCheckoutAssets: 1
-  m_VCOverlayIcons: 1
+  m_VCProjectOverlayIcons: 1
+  m_VCHierarchyOverlayIcons: 1
+  m_VCOtherOverlayIcons: 1
   m_VCAllowAsyncUpdate: 0
+  m_ArtifactGarbageCollection: 1
